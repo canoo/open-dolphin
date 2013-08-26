@@ -6,7 +6,7 @@ client-server split. The only thing that is optionally shared are constants.
 
 It is always a good idea to refactor literal values into constants, especially if they
 are used in more than one place for a unique purpose.
-Therefore, pull out our String literals into static references:
+Therefore, we will extract our String literals into static references:
 
 {code}
 private static final String MODEL_ID           = "modelId";
@@ -14,7 +14,7 @@ private static final String MODEL_ATTRIBUTE_ID = "attrId";
 private static final String COMMAND_ID         = "LogOnServer";
 {code}
 
-The configuration setup should move into the constructor:
+The configuration setup now moves into the constructor:
 
 {code}
 public JumpStart() {
@@ -26,7 +26,7 @@ public JumpStart() {
 {code}
 
 This leaves the "start" method with "view" responsibilities only:
-the initial contruction and separate method call for binding and registering actions.
+the initial contruction and separate method calls for binding and registering actions.
 
 {code}
 @Override
@@ -52,13 +52,12 @@ public void start(Stage stage) throws Exception {
 }
 {code}
 
-We add an additional labeled checkbox to visualize the status: whether the text field - or better
-say the dolphin attribute that stands behind it - is considered "dirty".
+We add an additional labeled checkbox to visualize the status: whether the text field - or more precisely the dolphin attribute that backs it - is considered "dirty".
 
 !../img/dolphin_pics/step3.png!
 
-As soon as you change the content of the text field, this checkbox should become selected.
-If you remove your edits, it should become unselected again!
+As soon as we change the content of the text field, this checkbox will become selected (checked).
+If we remove our edits, it should become unselected (unchecked) again!
 
 Here is how the binding for that requirement looks like:
 
@@ -72,6 +71,6 @@ they can provide more information about themselves and can carry additional stat
 automatically updated and available for binding.
 
 Each attribute has a "base" value. When the current value differs from that base value, it is
-considered "dirty". A presentation model is dirty, if and only if any of it's attributes is dirty.
+considered "dirty". A presentation model is dirty, if and only if any of its attributes are dirty.
 
 With this knowledge, we can even do a little more.

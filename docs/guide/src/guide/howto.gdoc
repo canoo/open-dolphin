@@ -10,7 +10,7 @@ The dirty state is also visualized via a CSS class (background color changes). R
 Steps 0 to 4 solely live in the "combined" module for a simple jumpstart
 before we properly split client and server in step 5 and only keep a starter class in "combined".
 
-Step 7 produces a war file that you can deploy on e.g. tomcat and the client starter moves to the "client" module.
+Step 7 produces a WAR file that you can deploy in an application server (e.g. Tomcat) and the code that starts the client moves to the "client" module.
 
 h4. Setup and start of a basic JavaFX view
 
@@ -22,21 +22,22 @@ and have looked at the readme.
 You can either choose to clone the repo for following each step (recommended)
 or use the provided zip files for a Maven or Gradle build of your own application.
 
-The root directory contains a pom.xml that you may want to point your IDE to for creating a project.
-All major IDEs should understand this.
+The root directory contains a maven pom.xml that you may want to import into your IDE to for creating a project.
+All major IDEs support projects based on maven pom files.
 
-In case you are not using any IDE, follow the readme for how to build and run the various steps.
+In case you are not using an IDE, follow the readme for how to build and run the various steps.
 
 We start our development in the "combined" module with the simplest possible JavaFX view
 [step0.JumpStart|https://github.com/canoo/DolphinJumpStart/blob/master/combined/src/main/java/step_0/JumpStart.java].
 The class has a main method such that you can start it from inside the IDE.
 Otherwise use the command line launcher as described in the readme.
 
-When your setup is correct, it should appear on your screen like
+When your setup is correct, it should appear on your screen like:
 
 !../img/dolphin_pics/step0.png!
 
-The gist of the code shows a simple call into the JavaFX API.
+This code illustrates a simple call to the JavaFX API. This code displays a window with the title "Dolphin Jump Start" displayed in the title of the window.
+
 {code}
 public class JumpStart extends Application {
 
@@ -54,7 +55,6 @@ public class JumpStart extends Application {
 {code}
 
 You are free to also use any other Java-based widget toolkit at this point:
-Swing, AWT, SWT, Eclipse RCP, and else. That makes no difference to OpenDolphin.
+Swing, AWT, SWT, Eclipse RCP, or any other UI toolkit that runs in a JVM (Java Virtual Machine). OpenDolphin doesn't care which UI toolkit is used.
 
-Of course, the application needs some sensible content, which we will add right away -
-still without any OpenDolphin specifics.
+Of course, the application needs some sensible content, which we will add right away. Note that we haven added any OpenDolphin specific code to our samples (yet).

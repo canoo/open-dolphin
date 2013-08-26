@@ -9,7 +9,7 @@ The visual appearance and the behavior has not changed
 but the code has.
 
 As an intermediate step, we have put the OpenDolphin setup and the usage in the same place.
-Don't worry if that looks ugly. We will clean this up in a minute.
+Don't worry if this looks ugly. We will clean it up in a minute.
 
 Focus on these lines in the code:
 
@@ -19,7 +19,7 @@ We create a presentation model with the distinctive name "input" and an attribut
 PresentationModel input = clientDolphin.presentationModel("input", new ClientAttribute("text"));
 {code}
 
-Note that we _not_ define a "JumpStartPresentationModel" or so since presentation models in OpenDolphin
+Note that we do _not_ define a "JumpStartPresentationModel" since presentation models in OpenDolphin
 are totally generic.
 
 Behind the scenes (no pun intended) happens quite a lot:
@@ -28,7 +28,7 @@ Behind the scenes (no pun intended) happens quite a lot:
 * the server dolphin is asynchronously notified about the creation, which you can observe in the logs
 * the server dolphin asynchronously updates its model store accordingly.
 
-While this happens, we bind the text property of the text field (this is a JavaFX property) to the "text" attribute of
+While this happens, we bind the text property of the TextField (this is a JavaFX property) to the "text" attribute of
 the input presentation model
 
 {code}
@@ -38,7 +38,7 @@ JFXBinder.bind("text").of(field).to("text").of(input);
 Note the fluent API for setting up the binding.
 
 {note}
-The above is plain Java. When you use Groovy, you can make use of Groovy's command chain syntax
+The above is plain Java. When we use Groovy, we can make use of Groovy's command chain syntax
 that allows writing the *exact same code* as
 {code}
 bind "text" of field to "text" of input
@@ -85,7 +85,9 @@ When we now start the application we see in the log:
 [INFO] C: server responded with
 {code}
 
-telling us that the presentation model has been created and the value changed from null to an empty String,
+The C prefixes illustrate statements that are logged from the Client. S prefixes denote statements that are logged from the Server.
+
+The log statements are telling us that the presentation model has been created and the value changed from null to an empty String,
 the JavaFX default value for text fields.
 
 Let's enter "abcd":
@@ -116,11 +118,11 @@ server text field contains: abcd
 [INFO] C: server responded with 0 command(s): []
 {code}
 
-Our server action does it's printing action *asynchronously*, particularly not in the UI thread!
+Our server action performs its printing action *asynchronously*, particularly not in the UI thread!
 You can see the asynchronous behavior by the line ordering in the log above.
 If it were synchronous, lines 2 and 3 would never be in this order.
 
-Note that even though all the logic runs in-memory, we have the first benefits from OpenDolphin:
+Note that even though all the logic runs in-memory, we have the first benefit from OpenDolphin:
 
 {note}
 All actions are executed *asynchronously outside the UI thread*.\\

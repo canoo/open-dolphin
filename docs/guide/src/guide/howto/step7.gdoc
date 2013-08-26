@@ -1,4 +1,4 @@
-With the application being properly structured in its modules, we can now finally distribute it as a
+With the application being properly structured into its modules, we can now finally distribute it as a
 true client-server application without any of the application code being touched at all.
 Only the the server adapter needs to be in place and the client starter needs to
 connect to the correct URL.
@@ -50,25 +50,25 @@ It can be cleaned from setting up the in-memory server and must of course point 
     }
 {code}
 
-h4. That was it!
+h4. That is it!
 
-You can now start the provided jetty server
+We can now start the provided jetty server
 {code}
 ./gradlew :server-app:jettyRun
 {code}
-and the as many TutorialStarter clients as you want.
+and then as many TutorialStarter clients as we want.
 
-Alternatively, ou can now create a war file via Maven or Gradle and deploy it on any server you fancy.
+Alternatively, we can now create a WAR file via Maven or Gradle and deploy it on any server you fancy.
 
 h4. Some extra flexibility
 
 You may have observed that we refactored the actual server-side printing into a service class with
 a service interface. This allows some extra flexibility when the server-side action depends on any
-technology that is only available on the server - say JEE, JPA, Spring, GORM, or so.
+technology that is only available on the server - say JEE, JPA, Spring, GORM, etc.
 
-Refactoring that access into an interface allows to still use the same code
-with in-memory mode for testing, debugging, profiling, and so on with a
-stub or mock implementation of the service interface.
+Refactoring the access into an interface allows us to still use the same code
+with the in-memory mode for testing, debugging, profiling, and so on with a
+stub or mock implementation for the service interface.
 
 h2. Final considerations
 

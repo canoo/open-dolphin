@@ -9,7 +9,7 @@ presentation model behind it. This simplifies the binding:
 JFXBinder.bindInfo("dirty").of(textAttributeModel).to("selected").of(status);
 {code}
 
-Second, we also want the button to only be enabled when there is something reasonable to
+Second, we also want the button to be enabled only when there is something reasonable to
 do, i.e. when there is some value change in the form. This is a very common requirement
 in business applications.
 
@@ -31,6 +31,6 @@ You probably guessed that this code looks nicer in Groovy. Yes, it does:
 bindInfo "dirty" of textAttributeModel using { state -> !state } to "disabled" of button
 {code}
 
-Once the code is so nicely broken into independent parts we can put the various parts in separate modules
+Once the code is nicely broken into independent parts we can put the various parts into separate modules
 for better dependency management.
 

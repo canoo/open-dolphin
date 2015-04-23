@@ -18,7 +18,6 @@ package org.opendolphin.core.client
 
 import org.opendolphin.core.AbstractDolphin
 import org.opendolphin.core.ModelStore
-import org.opendolphin.core.PresentationModel
 import org.opendolphin.core.Tag
 import org.opendolphin.core.client.comm.ClientConnector
 import org.opendolphin.core.client.comm.OnFinishedHandler
@@ -35,7 +34,7 @@ import org.opendolphin.core.comm.SignalCommand
  * Threading model: confined to the UI handling thread.
  */
 // makes use of dynamic dispatch, do not use @CompileStatic
-public class ClientDolphin extends AbstractDolphin<ClientAttribute, ClientPresentationModel> {
+public class GClientDolphin extends AbstractDolphin<ClientAttribute, ClientPresentationModel> implements ClientDolphin {
 
     // todo dk: the client model store should become a secret of the ClientDolphin
     ClientModelStore clientModelStore
@@ -47,10 +46,8 @@ public class ClientDolphin extends AbstractDolphin<ClientAttribute, ClientPresen
         return clientModelStore
     }
 
-    /** Convenience method for a creating a ClientPresentationModel with initial null values for the attributes
-     */
     ClientPresentationModel presentationModel(String id, List<String> attributeNames) {
-        def result = new ClientPresentationModel(id, attributeNames.collect() { new ClientAttribute(it)})
+        def result = new GClientPresentationModel(id, attributeNames.collect() { new GClientAttribute(it)})
         clientModelStore.add result
         return result
     }
@@ -62,22 +59,20 @@ public class ClientDolphin extends AbstractDolphin<ClientAttribute, ClientPresen
 
     /** groovy-friendly convenience method for a typical case of creating a ClientPresentationModel with initial values*/
     ClientPresentationModel presentationModel(Map<String, Object> attributeNamesAndValues, String id, String presentationModelType = null) {
-        def attributes = attributeNamesAndValues.collect {key, value -> new ClientAttribute(key, value) }
-        def result = new ClientPresentationModel(id, attributes)
+        def attributes = attributeNamesAndValues.collect {key, value -> new GClientAttribute(key, value) }
+        def result = new GClientPresentationModel(id, attributes)
         result.presentationModelType = presentationModelType
         clientModelStore.add result
         return result
     }
 
-    /** both groovy- and java-friendly full-control factory */
     ClientPresentationModel presentationModel(String id, String presentationModelType = null, ClientAttribute... attributes) {
-        def result = new ClientPresentationModel(id, attributes as List)
+        def result = new GClientPresentationModel(id, attributes as List)
         result.presentationModelType = presentationModelType
         clientModelStore.add result
         return result
     }
 
-    /** java-friendly convenience method for sending a named command*/
     void send(String commandName, OnFinishedHandler onFinished = null) {
         clientConnector.send new NamedCommand(commandName), onFinished
     }
@@ -85,14 +80,12 @@ public class ClientDolphin extends AbstractDolphin<ClientAttribute, ClientPresen
     /** groovy-friendly convenience method for sending a named command that expects only PM responses */
     void send(String commandName, Closure onFinished) {
         clientConnector.send(new NamedCommand(commandName), new OnFinishedHandlerAdapter(){
-            void onFinished(List<ClientPresentationModel> presentationModels) {
+            void onFinished(List<GClientPresentationModel> presentationModels) {
                 onFinished(presentationModels)
             }
         })
     }
 
-    /** both java- and groovy-friendly convenience method to send an empty command, which will have no
-     * presentation models nor data in the callback */
     void sync(Runnable runnable) {
         clientConnector.send(new EmptyNotification(), new OnFinishedHandlerAdapter() {
             void onFinished(List<ClientPresentationModel> presentationModels) {
@@ -115,10 +108,7 @@ public class ClientDolphin extends AbstractDolphin<ClientAttribute, ClientPresen
         new ApplyToAble(dolphin: this, source: source)
     }
 
-   /** Removes the modelToDelete from the client model store,
-     * detaches all model store listeners,
-     * and notifies the server if successful */
-    public void delete(ClientPresentationModel modelToDelete) {
+   public void delete(ClientPresentationModel modelToDelete) {
         clientModelStore.delete(modelToDelete)
     }
 
@@ -136,7 +126,7 @@ public class ClientDolphin extends AbstractDolphin<ClientAttribute, ClientPresen
      */
     // todo: make this available on the server side as well
     public ClientAttribute tag(ClientPresentationModel model, String propertyName, Tag tag, def value) {
-        def attribute = new ClientAttribute(propertyName, value, null, tag)
+        def attribute = new GClientAttribute(propertyName, value, null, tag)
         addAttributeToModel(model, attribute)
         return attribute
     }
@@ -158,21 +148,21 @@ public class ClientDolphin extends AbstractDolphin<ClientAttribute, ClientPresen
 
     // todo dk: compare with JS version, todo: same on server
     protected ClientAttribute copyAttribute(ClientAttribute sourceAttribute) {
-        def result = new ClientAttribute(sourceAttribute.propertyName,sourceAttribute.baseValue, sourceAttribute.qualifier, sourceAttribute.tag)
+        def result = new GClientAttribute(sourceAttribute.propertyName,sourceAttribute.baseValue, sourceAttribute.qualifier, sourceAttribute.tag)
         result.value = sourceAttribute.value
         return result
     }
 
     public ClientPresentationModel copy(ClientPresentationModel sourcePM) {
         def attrs  = sourcePM.attributes.collect{ copyAttribute(it) }
-        def result = new ClientPresentationModel(null, attrs)
+        ClientPresentationModel result = new GClientPresentationModel(null, attrs)
         result.presentationModelType = sourcePM.presentationModelType
         result.clientSideOnly = sourcePM.clientSideOnly
         clientModelStore.add(result)
         return result
     }
 
-    public startPushListening(String pushActionName, String releaseActionName) {
+    public void startPushListening(String pushActionName, String releaseActionName) {
         if (null == pushActionName) {
             // todo dk: think about logging here
 //            log.warning("You must set a pushListener on the client connector if you want to listen for push events")
@@ -188,12 +178,52 @@ public class ClientDolphin extends AbstractDolphin<ClientAttribute, ClientPresen
         clientConnector.listen()
     }
 
-    public stopPushListening() {
+    public void stopPushListening() {
         clientConnector.pushEnabled = false
     }
 
     public boolean isPushListening() {
         return clientConnector.pushEnabled
+    }
+
+    @Override
+    ClientPresentationModel createPresentationModel(List<ClientAttribute> attributes) {
+        return new GClientPresentationModel(attributes)
+    }
+
+    @Override
+    ClientPresentationModel createPresentationModel(String id, List<ClientAttribute> attributes) {
+        return new GClientPresentationModel(id, attributes)
+    }
+
+    @Override
+    ClientAttribute createAttribute(String propertyName) {
+        return new GClientAttribute(propertyName)
+    }
+
+    @Override
+    ClientAttribute createAttribute(String propertyName, Object initialValue, String qualifier, Tag tag) {
+        return new GClientAttribute(propertyName, initialValue, qualifier, tag)
+    }
+
+    @Override
+    ClientAttribute createAttribute(String propertyName, Object initialValue, Tag tag) {
+        return new GClientAttribute(propertyName, initialValue, tag)
+    }
+
+    @Override
+    ClientAttribute createAttribute(String propertyName, Object initialValue, String qualifier) {
+        return new GClientAttribute(propertyName, initialValue, qualifier)
+    }
+
+    @Override
+    ClientAttribute createAttribute(String propertyName, Object initialValue) {
+        return new GClientAttribute(propertyName, initialValue)
+    }
+
+    @Override
+    ClientAttribute createAttribute(Map props) {
+        return new GClientAttribute(props)
     }
 }
 

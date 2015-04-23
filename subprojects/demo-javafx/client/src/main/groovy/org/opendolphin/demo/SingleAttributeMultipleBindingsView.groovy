@@ -16,17 +16,16 @@
 
 package org.opendolphin.demo
 
-import org.opendolphin.core.client.ClientAttribute
-import org.opendolphin.core.client.ClientPresentationModel
-import org.opendolphin.core.client.ClientDolphin
 import groovyx.javafx.SceneGraphBuilder
 import javafx.event.EventHandler
+import org.opendolphin.core.client.ClientDolphin
+import org.opendolphin.core.client.ClientPresentationModel
 
-import static org.opendolphin.binding.JFXBinder.bind
-import static org.opendolphin.demo.DemoStyle.style
-import static org.opendolphin.demo.MyProps.ATT.*
 import static groovyx.javafx.GroovyFX.start
 import static javafx.geometry.HPos.RIGHT
+import static org.opendolphin.binding.JFXBinder.bind
+import static org.opendolphin.demo.DemoStyle.style
+import static org.opendolphin.demo.MyProps.ATT.getTITLE
 
 class SingleAttributeMultipleBindingsView {
     void show(ClientDolphin clientDolphin) {
@@ -47,10 +46,10 @@ class SingleAttributeMultipleBindingsView {
         sgb.stage {
             scene {
                 gridPane {
-                    label id: 'header',     row: 0, column: 1
-                    label id: 'label',      row: 1, column: 0
-                    textField id: 'input',  row: 1, column: 1
-                    button id: 'submit',    row: 3, column: 1, halignment: RIGHT,
+                    label id: 'header', row: 0, column: 1
+                    label id: 'label', row: 1, column: 0
+                    textField id: 'input', row: 1, column: 1
+                    button id: 'submit', row: 3, column: 1, halignment: RIGHT,
                             "Update labels and title"
                 }
             }
@@ -58,7 +57,7 @@ class SingleAttributeMultipleBindingsView {
     }
 
     ClientPresentationModel createPresentationModel(ClientDolphin dolphin) {
-        def titleAttr = new ClientAttribute(TITLE, "Some Text: <enter> or <submit>")
+        def titleAttr = dolphin.createAttribute(TITLE, "Some Text: <enter> or <submit>")
         return dolphin.presentationModel('demo', titleAttr)
     }
 
@@ -80,7 +79,7 @@ class SingleAttributeMultipleBindingsView {
 
     void attachHandlers(ClientPresentationModel pm, SceneGraphBuilder sgb) {
         def copyFieldToPm = { pm[TITLE].value = sgb.input.text } as EventHandler
-        sgb.input.onAction  = copyFieldToPm
+        sgb.input.onAction = copyFieldToPm
         sgb.submit.onAction = copyFieldToPm
     }
 }

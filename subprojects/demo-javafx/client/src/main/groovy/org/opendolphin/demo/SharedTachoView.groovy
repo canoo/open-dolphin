@@ -16,9 +16,9 @@
 
 package org.opendolphin.demo
 
-import jfxtras.labs.scene.control.gauge.ColorDef
 import jfxtras.labs.scene.control.gauge.Gauge
 import org.opendolphin.core.client.ClientDolphin
+import org.opendolphin.core.client.GClientDolphin
 import jfxtras.labs.scene.control.gauge.Radial
 import jfxtras.labs.scene.control.gauge.StyleModel
 

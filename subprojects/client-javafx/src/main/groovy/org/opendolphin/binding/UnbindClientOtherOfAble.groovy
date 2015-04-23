@@ -1,12 +1,12 @@
 package org.opendolphin.binding
 
-import org.opendolphin.core.client.ClientAttribute
+import org.opendolphin.core.client.GClientAttribute
 
 class UnbindClientOtherOfAble {
-    final ClientAttribute attribute
+    final GClientAttribute attribute
     final String targetPropertyName
 
-    UnbindClientOtherOfAble(ClientAttribute attribute, String targetPropertyName) {
+    UnbindClientOtherOfAble(GClientAttribute attribute, String targetPropertyName) {
         this.attribute = attribute
         this.targetPropertyName = targetPropertyName
     }

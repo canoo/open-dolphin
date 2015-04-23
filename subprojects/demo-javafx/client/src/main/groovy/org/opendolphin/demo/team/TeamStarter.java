@@ -2,6 +2,7 @@ package org.opendolphin.demo.team;
 
 import javafx.application.Application;
 import org.opendolphin.core.client.ClientDolphin;
+import org.opendolphin.core.client.ClientDolphinFactory;
 import org.opendolphin.core.client.ClientModelStore;
 import org.opendolphin.core.client.comm.BlindCommandBatcher;
 import org.opendolphin.core.client.comm.HttpClientConnector;
@@ -16,7 +17,7 @@ public class TeamStarter {
 //        final String servletUrl = "http://localhost:8080/dolphin-grails/dolphin/";
         final String servletUrl = "https://klondike.canoo.com/dolphin-grails/dolphin/";
 
-        ClientDolphin clientDolphin = new ClientDolphin();
+        ClientDolphin clientDolphin = ClientDolphinFactory.create();
         clientDolphin.setClientModelStore(new ClientModelStore(clientDolphin));
         BlindCommandBatcher batcher = new BlindCommandBatcher();
         batcher.setMergeValueChanges(true);

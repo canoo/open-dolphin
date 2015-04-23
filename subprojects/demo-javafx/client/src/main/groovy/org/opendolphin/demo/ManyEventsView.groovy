@@ -16,10 +16,11 @@
 
 package org.opendolphin.demo
 
-import org.opendolphin.core.client.ClientDolphin
 import javafx.scene.paint.Color
 import jfxtras.labs.scene.control.gauge.Radial
 import jfxtras.labs.scene.control.gauge.StyleModel
+import org.opendolphin.core.client.ClientDolphin
+import org.opendolphin.core.client.GClientDolphin
 
 import static org.opendolphin.binding.JFXBinder.bind
 import static org.opendolphin.demo.DemoStyle.blueStyle

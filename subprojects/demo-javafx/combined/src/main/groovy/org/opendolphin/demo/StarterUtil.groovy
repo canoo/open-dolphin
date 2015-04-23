@@ -3,17 +3,18 @@ package org.opendolphin.demo
 import org.opendolphin.LogConfig
 import org.opendolphin.core.ModelStoreConfig
 import org.opendolphin.core.client.ClientDolphin
+import org.opendolphin.core.client.ClientDolphinFactory
 import org.opendolphin.core.client.ClientModelStore
+import org.opendolphin.core.client.GClientDolphin
 import org.opendolphin.core.client.comm.BlindCommandBatcher
 import org.opendolphin.core.client.comm.HttpClientConnector
 import org.opendolphin.core.comm.JsonCodec
-import org.opendolphin.core.comm.ZippedJsonCodec
 
 class StarterUtil {
 
     static ClientDolphin setupForRemote() {
         LogConfig.logCommunication()
-        def dolphin = new ClientDolphin()
+        def dolphin = ClientDolphinFactory.create()
         ModelStoreConfig config = new ModelStoreConfig(
 //            pmCapacity: 1024 * 8,
 //            attributeCapacity: 1024 * 8 * 16,

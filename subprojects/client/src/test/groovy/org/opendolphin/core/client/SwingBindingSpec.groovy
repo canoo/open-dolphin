@@ -10,7 +10,7 @@ class DirtyBindingSpec extends Specification{
 
     void "binding the dirty state of a presentation model to a swing action"() {
         given:
-        def pm = new ClientPresentationModel([])
+        def pm = new GClientPresentationModel([])
         def action = new AbstractAction() {
             void actionPerformed(ActionEvent e) {}
         }
@@ -22,8 +22,8 @@ class DirtyBindingSpec extends Specification{
 
     void "binding the dirty state of a presentation model to an attribute"() {
         given:
-        def sourcePm = new ClientPresentationModel([])
-        def targetPm = new ClientPresentationModel([new ClientAttribute("dirt",true)])
+        def sourcePm = new GClientPresentationModel([])
+        def targetPm = new GClientPresentationModel([new GClientAttribute("dirt",true)])
         when:
         bindInfo("dirty").of(sourcePm).to("dirt").of(targetPm)
         then:

@@ -16,38 +16,99 @@
 
 package org.opendolphin.core;
 
+/**
+ * Defines an attribute in a presentation model. Each attribute can store a value and is identified by its property name,
+ * qualifier and tag.
+ */
 public interface Attribute extends Observable {
-    String QUALIFIER_PROPERTY   = "qualifier";
-    String DIRTY_PROPERTY       = "dirty";
-    String BASE_VALUE           = "baseValue";
-    String VALUE                = "value";
 
+    /**
+     * Defines the property name for the qualifier property of an attribute. This can be used to register a {@link java.beans.PropertyChangeListener} for example.
+     */
+    public static final String QUALIFIER_PROPERTY   = "qualifier";
+
+    /**
+     * Defines the property name for the dirty property of an attribute. This can be used to register a {@link java.beans.PropertyChangeListener} for example.
+     */
+    public static final String DIRTY_PROPERTY       = "dirty";
+
+    /**
+     * Defines the property name for the baseValue property of an attribute. This can be used to register a {@link java.beans.PropertyChangeListener} for example.
+     */
+    public static final String BASE_VALUE           = "baseValue";
+
+    /**
+     * Defines the property name for the value property of an attribute. This can be used to register a {@link java.beans.PropertyChangeListener} for example.
+     */
+    public static final String VALUE                = "value";
+
+    /**
+     * Returns the value of the attribute
+     * @return the value
+     */
     Object getValue();
 
+    /**
+     * Sets the value of the attribute
+     * @param value the new value
+     */
     void setValue(Object value);
 
+    /**
+     * Returns the property name of the attribute
+     * @return
+     */
     String getPropertyName();
 
+    /**
+     * Returns the qualifier of the attribute
+     * @return
+     */
     String getQualifier();
 
+    //TODO: Should we remove this method from the interface? The Id is an internal value
     String getId();
 
+    /**
+     * Returns the tag of the attribute
+     * @return the tag
+     */
     Tag getTag();
 
+    /**
+     * Synchronizes this attribute with the given one
+     * @param source the attribute
+     */
     void syncWith(Attribute source);
 
+    //TODO: Should we remove this method from the interface?
     boolean isDirty();
 
+    /**
+     * Returns the base value of this attribute
+     * @return the base value
+     */
     Object getBaseValue();
+
+    //TODO: Should we remove this method from the interface?
     void   setBaseValue(Object newValue);
 
+    /**
+     * Returns the presentation model that contains this attribute or {@code null} if this attribute isn't part of a
+     * presentation model.
+     * @return the presentation model
+     */
     PresentationModel getPresentationModel();
 
-    // todo dk: add rebase to BasePresentationModel or to facade
-
-    /** setting the base value to the current value, effectively providing a new base for "dirty" calculations */
+    /**
+     * Setting the base value to the current value, effectively providing a new base for "dirty" calculations
+     */
+    //TODO: Should we remove this method from the interface?
     void rebase();
 
-    /** setting the current value back to the last known base, which is the base value */
+    /**
+     * Setting the current value back to the last known base, which is the base value
+     */
+    //TODO: Should we remove this method from the interface?
     void reset();
 }

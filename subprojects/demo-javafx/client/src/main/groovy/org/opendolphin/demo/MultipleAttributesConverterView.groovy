@@ -17,9 +17,7 @@
 package org.opendolphin.demo
 
 import org.opendolphin.binding.Converter
-import org.opendolphin.core.client.ClientAttribute
 import org.opendolphin.core.client.ClientDolphin
-import org.opendolphin.core.client.ClientPresentationModel
 
 import static groovyx.javafx.GroovyFX.start
 import static org.opendolphin.binding.JFXBinder.bind
@@ -36,27 +34,29 @@ class MultipleAttributesConverterView {
 
         start { app ->
             // construct the PM
-            def titleAttr = new ClientAttribute(TITLE)
-            def purposeAttr = new ClientAttribute(PURPOSE)
-            def pm = new ClientPresentationModel('demo',[titleAttr, purposeAttr])
+            def titleAttr = clientDolphin.createAttribute(TITLE)
+            def purposeAttr = clientDolphin.createAttribute(PURPOSE)
+            def pm = clientDolphin.createPresentationModel('demo', [titleAttr, purposeAttr])
             clientDolphin.clientModelStore.add pm
 
             stage {
                 scene {
-                    gridPane  {
+                    gridPane {
 
                         label id: 'header', row: 0, column: 1, 'Using converters with presentation models'
 
-                        label       'Title: ',        row: 1, column: 0
-                        label       id: 'titleLabel', row: 1, column: 1, defaultTitle
-                        textField   id: 'titleInput', row: 2, column: 1
+                        label 'Title: ', row: 1, column: 0
+                        label id: 'titleLabel', row: 1, column: 1, defaultTitle
+                        textField id: 'titleInput', row: 2, column: 1
 
-                        label       'Purpose: ',        row: 3, column: 0
-                        label       id: 'purposeLabel', row: 3, column: 1, defaultPurpose
-                        label       id: 'remainingLabel', row: 4, column: 0
-                        textField   id: 'purposeInput', row: 4, column: 1
+                        label 'Purpose: ', row: 3, column: 0
+                        label id: 'purposeLabel', row: 3, column: 1, defaultPurpose
+                        label id: 'remainingLabel', row: 4, column: 0
+                        textField id: 'purposeInput', row: 4, column: 1
 
-            }   }   }
+                    }
+                }
+            }
 
             style delegate
 
@@ -74,7 +74,7 @@ class MultipleAttributesConverterView {
             bind(TITLE).of(pm).using(titleConverter).to(FX.TEXT).of(titleLabel)     // pm -> ui (converter)
 
             // groovy style binding
-            Closure purposeConverter = {it.toUpperCase()}                           // converter as closure
+            Closure purposeConverter = { it.toUpperCase() }                           // converter as closure
             bind FX.TEXT of purposeInput to PURPOSE of pm                           // ui -> pm
             bind PURPOSE of pm to FX.TEXT of purposeInput                           // pm -> ui
             bind PURPOSE of pm using purposeConverter to FX.TEXT of purposeLabel    // pm -> ui (converter)
@@ -91,7 +91,7 @@ class MultipleAttributesConverterView {
             }
             bind PURPOSE of pm using validator to FX.TEXT of remainingLabel    // pm -> ui (converter)
 
-            titleAttr.value   = defaultTitle
+            titleAttr.value = defaultTitle
             purposeAttr.value = defaultPurpose
 
             primaryStage.show()

@@ -18,7 +18,7 @@ package org.opendolphin.demo
 
 import org.opendolphin.core.client.ClientAttributeWrapper
 import org.opendolphin.core.client.ClientDolphin
-import org.opendolphin.core.client.ClientPresentationModel
+import org.opendolphin.core.client.GClientPresentationModel
 import javafx.beans.value.ChangeListener
 import javafx.collections.FXCollections
 import javafx.collections.ObservableList
@@ -52,7 +52,7 @@ class ComposedDirtyView {
             def portfolio = dolphin.presentationModel 'portfolio1', name:'Blue chips', date:'14.04.2009', saveable:false
             def selectedPosition = dolphin.presentationModel "selected", weight: null
 
-            ObservableList<ClientPresentationModel> positions = FXCollections.observableArrayList()
+            ObservableList<GClientPresentationModel> positions = FXCollections.observableArrayList()
 
             stage {
                 scene {

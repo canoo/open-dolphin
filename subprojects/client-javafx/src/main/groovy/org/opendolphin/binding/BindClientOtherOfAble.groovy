@@ -1,13 +1,13 @@
 package org.opendolphin.binding
 
-import org.opendolphin.core.client.ClientAttribute
+import org.opendolphin.core.client.GClientAttribute
 
 class BindClientOtherOfAble {
-    final ClientAttribute attribute
+    final GClientAttribute attribute
     final String targetPropertyName
     final Converter converter
 
-    BindClientOtherOfAble(ClientAttribute attribute, String targetPropertyName, Converter converter) {
+    BindClientOtherOfAble(GClientAttribute attribute, String targetPropertyName, Converter converter) {
         this.attribute = attribute
         this.targetPropertyName = targetPropertyName
         this.converter = converter

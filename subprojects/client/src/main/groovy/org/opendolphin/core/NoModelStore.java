@@ -3,6 +3,7 @@ package org.opendolphin.core;
 import org.opendolphin.core.client.ClientDolphin;
 import org.opendolphin.core.client.ClientModelStore;
 import org.opendolphin.core.client.ClientPresentationModel;
+import org.opendolphin.core.client.GClientPresentationModel;
 
 /**
  * A model store that does not store, i.e. neither adds nor removes presentation models.

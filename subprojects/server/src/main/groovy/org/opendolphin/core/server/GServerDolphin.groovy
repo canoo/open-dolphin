@@ -21,7 +21,6 @@ import groovy.util.logging.Log
 import org.opendolphin.core.BaseAttribute
 import org.opendolphin.core.AbstractDolphin
 import org.opendolphin.core.ModelStore
-import org.opendolphin.core.PresentationModel
 import org.opendolphin.core.Tag
 import org.opendolphin.core.comm.BaseValueChangedCommand
 import org.opendolphin.core.comm.Command
@@ -47,7 +46,7 @@ import static org.opendolphin.StringUtil.isBlank
 
 @CompileStatic
 @Log
-class GServerDolphin extends AbstractDolphin<ServerAttribute, ServerPresentationModel> implements ServerDolphin{
+class GServerDolphin extends AbstractDolphin<ServerAttribute, ServerPresentationModel> implements ServerDolphin {
 
     /** the server model store is unique per user session */
     final ServerModelStore serverModelStore
@@ -123,14 +122,13 @@ class GServerDolphin extends AbstractDolphin<ServerAttribute, ServerPresentation
      */
     ServerPresentationModel presentationModel(String id, String presentationModelType, DTO dto) {
         List<ServerAttribute> attributes = dto.slots.collect { Slot slot ->
-            ServerAttribute result = new ServerAttribute(slot.propertyName, slot.baseValue, slot.qualifier, slot.tag)
+            ServerAttribute result = createAttribute(slot.propertyName, slot.baseValue, slot.qualifier, slot.tag)
             result.silently {
                 result.value = slot.value
             }
             return result
         }
-        ServerPresentationModel model = new ServerPresentationModel(id, attributes, serverModelStore)
-        model.presentationModelType = presentationModelType
+        ServerPresentationModel model = createPresentationModel(id, attributes, presentationModelType)
         add model
         return model
     }
@@ -160,7 +158,7 @@ class GServerDolphin extends AbstractDolphin<ServerAttribute, ServerPresentation
         response << new CreatePresentationModelCommand(pmId: id, pmType: presentationModelType, attributes: dto.encodable(), clientSideOnly:true)
     }
 
-    /** @deprecated use {@link #rebaseCommand(java.util.List, org.opendolphin.core.server.ServerAttribute)}. You can use the "inline method refactoring". Will be removed in version 1.0! */
+    /** @deprecated use {@link #rebaseCommand(java.util.List, GServerAttribute)}. You can use the "inline method refactoring". Will be removed in version 1.0! */
     static void rebase(List<Command> response, ServerAttribute attribute){
         rebaseCommand(response, attribute)
     }
@@ -197,14 +195,33 @@ class GServerDolphin extends AbstractDolphin<ServerAttribute, ServerPresentation
     /** Convenience method to let Dolphin remove all presentation models of a given type directly on the server and notify the client.*/
     void removeAllPresentationModelsOfType(String type) {
         // todo: [REF] duplicated with DeleteAllPresentationModelsOfTypeAction, could go into ModelStore
-        List<ServerPresentationModel> models = new LinkedList( findAllPresentationModelsByType(type)) // work on a copy
-        for (ServerPresentationModel model in models ){
+        List<GServerPresentationModel> models = new LinkedList( findAllPresentationModelsByType(type)) // work on a copy
+        for (GServerPresentationModel model in models ){
             serverModelStore.remove(model) // go through the model store to avoid single commands being sent to the client
         }
         GServerDolphin.deleteAllPresentationModelsOfTypeCommand(serverModelStore.currentResponse, type)
     }
 
-    /** @deprecated use {@link #deleteCommand(java.util.List, org.opendolphin.core.server.ServerPresentationModel)}. You can use the "inline method refactoring". Will be removed in version 1.0! */
+    @Override
+    ServerAttribute createAttribute(String propertyName, Object initialValue) {
+        return new GServerAttribute(propertyName, initialValue);
+    }
+
+    @Override
+    ServerAttribute createAttribute(String propertyName, Object baseValue, String qualifier, Tag tag) {
+        return new GServerAttribute(propertyName, baseValue, qualifier, tag);
+    }
+
+    @Override
+    ServerPresentationModel createPresentationModel(String id, List<ServerAttribute> attributes) {
+        return new GServerPresentationModel(id, attributes, serverModelStore);
+    }
+
+    @Override
+    ServerPresentationModel createPresentationModel(String id, List<ServerAttribute> attributes, String presentationModelType) {
+        return new GServerPresentationModel(id, attributes, serverModelStore, presentationModelType);
+    }
+/** @deprecated use {@link #deleteCommand(java.util.List, GServerPresentationModel)}. You can use the "inline method refactoring". Will be removed in version 1.0! */
     static void delete(List<Command> response, ServerPresentationModel pm){
         deleteCommand(response, pm)
     }
@@ -240,7 +257,7 @@ class GServerDolphin extends AbstractDolphin<ServerAttribute, ServerPresentation
         response << new DeleteAllPresentationModelsOfTypeCommand(pmType: pmType)
     }
 
-    /** @deprecated use {@link #resetCommand(java.util.List, org.opendolphin.core.server.ServerPresentationModel)}. You can use the "inline method refactoring". Will be removed in version 1.0! */
+    /** @deprecated use {@link #resetCommand(java.util.List, GServerPresentationModel)}. You can use the "inline method refactoring". Will be removed in version 1.0! */
     static void reset(List<Command> response, ServerPresentationModel pm){
         resetCommand(response, pm)
     }
@@ -265,7 +282,7 @@ class GServerDolphin extends AbstractDolphin<ServerAttribute, ServerPresentation
         response << new PresentationModelResetedCommand(pmId: pmId)
     }
 
-    /** @deprecated use {@link #resetCommand(java.util.List, org.opendolphin.core.server.ServerAttribute)}. You can use the "inline method refactoring". Will be removed in version 1.0! */
+    /** @deprecated use {@link #resetCommand(java.util.List, GServerAttribute)}. You can use the "inline method refactoring". Will be removed in version 1.0! */
     static void reset(List<Command> response, ServerAttribute attribute) {
         resetCommand(response, attribute)
     }
@@ -283,7 +300,7 @@ class GServerDolphin extends AbstractDolphin<ServerAttribute, ServerPresentation
         )
     }
 
-    /** @deprecated use {@link #changeValueCommand(java.util.List, org.opendolphin.core.server.ServerAttribute, java.lang.Object)}. You can use the "inline method refactoring". Will be removed in version 1.0! */
+    /** @deprecated use {@link #changeValueCommand(java.util.List, GServerAttribute, java.lang.Object)}. You can use the "inline method refactoring". Will be removed in version 1.0! */
     static void changeValue(List<Command>response, ServerAttribute attribute, value){
         changeValueCommand(response, attribute, value)
     }
@@ -302,12 +319,12 @@ class GServerDolphin extends AbstractDolphin<ServerAttribute, ServerPresentation
         forceChangeValue(value, response, attribute)
     }
 
-    /** @deprecated use {@link #forceChangeValueCommand(java.lang.Object, java.util.List, org.opendolphin.core.server.ServerAttribute)}. You can use the "inline method refactoring". Will be removed in version 1.0! */
+    /** @deprecated use {@link #forceChangeValueCommand(java.lang.Object, java.util.List, GServerAttribute)}. You can use the "inline method refactoring". Will be removed in version 1.0! */
     static void forceChangeValue(value, List<Command> response, ServerAttribute attribute) {
         forceChangeValueCommand(value, response, attribute)
     }
 
-    /** @deprecated use {@link #changeValueCommand(java.util.List, org.opendolphin.core.server.ServerAttribute, java.lang.Object)}, which enforces the value change by default. Will be removed in version 1.0! */
+    /** @deprecated use {@link #changeValueCommand(java.util.List, GServerAttribute, java.lang.Object)}, which enforces the value change by default. Will be removed in version 1.0! */
     static void forceChangeValueCommand(value, List<Command> response, ServerAttribute attribute) {
         value = BaseAttribute.checkValue(value)
         response << new ValueChangedCommand(attributeId: attribute.id, newValue: value, oldValue: attribute.value)

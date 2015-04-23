@@ -23,15 +23,15 @@ import groovy.transform.CompileStatic
 import org.opendolphin.core.comm.AttributeMetadataChangedCommand
 
 @CompileStatic
-class ServerAttribute extends BaseAttribute {
+class GServerAttribute extends BaseAttribute implements ServerAttribute {
 
     private boolean notifyClient = true;
 
-    ServerAttribute(String propertyName, Object initialValue) {
+    GServerAttribute(String propertyName, Object initialValue) {
         super(propertyName, initialValue)
     }
 
-    public ServerAttribute(String propertyName, Object baseValue, String qualifier, Tag tag){
+    public GServerAttribute(String propertyName, Object baseValue, String qualifier, Tag tag){
         super(propertyName, baseValue, qualifier, tag)
     }
 
@@ -43,7 +43,7 @@ class ServerAttribute extends BaseAttribute {
     @Override
     void setValue(Object value) {
         if (notifyClient) {
-            GServerDolphin.changeValueCommand(presentationModel.modelStore.currentResponse, this, value)
+            GServerDolphin.changeValueCommand(presentationModel.getServerModelStore().currentResponse, this, value)
         }
         super.setValue(value)
     }
@@ -52,7 +52,7 @@ class ServerAttribute extends BaseAttribute {
     void setBaseValue(Object value) {
         super.setBaseValue(value)
         if (notifyClient) {
-            presentationModel.modelStore.currentResponse << new AttributeMetadataChangedCommand(attributeId: id, metadataName: Attribute.BASE_VALUE, value:value)
+            presentationModel.getServerModelStore().currentResponse << new AttributeMetadataChangedCommand(attributeId: id, metadataName: Attribute.BASE_VALUE, value:value)
         }
     }
 
@@ -60,7 +60,7 @@ class ServerAttribute extends BaseAttribute {
     void setQualifier(String value) {
         super.setQualifier(value)
         if (notifyClient) {
-            presentationModel.modelStore.currentResponse << new AttributeMetadataChangedCommand(attributeId: id, metadataName: Attribute.QUALIFIER_PROPERTY, value:value)
+            presentationModel.getServerModelStore().currentResponse << new AttributeMetadataChangedCommand(attributeId: id, metadataName: Attribute.QUALIFIER_PROPERTY, value:value)
         }
     }
 
@@ -68,7 +68,7 @@ class ServerAttribute extends BaseAttribute {
     void reset() {
         super.reset()
         if (notifyClient) {
-            GServerDolphin.reset(presentationModel.modelStore.currentResponse, this)
+            GServerDolphin.reset(presentationModel.getServerModelStore().currentResponse, this)
         }
     }
 
@@ -76,11 +76,11 @@ class ServerAttribute extends BaseAttribute {
     void rebase() {
         super.rebase()
         if (notifyClient) {
-            GServerDolphin.rebaseCommand(presentationModel.modelStore.currentResponse, this)
+            GServerDolphin.rebaseCommand(presentationModel.getServerModelStore().currentResponse, this)
         }
         if (qualifier) { // other attributes with the same qualifier must also rebase
-            for (ServerAttribute sameQualified in (List<ServerAttribute>) presentationModel.modelStore.findAllAttributesByQualifier(qualifier)) {
-                if (sameQualified.dirty) {
+            for (ServerAttribute sameQualified in (List<ServerAttribute>) presentationModel.getServerModelStore().findAllAttributesByQualifier(qualifier)) {
+                if (sameQualified.isDirty()) {
                     sameQualified.rebase()
                 }
             }

@@ -17,14 +17,14 @@
 package org.opendolphin.core.comm
 
 import org.opendolphin.core.client.ClientDolphin
-import org.opendolphin.core.server.GServerDolphin
+import org.opendolphin.core.server.ServerDolphin
 
 import java.util.concurrent.TimeUnit
 
 class DeletePresentationModelTests extends GroovyTestCase {
 
     volatile TestInMemoryConfig context
-    GServerDolphin serverDolphin
+    ServerDolphin serverDolphin
     ClientDolphin clientDolphin
 
     @Override
@@ -42,7 +42,7 @@ class DeletePresentationModelTests extends GroovyTestCase {
     void testCreateAndDeletePresentationModel() {
         // create the pm
         String modelId = 'modelId'
-        def model = clientDolphin.presentationModel(modelId, someAttribute:"someValue")
+        def model = clientDolphin.presentationModel(modelId, someAttribute: "someValue")
         // sanity check: we have a least the client model store listening to changes of someAttribute
         assert model.someAttribute.propertyChangeListeners
         // the model is in the client model store
@@ -57,7 +57,7 @@ class DeletePresentationModelTests extends GroovyTestCase {
         // ... it is no longer in the client model store
         assert !clientDolphin.findPresentationModelById(modelId)
         // ... all listeners have been detached from model and all its attributes
-        assert ! model.getPropertyChangeListeners()
+        assert !model.getPropertyChangeListeners()
         // what is allowed to remain is the "detached" model still listening to its own attribute changes
         model.attributes*.propertyChangeListeners.flatten()*.listener.each {
             assert (it.toString() =~ "PresentationModel")
@@ -75,7 +75,7 @@ class DeletePresentationModelTests extends GroovyTestCase {
     void testCreateAndDeletePresentationModelFromServer() {
         // create the pm
         String modelId = 'modelId'
-        def model = clientDolphin.presentationModel(modelId, someAttribute:"someValue")
+        def model = clientDolphin.presentationModel(modelId, someAttribute: "someValue")
         // the model is in the client model store
         def found = clientDolphin.getAt(modelId)
         assert model == found

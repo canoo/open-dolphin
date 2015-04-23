@@ -17,14 +17,12 @@ package org.opendolphin.server.adapter
 
 import groovy.util.logging.Log
 import org.opendolphin.core.comm.Codec
-import org.opendolphin.core.comm.JsonCodec;
-import org.opendolphin.core.server.GServerDolphin
-import org.opendolphin.core.server.ServerConnector
-import org.opendolphin.core.server.ServerModelStore;
+import org.opendolphin.core.comm.JsonCodec
+import org.opendolphin.core.server.*
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
+import javax.servlet.ServletException
+import javax.servlet.http.HttpServlet
+import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 import java.nio.charset.Charset
 
@@ -50,13 +48,13 @@ abstract class DolphinServlet extends HttpServlet {
         resp.outputStream.close()
     }
 
-    private GServerDolphin checkDolphinInSession(HttpServletRequest request) {
+    private ServerDolphin checkDolphinInSession(HttpServletRequest request) {
         def session = request.session
-        GServerDolphin dolphin = (GServerDolphin) session.getAttribute(DOLPHIN_ATTRIBUTE_ID)
+        ServerDolphin dolphin = (ServerDolphin) session.getAttribute(DOLPHIN_ATTRIBUTE_ID)
         if (!dolphin) {
             log.info "creating new dolphin for session $session.id"
             def modelStore = new ServerModelStore()
-            dolphin = new GServerDolphin(modelStore, new ServerConnector(codec: codec, serverModelStore: modelStore))
+            dolphin = ServerDolphinFactory.create(modelStore, new ServerConnector(codec: codec, serverModelStore: modelStore))
             dolphin.registerDefaultActions()
             registerApplicationActions(dolphin)
             session.setAttribute(DOLPHIN_ATTRIBUTE_ID, dolphin)

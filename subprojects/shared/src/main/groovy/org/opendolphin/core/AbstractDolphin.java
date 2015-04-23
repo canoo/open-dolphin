@@ -28,45 +28,21 @@ public abstract class AbstractDolphin<A extends Attribute, P extends Presentatio
 
     protected abstract ModelStore<A, P> getModelStore();
 
-    /**
-     * Adds a presentation model to the model store.<br/>
-     * Presentation model ids should be unique. This method guarantees this condition by disallowing
-     * models with duplicate ids to be added.
-     *
-     * @param model the model to be added.
-     * @return if the add operation was successful or not.
-     */
     public boolean add(P model) {
         return getModelStore().add(model);
     }
 
-    /**
-     * Removes a presentation model from the model store.<br/>
-     *
-     * @param model the model to be removed from the store.
-     * @return if the remove operation was successful or not.
-     */
+
     public boolean remove(P model) {
         return getModelStore().remove(model);
     }
 
-    /**
-     * Finds an attribute by its id.<br/>
-     * <strong>WARNING:</strong> this method may return {@code null} if no match is found.
-     *
-     * @param id the id to search for.
-     * @return an attribute whose id matches the parameter, {@code null} otherwise.
-     */
+
     public A findAttributeById(String id) {
         return (A)getModelStore().findAttributeById(id);
     }
 
-    /**
-     * Returns a {@code List} of all attributes that share the same qualifier.<br/>
-     * Never returns null. The returned {@code List} is immutable.
-     *
-     * @return a {@code List} of all attributes for which their qualifier was a match.
-     */
+
     public List<A> findAllAttributesByQualifier(String qualifier) {
         return (List<A>)getModelStore().findAllAttributesByQualifier(qualifier);
     }

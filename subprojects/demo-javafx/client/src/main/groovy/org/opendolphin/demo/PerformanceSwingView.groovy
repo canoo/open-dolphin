@@ -18,6 +18,7 @@ package org.opendolphin.demo
 
 import org.opendolphin.LogConfig
 import org.opendolphin.core.client.ClientDolphin
+import org.opendolphin.core.client.GClientDolphin
 import org.opendolphin.core.client.comm.InMemoryClientConnector
 import groovy.swing.SwingBuilder
 

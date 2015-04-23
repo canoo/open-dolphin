@@ -17,7 +17,7 @@
 package org.opendolphin.demo
 
 import org.opendolphin.core.client.ClientDolphin
-import org.opendolphin.core.client.ClientPresentationModel
+import org.opendolphin.core.client.GClientPresentationModel
 import groovy.beans.Bindable
 import groovy.swing.SwingBuilder
 
@@ -51,7 +51,7 @@ class SwingView {
         builder.primaryStage.visible = true
     }
 
-    void bindPmToViews(ClientPresentationModel pm, builder) {
+    void bindPmToViews(GClientPresentationModel pm, builder) {
         builder.with {
             bind TITLE  of pm  to FX.TITLE of primaryStage   // groovy style
 

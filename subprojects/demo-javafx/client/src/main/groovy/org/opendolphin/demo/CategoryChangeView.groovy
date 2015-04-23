@@ -17,6 +17,7 @@
 package org.opendolphin.demo
 
 import org.opendolphin.core.client.ClientDolphin
+import org.opendolphin.core.client.GClientDolphin
 import groovyx.javafx.SceneGraphBuilder
 import javafx.event.EventHandler
 

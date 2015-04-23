@@ -14,15 +14,20 @@
  * limitations under the License.
  */
 
-package org.opendolphin.core.client.comm;
+package org.opendolphin.core.server;
 
-import org.opendolphin.core.client.ClientPresentationModel;
-import org.opendolphin.core.client.GClientPresentationModel;
+import org.opendolphin.core.Attribute;
+import org.opendolphin.core.PresentationModel;
 
-import java.util.List;
-import java.util.Map;
+/**
+ * Defines an attribute on server side. For more information see {@link org.opendolphin.core.Attribute} and
+ * {@link org.opendolphin.core.server.ServerDolphin}
+ */
+public interface ServerAttribute extends Attribute  {
 
-public interface OnFinishedHandler {
-    public void onFinished(List<ClientPresentationModel> presentationModels);
-    public void onFinishedData(List<Map> data);
+    //TODO: Should this method be part of the interface?
+    void silently(Runnable applyChange);
+
+
+    ServerPresentationModel getPresentationModel();
 }

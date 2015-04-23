@@ -6,7 +6,7 @@ import org.opendolphin.core.client.ClientDolphin;
 import org.opendolphin.core.client.comm.InMemoryClientConnector;
 import org.opendolphin.core.server.DTO;
 import org.opendolphin.core.server.EventBus;
-import org.opendolphin.core.server.GServerDolphin;
+import org.opendolphin.core.server.ServerDolphin;
 import org.opendolphin.demo.JavaFxInMemoryConfig;
 
 import java.util.LinkedList;
@@ -20,8 +20,8 @@ public class TeamInMemoryStarter {
 
         final JavaFxInMemoryConfig config = new JavaFxInMemoryConfig();
         ClientDolphin clientDolphin = config.getClientDolphin();
-        ((InMemoryClientConnector)clientDolphin.getClientConnector()).setSleepMillis(0);
-        GServerDolphin serverDolphin = config.getServerDolphin();
+        ((InMemoryClientConnector) clientDolphin.getClientConnector()).setSleepMillis(0);
+        ServerDolphin serverDolphin = config.getServerDolphin();
         serverDolphin.register(new TeamMemberActions(teamBus, history));
         serverDolphin.getServerConnector().register(new TeamBusRelease(teamBus));
 

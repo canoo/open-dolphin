@@ -29,21 +29,23 @@ import groovy.transform.CompileStatic
  */
 
 @CompileStatic
-class ClientAttribute extends BaseAttribute {
+class GClientAttribute extends BaseAttribute implements ClientAttribute {
 
     /** @deprecated you should not create Client Attributes without initial values */
-    ClientAttribute(String propertyName) {
+    @Deprecated
+    GClientAttribute(String propertyName) {
         this(propertyName, null)
     }
 
 
-    ClientAttribute(String propertyName, Object initialValue, String qualifier = null, Tag tag = Tag.VALUE) {
+    GClientAttribute(String propertyName, Object initialValue, String qualifier = null, Tag tag = Tag.VALUE) {
         super(propertyName, initialValue, qualifier, tag)
     }
 
 
     /** @deprecated too much dependent on key names and doesn't allow setting the tag */
-    ClientAttribute(Map props) {
+    @Deprecated
+    GClientAttribute(Map props) {
         this(props.propertyName.toString(), props.initialValue)
         this.qualifier = props.qualifier
     }

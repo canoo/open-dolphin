@@ -16,8 +16,8 @@
 
 package org.opendolphin.demo
 
-import org.opendolphin.core.client.ClientPresentationModel
 import org.opendolphin.core.client.ClientDolphin
+import org.opendolphin.core.client.GClientPresentationModel
 import groovyx.javafx.SceneGraphBuilder
 import javafx.beans.value.ChangeListener
 import javafx.collections.FXCollections
@@ -38,8 +38,8 @@ class SharedAttributesView {
 
         def selectedVehicle = clientDolphin.presentationModel null, vehiclePmId : null
 
-        ObservableList<ClientPresentationModel> observableListOfPms   = FXCollections.observableArrayList()
-        ObservableList<ClientPresentationModel> observableListOfTasks = FXCollections.observableArrayList()
+        ObservableList<GClientPresentationModel> observableListOfPms   = FXCollections.observableArrayList()
+        ObservableList<GClientPresentationModel> observableListOfTasks = FXCollections.observableArrayList()
 
         start { app ->
             SceneGraphBuilder sgb = delegate

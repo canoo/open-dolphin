@@ -22,6 +22,7 @@ import org.opendolphin.core.ModelStoreConfig
 import org.opendolphin.core.ModelStoreEvent
 import org.opendolphin.core.ModelStoreListener
 import org.opendolphin.core.client.ClientDolphin
+import org.opendolphin.core.client.GClientDolphin
 import org.opendolphin.core.server.*
 import org.opendolphin.core.server.action.DolphinServerAction
 import org.opendolphin.core.server.comm.ActionRegistry
@@ -36,7 +37,7 @@ import java.util.concurrent.atomic.AtomicBoolean
 class ServerPresentationModelTests extends GroovyTestCase {
 
     volatile TestInMemoryConfig context
-    GServerDolphin serverDolphin
+    ServerDolphin serverDolphin
     ClientDolphin clientDolphin
 
     @Override
@@ -60,7 +61,7 @@ class ServerPresentationModelTests extends GroovyTestCase {
     void testServerPresentationModelDoesNotRejectAutoId() {
         // re-enable the shouldFail once we have proper Separation of commands and notifications
 //        shouldFail IllegalArgumentException, {
-        assert new ServerPresentationModel("1${ServerPresentationModel.AUTO_ID_SUFFIX}", [], new ServerModelStore())
+        assert new GServerPresentationModel("1${GServerPresentationModel.AUTO_ID_SUFFIX}", [], new ServerModelStore())
 //        }
         context.assertionsDone()
     }
@@ -184,7 +185,7 @@ class ServerPresentationModelTests extends GroovyTestCase {
             assert pm.dirty
             pm.rebase()
             assert ! pm.dirty
-            GServerDolphin.rebase(null, (ServerAttribute) null) // throws no exception but logs and returns
+            GServerDolphin.rebase(null, (GServerAttribute) null) // throws no exception but logs and returns
         }
 
         serverDolphin.action "assertNewPristine", { cmd, response ->
@@ -419,7 +420,7 @@ class ServerPresentationModelTests extends GroovyTestCase {
 
         serverDolphin.action "addAttribute", { cmd, response ->
             def pm = serverDolphin.getAt("source")
-            def attr2 = new ServerAttribute("attr2","initial")
+            def attr2 = new GServerAttribute("attr2","initial")
             pm.addAttribute(attr2)
             // immediately applied on server
             assert pm.getAt("attr2").value == "initial"

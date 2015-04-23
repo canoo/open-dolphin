@@ -66,7 +66,7 @@ class BaseAttributeSpec extends Specification {
 
         when:
 
-        attribute.addPropertyChangeListener(Attribute.DIRTY_PROPERTY, changeListener)
+        attribute.addPropertyChangeListener(BaseAttribute.DIRTY_PROPERTY, changeListener)
         attribute.value = 'foo'
 
         then:
@@ -107,7 +107,7 @@ class BaseAttributeSpec extends Specification {
 
         when:
 
-        attribute.addPropertyChangeListener(Attribute.DIRTY_PROPERTY, changeListener)
+        attribute.addPropertyChangeListener(BaseAttribute.DIRTY_PROPERTY, changeListener)
         attribute.value = 'foo'
 
         then:
@@ -157,8 +157,8 @@ class BaseAttributeSpec extends Specification {
         def attribute = new MyAttribute("name", 'bar')
         def dirtyChecker = Mock(PropertyChangeListener)
         def initialValueChecker = Mock(PropertyChangeListener)
-        attribute.addPropertyChangeListener(Attribute.DIRTY_PROPERTY, dirtyChecker)
-        attribute.addPropertyChangeListener(Attribute.BASE_VALUE, initialValueChecker)
+        attribute.addPropertyChangeListener(BaseAttribute.DIRTY_PROPERTY, dirtyChecker)
+        attribute.addPropertyChangeListener(BaseAttribute.BASE_VALUE, initialValueChecker)
 
         when:
 
@@ -191,7 +191,7 @@ class BaseAttributeSpec extends Specification {
         def attribute = new MyAttribute("name", 'bar')
         def dirtyChecker = Mock(PropertyChangeListener)
         def valueChecker = Mock(PropertyChangeListener)
-        attribute.addPropertyChangeListener(Attribute.DIRTY_PROPERTY, dirtyChecker)
+        attribute.addPropertyChangeListener(BaseAttribute.DIRTY_PROPERTY, dirtyChecker)
         attribute.addPropertyChangeListener(Attribute.VALUE, valueChecker)
 
         when:

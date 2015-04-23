@@ -18,16 +18,47 @@ package org.opendolphin.core;
 
 import java.beans.PropertyChangeListener;
 
+/**
+ * Basic interface that adds support for {@link java.beans.PropertyChangeListener}.
+ */
 public interface Observable {
+
+    /**
+     * Registers the given listener
+     * @param listener the listener
+     */
     void addPropertyChangeListener(PropertyChangeListener listener);
 
+    /**
+     * Registers the given listener for a specific property
+     * @param propertyName the name of the property
+     * @param listener the listener
+     */
     void addPropertyChangeListener(String propertyName, PropertyChangeListener listener);
 
+    /**
+     * Deregisters the given listener
+     * @param listener the lister that should be deregistered
+     */
     void removePropertyChangeListener(PropertyChangeListener listener);
 
+    /**
+     * Deregisters the given listener for a specific property
+     * @param propertyName name of the property
+     * @param listener the listener
+     */
     void removePropertyChangeListener(String propertyName, PropertyChangeListener listener);
 
+    /**
+     * Returns an array of all registered listeners
+     * @return array of all registered listeners
+     */
     PropertyChangeListener[] getPropertyChangeListeners();
 
+    /**
+     * Returns an array of all registered listeners for the a specific property
+     * @param propertyName the name of the property
+     * @return array of all registered listeners
+     */
     PropertyChangeListener[] getPropertyChangeListeners(String propertyName);
 }

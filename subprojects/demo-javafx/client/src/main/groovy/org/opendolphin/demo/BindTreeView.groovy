@@ -19,7 +19,7 @@ package org.opendolphin.demo
 import javafx.scene.control.TreeItem
 import javafx.scene.control.TreeView
 import org.opendolphin.core.client.ClientDolphin
-import org.opendolphin.core.client.ClientPresentationModel
+import org.opendolphin.core.client.GClientPresentationModel
 
 import static groovyx.javafx.GroovyFX.start
 
@@ -40,7 +40,7 @@ class BindTreeView {
                 }
             }
 
-            dolphin.send "PULL_TREE", { List<ClientPresentationModel> pms ->
+            dolphin.send "PULL_TREE", { List<GClientPresentationModel> pms ->
                 def root = pms.find { it.parent.value == null }
                 tree.root = filledTreeItem(pms, root)
                 tree.root.expanded = true

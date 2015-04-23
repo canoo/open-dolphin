@@ -25,9 +25,9 @@ import javafx.scene.control.Tooltip
 import javafx.scene.layout.GridPane
 import javafx.scene.layout.HBox
 import javafx.stage.Stage
-import org.opendolphin.core.client.ClientAttribute
 import org.opendolphin.core.client.ClientDolphin
-import org.opendolphin.core.client.ClientPresentationModel
+import org.opendolphin.core.client.GClientAttribute
+import org.opendolphin.core.client.GClientPresentationModel
 import org.opendolphin.demo.FX
 
 import static groovyx.javafx.GroovyFX.start
@@ -110,11 +110,11 @@ class JavaFxProjector implements IProjector {
         def grid = new GridPane()
 
         dolphin.send 'init', { pms ->        // only do binding after server has initialized the tags
-            ClientPresentationModel model = dolphin.getAt(pmId)
+            GClientPresentationModel model = dolphin.getAt(pmId)
             int row = 0
 
             // make a new row in the grid for each attribute in the form's presentation model
-            for (ClientAttribute valAtt in model.attributes.findAll{it.tag == VALUE}) {
+            for (GClientAttribute valAtt in model.attributes.findAll{it.tag == VALUE}) {
                 String propName = valAtt.propertyName
                 def labelAtt    = model.getAt(propName, LABEL)
                 def label       = new Label(propName) // if there is no label tag, use property name as fallback
@@ -151,8 +151,8 @@ class JavaFxProjector implements IProjector {
             def buttons = new HBox(5)
             grid.add(buttons, 1, row)
 
-            ClientPresentationModel actions = dolphin.getAt(pmId+".actions")
-            for (ClientAttribute valAtt in actions.attributes.findAll{it.tag == VALUE}) {
+            GClientPresentationModel actions = dolphin.getAt(pmId+".actions")
+            for (GClientAttribute valAtt in actions.attributes.findAll{it.tag == VALUE}) {
                 String actionName = valAtt.value
                 String propName   = valAtt.propertyName
                 def buttonModel   = valAtt.presentationModel

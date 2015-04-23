@@ -19,5 +19,5 @@ package org.opendolphin.core.client.comm;
 import org.opendolphin.core.client.ClientPresentationModel;
 
 public interface WithPresentationModelHandler {
-	public void onFinished(ClientPresentationModel presentationModel);
+    public void onFinished(ClientPresentationModel presentationModel);
 }

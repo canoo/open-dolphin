@@ -17,24 +17,21 @@
 package org.opendolphin.core.server
 
 import groovy.util.logging.Log
-import org.opendolphin.core.Attribute
 import org.opendolphin.core.BasePresentationModel
-import org.opendolphin.core.PresentationModel
-import org.opendolphin.core.Tag
 import groovy.transform.CompileStatic
 import org.opendolphin.core.comm.SwitchPresentationModelCommand
 
 @CompileStatic @Log
-class ServerPresentationModel extends BasePresentationModel<ServerAttribute> {
+class GServerPresentationModel extends BasePresentationModel<ServerAttribute> implements ServerPresentationModel {
 
     public static final String AUTO_ID_SUFFIX = "-AUTO-SRV"
 
-    public ServerModelStore modelStore
+    private ServerModelStore modelStore
 
     /**
      * @param id if id is null or empty, an auto-generated id will be used
      */
-    ServerPresentationModel(String id, List<ServerAttribute> attributes, ServerModelStore serverModelStore) {
+    GServerPresentationModel(String id, List<ServerAttribute> attributes, ServerModelStore serverModelStore) {
         super(id ?: makeId(serverModelStore), attributes)
         if (id?.endsWith(AUTO_ID_SUFFIX)) {
             log.info("Creating a PM with self-provided id '$id' even though it ends with a reserved suffix.")
@@ -45,13 +42,26 @@ class ServerPresentationModel extends BasePresentationModel<ServerAttribute> {
         modelStore = serverModelStore
     }
 
+    GServerPresentationModel(String id, List<ServerAttribute> attributes, ServerModelStore serverModelStore, String presentationModelType) {
+       this(id, attributes, serverModelStore);
+        this.presentationModelType = presentationModelType;
+    }
+
+    public ServerModelStore getServerModelStore() {
+        return modelStore;
+    }
+
+    public void setServerModelStore(ServerModelStore store) {
+        this.modelStore = store;
+    }
+
     static String makeId(ServerModelStore serverModelStore) {
         def newId = serverModelStore.pmInstanceCount++
         return "$newId"+AUTO_ID_SUFFIX
     }
 
     @Override
-    void syncWith(PresentationModel sourcePresentationModel) {
+    void syncWith(ServerPresentationModel sourcePresentationModel) {
         super.syncWith(sourcePresentationModel) // this may already trigger some value changes and metadata changes
         modelStore.currentResponse << new SwitchPresentationModelCommand(sourcePmId: sourcePresentationModel.id, pmId: id)
     }

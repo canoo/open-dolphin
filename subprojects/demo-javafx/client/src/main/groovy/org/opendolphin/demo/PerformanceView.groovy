@@ -18,6 +18,7 @@ package org.opendolphin.demo
 
 import org.opendolphin.LogConfig
 import org.opendolphin.core.client.ClientDolphin
+import org.opendolphin.core.client.GClientDolphin
 import org.opendolphin.core.client.comm.InMemoryClientConnector
 import groovyx.javafx.SceneGraphBuilder
 import javafx.beans.value.ChangeListener
@@ -25,7 +26,6 @@ import javafx.beans.value.ChangeListener
 import static org.opendolphin.binding.Binder.bind
 import static org.opendolphin.core.ModelStoreEvent.Type.ADDED
 import static org.opendolphin.core.ModelStoreEvent.Type.REMOVED
-import static org.opendolphin.demo.DemoStyle.blueStyle
 import static groovyx.javafx.GroovyFX.start
 import static org.opendolphin.demo.DemoStyle.style
 

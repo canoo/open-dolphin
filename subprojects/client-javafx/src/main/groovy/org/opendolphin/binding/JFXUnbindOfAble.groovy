@@ -1,8 +1,8 @@
 package org.opendolphin.binding
 
 import org.opendolphin.core.PresentationModel
-import org.opendolphin.core.client.ClientAttribute
-import org.opendolphin.core.client.ClientPresentationModel
+import org.opendolphin.core.client.GClientAttribute
+import org.opendolphin.core.client.GClientPresentationModel
 
 class JFXUnbindOfAble {
     private String sourcePropertyName
@@ -19,8 +19,8 @@ class JFXUnbindOfAble {
         return Binder.unbind(sourcePropertyName).of(source)
     }
 
-    UnbindClientFromAble of(ClientPresentationModel source) {
-        new UnbindClientFromAble((ClientAttribute) source.findAttributeByPropertyName(sourcePropertyName))
+    UnbindClientFromAble of(GClientPresentationModel source) {
+        new UnbindClientFromAble((GClientAttribute) source.findAttributeByPropertyName(sourcePropertyName))
     }
 
     UnbindPojoFromAble of(Object source) {

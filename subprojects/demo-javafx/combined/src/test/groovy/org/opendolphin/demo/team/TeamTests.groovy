@@ -3,6 +3,7 @@ package org.opendolphin.demo.team
 import groovyx.gpars.agent.Agent
 import org.opendolphin.LogConfig
 import org.opendolphin.core.client.ClientDolphin
+import org.opendolphin.core.client.GClientDolphin
 import org.opendolphin.core.comm.TestInMemoryConfig
 import org.opendolphin.core.server.DTO
 import org.opendolphin.core.server.EventBus

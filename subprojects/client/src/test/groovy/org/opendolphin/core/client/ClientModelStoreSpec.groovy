@@ -16,66 +16,66 @@
 
 package org.opendolphin.core.client
 
+import org.opendolphin.core.ModelStoreEvent
+import org.opendolphin.core.ModelStoreListener
+import org.opendolphin.core.client.comm.InMemoryClientConnector
 import org.opendolphin.core.client.comm.WithPresentationModelHandler
 import spock.lang.Specification
-import org.opendolphin.core.client.comm.InMemoryClientConnector
-import org.opendolphin.core.ModelStoreListener
-import org.opendolphin.core.ModelStoreEvent
 
 /**
  * @author Dieter Holz
  */
 class ClientModelStoreSpec extends Specification {
-	def modelStore, pmType, pm, listener
+    def modelStore, pmType, pm, listener
 
-	def setup(){
-        def clientDolphin = new ClientDolphin()
-		modelStore = new ClientModelStore(clientDolphin)
+    def setup() {
+        def clientDolphin = ClientDolphinFactory.create()
+        modelStore = new ClientModelStore(clientDolphin)
         clientDolphin.clientModelStore = modelStore
         clientDolphin.clientConnector = new InMemoryClientConnector(clientDolphin)
 
-		pmType = 'myType'
-		pm = new ClientPresentationModel('myId', [])
-		pm.setPresentationModelType(pmType)
+        pmType = 'myType'
+        pm = new GClientPresentationModel('myId', [])
+        pm.setPresentationModelType(pmType)
 
-		listener = Mock(ModelStoreListener)
-		modelStore.addModelStoreListener(pmType, listener)
-	}
+        listener = Mock(ModelStoreListener)
+        modelStore.addModelStoreListener(pmType, listener)
+    }
 
-	void "listeners are notified if PM is added to the clientModelStore"() {
-		when:
-		modelStore.add(pm)
+    void "listeners are notified if PM is added to the clientModelStore"() {
+        when:
+        modelStore.add(pm)
 
-		then:
-		1 * listener.modelStoreChanged(new ModelStoreEvent(ModelStoreEvent.Type.ADDED, pm))
-		0 * listener.modelStoreChanged(new ModelStoreEvent(ModelStoreEvent.Type.REMOVED, pm))
-	}
+        then:
+        1 * listener.modelStoreChanged(new ModelStoreEvent(ModelStoreEvent.Type.ADDED, pm))
+        0 * listener.modelStoreChanged(new ModelStoreEvent(ModelStoreEvent.Type.REMOVED, pm))
+    }
 
-	void "listeners are notified if PM is removed from clientModelStore"() {
-		given:
-		modelStore.add(pm)
+    void "listeners are notified if PM is removed from clientModelStore"() {
+        given:
+        modelStore.add(pm)
 
-		when:
-		modelStore.remove(pm)
+        when:
+        modelStore.remove(pm)
 
-		then:
+        then:
         0 * listener.modelStoreChanged(new ModelStoreEvent(ModelStoreEvent.Type.ADDED, pm))
         1 * listener.modelStoreChanged(new ModelStoreEvent(ModelStoreEvent.Type.REMOVED, pm))
-	}
+    }
 
-	void "listeners are not notified for different pmTypes"() {
-		given:
-		def otherPm = new ClientPresentationModel('otherId', [])
-		otherPm.setPresentationModelType('otherType')
+    void "listeners are not notified for different pmTypes"() {
+        given:
+        def otherPm = new GClientPresentationModel('otherId', [])
+        otherPm.setPresentationModelType('otherType')
 
-		when:
-		modelStore.add(otherPm)
-		modelStore.remove(otherPm)
+        when:
+        modelStore.add(otherPm)
+        modelStore.remove(otherPm)
 
-		then:
+        then:
         0 * listener.modelStoreChanged(new ModelStoreEvent(ModelStoreEvent.Type.ADDED, pm))
         0 * listener.modelStoreChanged(new ModelStoreEvent(ModelStoreEvent.Type.REMOVED, pm))
-	}
+    }
 
     // when not in store, we need a functional test
     void "withPresentationModel returns known one if in store"() {

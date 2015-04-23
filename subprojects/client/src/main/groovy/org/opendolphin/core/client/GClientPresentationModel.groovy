@@ -17,24 +17,23 @@
 package org.opendolphin.core.client
 
 import org.opendolphin.core.BasePresentationModel
-import org.opendolphin.core.Tag
 import groovy.transform.CompileStatic
 
 @CompileStatic
-class ClientPresentationModel extends BasePresentationModel<ClientAttribute> {
+class GClientPresentationModel extends BasePresentationModel<ClientAttribute> implements ClientPresentationModel{
 
     public  static final String AUTO_ID_SUFFIX = "-AUTO-CLT"
     boolean clientSideOnly = false
     private static long instanceCount = 0
 
-    ClientPresentationModel(List<ClientAttribute> attributes) {
+    GClientPresentationModel(List<ClientAttribute> attributes) {
         this(null, attributes)
     }
 
     /**
      * @param id if id is null or empty, an auto-generated id will be used
      */
-    ClientPresentationModel(String id, List<ClientAttribute> attributes) {
+    GClientPresentationModel(String id, List<ClientAttribute> attributes) {
         super(id ?: "" + instanceCount++ + AUTO_ID_SUFFIX, attributes)
         if (id?.endsWith(AUTO_ID_SUFFIX)) {
             throw new IllegalArgumentException("presentation model with self-provided id '$id' may not end with suffix '$AUTO_ID_SUFFIX' since that is reserved.")

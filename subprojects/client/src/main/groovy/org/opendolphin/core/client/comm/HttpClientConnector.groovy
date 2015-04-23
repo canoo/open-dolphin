@@ -16,22 +16,19 @@
 
 package org.opendolphin.core.client.comm
 
-import org.apache.http.ConnectionReuseStrategy
 import org.apache.http.HttpEntity
 import org.apache.http.HttpResponse
 import org.apache.http.StatusLine
 import org.apache.http.client.HttpResponseException
-import org.apache.http.client.methods.HttpRequestBase
-import org.apache.http.protocol.HttpContext
 import org.apache.http.util.EntityUtils
 import org.opendolphin.core.client.ClientDolphin
+import org.opendolphin.core.client.GClientDolphin
 import org.opendolphin.core.comm.Command
 import groovy.util.logging.Log
 import org.apache.http.client.ResponseHandler
 import org.apache.http.client.methods.HttpPost
 import org.apache.http.entity.StringEntity
 import org.apache.http.impl.client.DefaultHttpClient
-import org.opendolphin.core.comm.SignalCommand
 
 @Log
 class HttpClientConnector extends ClientConnector {

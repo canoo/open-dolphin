@@ -13,6 +13,7 @@ import groovy.lang.Closure;
 import groovyx.gpars.agent.Agent;
 import groovyx.gpars.dataflow.DataflowQueue;
 import org.opendolphin.core.Attribute;
+import org.opendolphin.core.BaseAttribute;
 import org.opendolphin.core.PresentationModel;
 import org.opendolphin.core.comm.*;
 import org.opendolphin.core.server.*;
@@ -161,7 +162,7 @@ public class TeamMemberActions extends DolphinServerAction {
 
     private void registerOnValueChange(ServerPresentationModel member) {
         for (final Attribute attribute : member.getAttributes()) {
-            attribute.addPropertyChangeListener(Attribute.VALUE, proliferator);
+            attribute.addPropertyChangeListener(BaseAttribute.VALUE, proliferator);
         }
     }
 

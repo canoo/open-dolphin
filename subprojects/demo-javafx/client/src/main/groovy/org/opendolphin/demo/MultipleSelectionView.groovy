@@ -17,7 +17,7 @@
 package org.opendolphin.demo
 
 import org.opendolphin.core.client.ClientDolphin
-import org.opendolphin.core.client.ClientPresentationModel
+import org.opendolphin.core.client.GClientPresentationModel
 import groovyx.javafx.SceneGraphBuilder
 import javafx.collections.FXCollections
 import javafx.collections.ListChangeListener
@@ -33,7 +33,7 @@ class MultipleSelectionView {
 
     static show(ClientDolphin clientDolphin) {
 
-        ObservableList<ClientPresentationModel> observableSelectionList = FXCollections.observableArrayList()
+        ObservableList<GClientPresentationModel> observableSelectionList = FXCollections.observableArrayList()
 
         def firstPm = clientDolphin.presentationModel('firstPm', ['selected'])
         firstPm.selected.value = false

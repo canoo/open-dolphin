@@ -1,6 +1,7 @@
 package org.opendolphin.core.client.comm;
 
 import org.opendolphin.core.client.ClientPresentationModel;
+import org.opendolphin.core.client.GClientPresentationModel;
 
 import java.util.List;
 import java.util.Map;

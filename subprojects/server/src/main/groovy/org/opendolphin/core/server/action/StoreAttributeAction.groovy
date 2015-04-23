@@ -18,8 +18,8 @@ package org.opendolphin.core.server.action
 
 import org.opendolphin.core.comm.AttributeCreatedNotification
 import org.opendolphin.core.comm.ChangeAttributeMetadataCommand
-import org.opendolphin.core.server.ServerAttribute
-import org.opendolphin.core.server.ServerPresentationModel
+import org.opendolphin.core.server.GServerAttribute
+import org.opendolphin.core.server.GServerPresentationModel
 import org.opendolphin.core.server.comm.ActionRegistry
 import groovy.transform.CompileStatic
 import groovy.util.logging.Log
@@ -37,11 +37,11 @@ class StoreAttributeAction extends DolphinServerAction {
                 return
             }
 
-            def attribute = new ServerAttribute(command.propertyName, command.newValue, command.qualifier, command.tag)
+            def attribute = new GServerAttribute(command.propertyName, command.newValue, command.qualifier, command.tag)
             attribute.id = command.attributeId
             def pm = serverDolphin.findPresentationModelById(command.pmId)
             if (null == pm) {
-                pm = new ServerPresentationModel(command.pmId, [], modelStore)
+                pm = new GServerPresentationModel(command.pmId, [], modelStore)
                 modelStore.add(pm)
             }
             pm._internal_addAttribute(attribute)

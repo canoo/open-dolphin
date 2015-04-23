@@ -30,10 +30,7 @@ import org.codehaus.groovy.runtime.DefaultGroovyMethods;
 import org.opendolphin.binding.Converter;
 import org.opendolphin.binding.JavaFxUtil;
 import org.opendolphin.core.*;
-import org.opendolphin.core.client.ClientAttribute;
-import org.opendolphin.core.client.ClientAttributeWrapper;
-import org.opendolphin.core.client.ClientDolphin;
-import org.opendolphin.core.client.ClientPresentationModel;
+import org.opendolphin.core.client.*;
 import org.opendolphin.core.client.comm.OnFinishedHandlerAdapter;
 
 import java.beans.PropertyChangeEvent;
@@ -73,23 +70,23 @@ public class TeamApplication extends Application {
 
     GridPane form;
 
-    static  ClientDolphin           clientDolphin;
+    static ClientDolphin clientDolphin;
     private ClientPresentationModel teamMemberMold;
     private ClientPresentationModel blankMold;
-    private ClientAttribute         selectedPmId;
+    private ClientAttribute selectedPmId;
 
     public TeamApplication() {
         teamMemberMold = clientDolphin.presentationModel(PM_ID_MOLD, (String) null,
-            new ClientAttribute(ATT_FIRSTNAME, ""),
-            new ClientAttribute(ATT_LASTNAME, ""),
-            new ClientAttribute(ATT_FUNCTION, ""),
-            new ClientAttribute(ATT_AVAILABLE, false),
-            new ClientAttribute(ATT_CONTRACTOR, false),
-            new ClientAttribute(ATT_WORKLOAD, 0));
+                clientDolphin.createAttribute(ATT_FIRSTNAME, ""),
+                clientDolphin.createAttribute(ATT_LASTNAME, ""),
+                clientDolphin.createAttribute(ATT_FUNCTION, ""),
+                clientDolphin.createAttribute(ATT_AVAILABLE, false),
+                clientDolphin.createAttribute(ATT_CONTRACTOR, false),
+                clientDolphin.createAttribute(ATT_WORKLOAD, 0));
 
         blankMold = clientDolphin.copy(teamMemberMold);
 
-        selectedPmId = new ClientAttribute(ATT_SEL_PM_ID, null, QUAL_SEL_PM_ID, null); /* null for no selection*/
+        selectedPmId = clientDolphin.createAttribute(ATT_SEL_PM_ID, null, QUAL_SEL_PM_ID, null); /* null for no selection*/
         clientDolphin.presentationModel(PM_ID_SELECTED, (String) null, selectedPmId);
 
     }
@@ -397,7 +394,7 @@ public class TeamApplication extends Application {
             @Override
             public void changed(ObservableValue<?> observableValue, Object old, Object newSelection) {
                 if (null != newSelection) {
-                    ClientPresentationModel selectedPm = (ClientPresentationModel) newSelection;
+                    GClientPresentationModel selectedPm = (GClientPresentationModel) newSelection;
                     selectedPmId.setValue(selectedPm.getId());
                     clientDolphin.apply(selectedPm).to(teamMemberMold);
                     form.setDisable(false);

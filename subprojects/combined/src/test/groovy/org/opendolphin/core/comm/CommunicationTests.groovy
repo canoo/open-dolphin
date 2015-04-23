@@ -17,10 +17,8 @@
 package org.opendolphin.core.comm
 
 import org.opendolphin.LogConfig
-import org.opendolphin.core.client.ClientAttribute
 import org.opendolphin.core.client.ClientDolphin
 import org.opendolphin.core.client.ClientModelStore
-import org.opendolphin.core.client.ClientPresentationModel
 import org.opendolphin.core.client.comm.ClientConnector
 import org.opendolphin.core.server.ServerConnector
 
@@ -33,38 +31,38 @@ import java.util.concurrent.TimeUnit
 
 class CommunicationTests extends GroovyTestCase {
 
-	ServerConnector     serverConnector
-	ClientConnector     clientConnector
-    ClientModelStore    clientModelStore
-    ClientDolphin       clientDolphin
-    TestInMemoryConfig  config
+    ServerConnector serverConnector
+    ClientConnector clientConnector
+    ClientModelStore clientModelStore
+    ClientDolphin clientDolphin
+    TestInMemoryConfig config
 
     @Override
-	protected void setUp() {
-		LogConfig.logCommunication()
-		config = new TestInMemoryConfig()
-        serverConnector  = config.serverDolphin.serverConnector
-        clientConnector  = config.clientDolphin.clientConnector
+    protected void setUp() {
+        LogConfig.logCommunication()
+        config = new TestInMemoryConfig()
+        serverConnector = config.serverDolphin.serverConnector
+        clientConnector = config.clientDolphin.clientConnector
         clientModelStore = config.clientDolphin.clientModelStore
-        clientDolphin    = config.clientDolphin
-	}
+        clientDolphin = config.clientDolphin
+    }
 
     @Override
     protected void tearDown() {
         assert config.done.await(2, TimeUnit.SECONDS)
     }
 
-	void testSimpleAttributeChangeIsVisibleOnServer() {
-		def ca  = new ClientAttribute('name')
-        def cpm = new ClientPresentationModel('model', [ca])
+    void testSimpleAttributeChangeIsVisibleOnServer() {
+        def ca = clientDolphin.createAttribute('name')
+        def cpm = clientDolphin.createPresentationModel('model', [ca])
         clientModelStore.add cpm
 
-		Command receivedCommand = null
-		def testServerAction = { ValueChangedCommand command, response ->
-			receivedCommand = command
-		}
-		serverConnector.registry.register ValueChangedCommand, testServerAction
-		ca.value = 'initial'
+        Command receivedCommand = null
+        def testServerAction = { ValueChangedCommand command, response ->
+            receivedCommand = command
+        }
+        serverConnector.registry.register ValueChangedCommand, testServerAction
+        ca.value = 'initial'
 
         clientDolphin.sync {
             assert receivedCommand
@@ -74,17 +72,17 @@ class CommunicationTests extends GroovyTestCase {
             assert receivedCommand.newValue == 'initial'
             config.assertionsDone()
         }
-	}
+    }
 
-	void testServerIsNotifiedAboutNewAttributesAndTheirPms() {
+    void testServerIsNotifiedAboutNewAttributesAndTheirPms() {
 
-		Command receivedCommand = null
-		def testServerAction = { CreatePresentationModelCommand command, response ->
-			receivedCommand = command
-		}
-		serverConnector.registry.register CreatePresentationModelCommand, testServerAction
+        Command receivedCommand = null
+        def testServerAction = { CreatePresentationModelCommand command, response ->
+            receivedCommand = command
+        }
+        serverConnector.registry.register CreatePresentationModelCommand, testServerAction
 
-        clientModelStore.add new ClientPresentationModel('testPm', [new ClientAttribute('name')])
+        clientModelStore.add clientDolphin.createPresentationModel('testPm', [clientDolphin.createAttribute('name')])
 
         clientDolphin.sync {
             assert receivedCommand.id == "CreatePresentationModel"
@@ -93,44 +91,45 @@ class CommunicationTests extends GroovyTestCase {
             assert receivedCommand.attributes.name
             config.assertionsDone()
         }
-	}
+    }
 
-	void testWhenServerChangesValueThisTriggersUpdateOnClient() {
-		def ca = new ClientAttribute('name')
+    void testWhenServerChangesValueThisTriggersUpdateOnClient() {
+        def ca = clientDolphin.createAttribute('name')
 
-		def setValueAction = { CreatePresentationModelCommand command, response ->
-			response << new ValueChangedCommand(
-					attributeId: command.attributes.id.first(),
-					newValue: "set from server",
-					oldValue: null
-			)
-		}
+        def setValueAction = { CreatePresentationModelCommand command, response ->
+            response << new ValueChangedCommand(
+                    attributeId: command.attributes.id.first(),
+                    newValue: "set from server",
+                    oldValue: null
+            )
+        }
 
-		Command receivedCommand = null
-		def valueChangedAction = { ValueChangedCommand command, response ->
-			receivedCommand = command
-            clientDolphin.sync {                            // there is no onFinished for value changes, so we have to do it here
+        Command receivedCommand = null
+        def valueChangedAction = { ValueChangedCommand command, response ->
+            receivedCommand = command
+            clientDolphin.sync {
+                // there is no onFinished for value changes, so we have to do it here
                 assert ca.value == "set from server"        // client is updated
                 assert receivedCommand.attributeId == ca.id // client notified server about value change
                 config.assertionsDone()
             }
-		}
+        }
 
         serverConnector.registry.register CreatePresentationModelCommand, setValueAction
-		serverConnector.registry.register ValueChangedCommand, valueChangedAction
+        serverConnector.registry.register ValueChangedCommand, valueChangedAction
 
-        clientModelStore.add new ClientPresentationModel('testPm', [ca]) // trigger the whole cycle
+        clientModelStore.add clientDolphin.createPresentationModel('testPm', [ca]) // trigger the whole cycle
     }
 
-	void testRequestingSomeGeneralCommandExecution() {
-		boolean reached = false
-		serverConnector.registry.register "ButtonAction", { cmd, resp -> reached = true }
-		clientConnector.send(new NamedCommand(id: "ButtonAction"))
+    void testRequestingSomeGeneralCommandExecution() {
+        boolean reached = false
+        serverConnector.registry.register "ButtonAction", { cmd, resp -> reached = true }
+        clientConnector.send(new NamedCommand(id: "ButtonAction"))
 
         clientDolphin.sync {
             assert reached
             config.assertionsDone()
         }
-	}
+    }
 
 }

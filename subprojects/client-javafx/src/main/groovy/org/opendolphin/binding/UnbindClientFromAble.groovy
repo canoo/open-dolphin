@@ -1,11 +1,11 @@
 package org.opendolphin.binding
 
-import org.opendolphin.core.client.ClientAttribute
+import org.opendolphin.core.client.GClientAttribute
 
 class UnbindClientFromAble {
-    final ClientAttribute attribute
+    final GClientAttribute attribute
 
-    UnbindClientFromAble(ClientAttribute attribute) {
+    UnbindClientFromAble(GClientAttribute attribute) {
         this.attribute = attribute
     }
 

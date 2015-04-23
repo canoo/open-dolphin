@@ -1,12 +1,12 @@
 package org.opendolphin.binding
 
-import org.opendolphin.core.client.ClientAttribute
+import org.opendolphin.core.client.GClientAttribute
 
 class BindClientToAble {
-    final ClientAttribute attribute
+    final GClientAttribute attribute
     final Converter converter
 
-    BindClientToAble(ClientAttribute attribute, Converter converter = null) {
+    BindClientToAble(GClientAttribute attribute, Converter converter = null) {
         this.attribute = attribute
         this.converter = converter
     }

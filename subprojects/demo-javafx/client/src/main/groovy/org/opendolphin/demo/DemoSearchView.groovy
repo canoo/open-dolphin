@@ -16,8 +16,8 @@
 
 package org.opendolphin.demo
 
-import org.opendolphin.core.client.ClientPresentationModel
 import org.opendolphin.core.client.ClientDolphin
+import org.opendolphin.core.client.GClientPresentationModel
 import groovyx.javafx.SceneGraphBuilder
 import javafx.beans.property.SimpleStringProperty
 import javafx.beans.value.ChangeListener
@@ -37,7 +37,7 @@ class DemoSearchView {
 
         def searchCriteria = clientDolphin.presentationModel(SEARCH_CRITERIA, [FIRST, SECOND, NAME])
 
-        ObservableList<ClientPresentationModel> observableListOfKoMaps = FXCollections.observableArrayList()
+        ObservableList<GClientPresentationModel> observableListOfKoMaps = FXCollections.observableArrayList()
 
         start { app ->
             SceneGraphBuilder sgb = delegate

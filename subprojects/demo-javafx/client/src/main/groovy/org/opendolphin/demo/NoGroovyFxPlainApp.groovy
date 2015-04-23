@@ -16,8 +16,6 @@
 
 package org.opendolphin.demo
 
-import org.opendolphin.core.client.ClientAttribute
-import org.opendolphin.core.client.ClientPresentationModel
 import javafx.application.Application
 import javafx.event.EventHandler
 import javafx.scene.Group
@@ -27,13 +25,14 @@ import javafx.scene.control.TextField
 import javafx.scene.layout.VBox
 import javafx.stage.Stage
 
+
 import static org.opendolphin.binding.Binder.bind
-import static org.opendolphin.demo.MyProps.ATT.*
-import static org.opendolphin.demo.MyProps.TITLE
+import static org.opendolphin.demo.MyProps.ATT.getTITLE
 
 public class NoGroovyFxPlainApp extends Application {
 
-    @Override public void start(Stage stage) {
+    @Override
+    public void start(Stage stage) {
 
         // construct the view
         stage.title = ""
@@ -48,16 +47,17 @@ public class NoGroovyFxPlainApp extends Application {
         vbox.children << label
         vbox.children << textField
         root.children << vbox
-        
+
         // construct the PM
-        def titleAttr = new ClientAttribute(TITLE)
-        def pm = new ClientPresentationModel('demo',[titleAttr])
+        def titleAttr = ClientAttributeFactory.create(TITLE)
+        def pm = ClientPresentationModelFactory.create('demo', [titleAttr])
         pm[TITLE].value = "Hello JavaFX"
 
-        stage.titleProperty().bind(label.textProperty()) // JavaFX: changes to label will be propagated to the stage title
+        stage.titleProperty().bind(label.textProperty())
+        // JavaFX: changes to label will be propagated to the stage title
 
         // bind the view onto the PM
-        bind TITLE  of pm  to FX.TEXT  of label      // groovy style
+        bind TITLE of pm to FX.TEXT of label      // groovy style
         bind(TITLE).of(pm).to(FX.TEXT).of(textField) // java style
 
         textField.onAction = { titleAttr.value = textField.text } as EventHandler
@@ -65,7 +65,6 @@ public class NoGroovyFxPlainApp extends Application {
         // let the show begin
         stage.show()
     }
-    
 
 
     public static void main(String[] args) {

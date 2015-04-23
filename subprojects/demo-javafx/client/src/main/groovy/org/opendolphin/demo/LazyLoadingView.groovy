@@ -20,6 +20,7 @@ import org.opendolphin.core.ModelStoreEvent
 import org.opendolphin.core.ModelStoreListener
 import org.opendolphin.core.client.ClientDolphin
 import org.opendolphin.core.client.ClientPresentationModel
+import org.opendolphin.core.client.GClientPresentationModel
 import org.opendolphin.core.client.comm.WithPresentationModelHandler
 import groovyx.javafx.SceneGraphBuilder
 import javafx.beans.property.SimpleStringProperty
@@ -51,7 +52,7 @@ class LazyLoadingView {
 
     static show(ClientDolphin dolphin) {
 
-        ClientPresentationModel dataMold = dolphin.presentationModel('dataMold', [ID, FIRST_LAST, LAST_FIRST, CITY, PHONE])
+        GClientPresentationModel dataMold = dolphin.presentationModel('dataMold', [ID, FIRST_LAST, LAST_FIRST, CITY, PHONE])
 
         ObservableList<Integer> observableList = FXCollections.observableArrayList()
 

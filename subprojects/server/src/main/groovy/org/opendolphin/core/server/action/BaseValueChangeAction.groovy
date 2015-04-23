@@ -16,8 +16,8 @@
 
 package org.opendolphin.core.server.action
 
-import org.opendolphin.core.Attribute
 import org.opendolphin.core.comm.BaseValueChangedCommand
+import org.opendolphin.core.server.GServerAttribute
 import org.opendolphin.core.server.ServerAttribute
 import org.opendolphin.core.server.comm.ActionRegistry
 import groovy.util.logging.Log

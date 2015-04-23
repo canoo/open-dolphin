@@ -16,20 +16,19 @@
 
 package org.opendolphin.demo
 
+import javafx.scene.control.Tooltip
 import org.opendolphin.core.Tag
 import org.opendolphin.core.client.ClientDolphin
-import javafx.scene.control.Tooltip
 
-import java.beans.PropertyChangeListener
-
+import static groovyx.javafx.GroovyFX.start
 import static org.opendolphin.binding.JFXBinder.bind
 import static org.opendolphin.binding.JFXBinder.bindInfo
 import static org.opendolphin.core.Attribute.DIRTY_PROPERTY
 import static org.opendolphin.core.Tag.LABEL
 import static org.opendolphin.core.Tag.TOOLTIP
 import static org.opendolphin.demo.DemoStyle.style
-import static org.opendolphin.demo.MyProps.ATT.*
-import static groovyx.javafx.GroovyFX.start
+import static org.opendolphin.demo.MyProps.ATT.getLASTNAME
+import static org.opendolphin.demo.MyProps.ATT.getNAME
 
 /**
  * An example where not only the values and dirty properties are bound but also the
@@ -46,23 +45,23 @@ class AttributeTagView {
     static show(ClientDolphin dolphin) {
         start { app ->
 
-            def model = dolphin.presentationModel 'person', (NAME):'', (LASTNAME):'Smith'
+            def model = dolphin.presentationModel 'person', (NAME): '', (LASTNAME): 'Smith'
 
             stage {
                 scene {
                     gridPane {
 
-                        label       id: 'header',        row: 0, column: 1, 'Person Form'
+                        label id: 'header', row: 0, column: 1, 'Person Form'
 
-                        label       id: 'nameLabel',     row: 1, column: 0, ' ' * 20
-                        textField   id: 'nameInput',     row: 1, column: 1
+                        label id: 'nameLabel', row: 1, column: 0, ' ' * 20
+                        textField id: 'nameInput', row: 1, column: 1
 
-                        label       id: 'lastnameLabel', row: 2, column: 0, ' ' * 20
-                        textField   id: 'lastnameInput', row: 2, column: 1
+                        label id: 'lastnameLabel', row: 2, column: 0, ' ' * 20
+                        textField id: 'lastnameInput', row: 2, column: 1
 
-                        hbox row: 3, column: 1, spacing:5, {
+                        hbox row: 3, column: 1, spacing: 5, {
                             button id: 'german', 'German', onAction: { dolphin.send 'german' }
-                            button id: 'reset',  'Undo',   onAction: { model.reset() }
+                            button id: 'reset', 'Undo', onAction: { model.reset() }
                         }
                     }
                 }
@@ -71,32 +70,32 @@ class AttributeTagView {
             style sgb
 
             // binding the values
-            bind NAME     of model         to FX.TEXT  of nameInput
-            bind LASTNAME of model         to FX.TEXT  of lastnameInput
+            bind NAME of model to FX.TEXT of nameInput
+            bind LASTNAME of model to FX.TEXT of lastnameInput
 
             dolphin.send 'init', { pms ->        // only do binding after server has initialized the tags
-                bind FX.TEXT  of nameInput     to NAME     of model, { newVal ->
+                bind FX.TEXT of nameInput to NAME of model, { newVal ->
                     boolean matches = newVal ==~ model.getAt(NAME, Tag.REGEX).value
                     putStyle(sgb.nameInput, !matches, 'invalid')
                     return newVal
                 }
-                bind FX.TEXT  of lastnameInput to LASTNAME of model
+                bind FX.TEXT of lastnameInput to LASTNAME of model
 
-                bind NAME,     LABEL   of model to FX.TEXT    of nameLabel
-                bind NAME,     TOOLTIP of model to FX.TOOLTIP of nameInput, { new Tooltip(it) }
+                bind NAME, LABEL of model to FX.TEXT of nameLabel
+                bind NAME, TOOLTIP of model to FX.TOOLTIP of nameInput, { new Tooltip(it) }
 
-                bind LASTNAME, LABEL   of model to FX.TEXT    of lastnameLabel
+                bind LASTNAME, LABEL of model to FX.TEXT of lastnameLabel
             }
 
             // binding meta properties
-            model[NAME].addPropertyChangeListener        DIRTY_PROPERTY, {
-                putStyle sgb.nameLabel,     it.newValue, DIRTY_PROPERTY
+            model[NAME].addPropertyChangeListener DIRTY_PROPERTY, {
+                putStyle sgb.nameLabel, it.newValue, DIRTY_PROPERTY
             }
-            model[LASTNAME].addPropertyChangeListener    DIRTY_PROPERTY, {
+            model[LASTNAME].addPropertyChangeListener DIRTY_PROPERTY, {
                 putStyle sgb.lastnameLabel, it.newValue, DIRTY_PROPERTY
             }
-            bindInfo DIRTY_PROPERTY of model to FX.TITLE    of primaryStage , { it ? '** DIRTY **': '' }
-            bindInfo DIRTY_PROPERTY of model to FX.DISABLE  of reset        , { !it }
+            bindInfo DIRTY_PROPERTY of model to FX.TITLE of primaryStage, { it ? '** DIRTY **' : '' }
+            bindInfo DIRTY_PROPERTY of model to FX.DISABLE of reset, { !it }
 
             primaryStage.show()
         }

@@ -2,15 +2,10 @@ package org.opendolphin.demo.sharedStation
 
 import javafx.event.EventHandler
 import javafx.stage.Stage
-import org.opendolphin.core.Attribute
-import org.opendolphin.core.client.ClientAttribute
+import org.opendolphin.core.client.ClientDolphin
 import org.opendolphin.demo.FX
 
-import java.beans.PropertyChangeListener
-
 import static groovyx.javafx.GroovyFX.start
-import org.opendolphin.core.client.ClientDolphin
-
 import static org.opendolphin.binding.JFXBinder.bind
 
 class SharedStationView {
@@ -50,18 +45,18 @@ class SharedStationView {
     private void createModels() {
         users.each {
             dolphin.presentationModel(it, "user",
-                new ClientAttribute("name", it, "$it-name"),
-                new ClientAttribute("status", "asleep", "$it-status"),
-                new ClientAttribute("wakeup", true, "$it-wakeup-enabled"),
-                new ClientAttribute("play",   false,"$it-play-enabled"),
-                new ClientAttribute("gotobed",false,"$it-gotobed-enabled")
+                    dolphin.createAttribute("name", it, "$it-name"),
+                    dolphin.createAttribute("status", "asleep", "$it-status"),
+                    dolphin.createAttribute("wakeup", true, "$it-wakeup-enabled"),
+                    dolphin.createAttribute("play",   false,"$it-play-enabled"),
+                    dolphin.createAttribute("gotobed",false,"$it-gotobed-enabled")
             )
         }
         dolphin.presentationModel("current_user", "user", name: null, status:null, wakeup:false, play:false, gotobed:false)
 
         for (user in users) {
             for (status in stati) {
-                dolphin.presentationModel("${user}-${status}", "Detail", new ClientAttribute('detail','',"${user}-${status}-detail"))
+                dolphin.presentationModel("${user}-${status}", "Detail", dolphin.createAttribute('detail','',"${user}-${status}-detail"))
             }
         }
         dolphin.presentationModel("current_detail", "Detail", detail:'')

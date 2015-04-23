@@ -17,6 +17,7 @@
 package org.opendolphin.demo
 
 import org.opendolphin.core.client.ClientDolphin
+import org.opendolphin.core.client.GClientDolphin
 import javafx.event.EventHandler
 
 import static org.opendolphin.binding.JFXBinder.bind

@@ -14,15 +14,20 @@
  * limitations under the License.
  */
 
-package org.opendolphin.core.client.comm;
+package org.opendolphin.core.client;
 
-import org.opendolphin.core.client.ClientPresentationModel;
-import org.opendolphin.core.client.GClientPresentationModel;
+/**
+ * Factory that creates a client dolphin instance. Application developers should always use this method to create a dolphin on client side.
+ */
+public class ClientDolphinFactory {
 
-import java.util.List;
-import java.util.Map;
+    private ClientDolphinFactory() {}
 
-public interface OnFinishedHandler {
-    public void onFinished(List<ClientPresentationModel> presentationModels);
-    public void onFinishedData(List<Map> data);
+    /**
+     * Returns a client dolphin instance
+     * @return the dolphin
+     */
+    public static ClientDolphin create() {
+        return new GClientDolphin();
+    }
 }

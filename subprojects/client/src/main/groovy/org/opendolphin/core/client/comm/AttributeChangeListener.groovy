@@ -1,6 +1,7 @@
 package org.opendolphin.core.client.comm
 
 import org.opendolphin.core.Attribute
+import org.opendolphin.core.BaseAttribute
 import org.opendolphin.core.client.ClientModelStore
 import org.opendolphin.core.comm.BaseValueChangedCommand
 import org.opendolphin.core.comm.ChangeAttributeMetadataCommand
@@ -15,16 +16,16 @@ class AttributeChangeListener implements PropertyChangeListener {
     ClientConnector clientConnector
 
     void propertyChange(PropertyChangeEvent evt) {
-        if (evt.propertyName == Attribute.DIRTY_PROPERTY) {
+        if (evt.propertyName == BaseAttribute.DIRTY_PROPERTY) {
             // ignore
-        } else if (evt.propertyName == Attribute.VALUE) {
+        } else if (evt.propertyName == BaseAttribute.VALUE) {
             if (evt.oldValue == evt.newValue) return
             if (isSendable(evt)) {
                 clientConnector.send constructValueChangedCommand(evt)
             }
             List<Attribute> attributes = clientModelStore.findAllAttributesByQualifier(evt.source.qualifier)
             attributes.each { it.value = evt.newValue }
-        } else if (evt.propertyName == Attribute.BASE_VALUE) {
+        } else if (evt.propertyName == BaseAttribute.BASE_VALUE) {
             if (evt.oldValue == evt.newValue) return
             if (isSendable(evt)) {
                 clientConnector.send constructBaseValueChangedCommand(evt)

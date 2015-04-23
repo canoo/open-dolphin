@@ -17,10 +17,10 @@
 package org.opendolphin.core.server.action;
 
 import org.opendolphin.core.comm.Command;
-import org.opendolphin.core.server.ServerPresentationModel;
+import org.opendolphin.core.server.GServerPresentationModel;
 
 import java.util.List;
 
 public interface CreatePresentationModelHandler {
-    public void call(List<Command> response, ServerPresentationModel presentationModel);
+    public void call(List<Command> response, GServerPresentationModel presentationModel);
 }

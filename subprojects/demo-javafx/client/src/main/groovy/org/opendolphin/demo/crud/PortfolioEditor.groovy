@@ -4,7 +4,7 @@ import javafx.beans.value.ChangeListener
 import org.opendolphin.core.ModelStoreEvent
 import org.opendolphin.core.PresentationModel
 import org.opendolphin.core.client.ClientDolphin
-import org.opendolphin.core.client.ClientPresentationModel
+import org.opendolphin.core.client.GClientPresentationModel
 import org.opendolphin.demo.FX
 import groovyx.javafx.SceneGraphBuilder
 import javafx.collections.FXCollections
@@ -30,16 +30,16 @@ import static javafx.scene.layout.GridPane.REMAINING
 @SuppressWarnings("GroovyAssignabilityCheck")
 class PortfolioEditor {
 
-    ClientPresentationModel portfolioPM
+    GClientPresentationModel portfolioPM
 
     private javafx.scene.Node view
     private ClientDolphin clientDolphin
-    private ObservableList<ClientPresentationModel> observableListOfPositions  = FXCollections.observableArrayList()
+    private ObservableList<GClientPresentationModel> observableListOfPositions  = FXCollections.observableArrayList()
     private plus, minus, nameField, tableBox, positions, totalField, fixedField, chart
 
-    private ClientPresentationModel selectedPosition = null
+    private GClientPresentationModel selectedPosition = null
 
-    PortfolioEditor(ClientPresentationModel portfolioPM, ClientDolphin clientDolphin) {
+    PortfolioEditor(GClientPresentationModel portfolioPM, ClientDolphin clientDolphin) {
         this.portfolioPM = portfolioPM
         this.clientDolphin = clientDolphin
     }
@@ -108,7 +108,7 @@ class PortfolioEditor {
         sgb.with {
             def chart = chart // do not delete! Needed for local reference lookup.
             def observableListOfPositions = observableListOfPositions
-            TableView<ClientPresentationModel> positions = positions
+            TableView<GClientPresentationModel> positions = positions
 
             positions.selectionModel.selectedItemProperty().addListener( { val, oldModel, newModel ->
                 selectedPosition = newModel

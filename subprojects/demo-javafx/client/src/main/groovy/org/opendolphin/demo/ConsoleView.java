@@ -18,6 +18,7 @@ package org.opendolphin.demo;
 
 import org.opendolphin.core.client.ClientDolphin;
 import org.opendolphin.core.client.ClientPresentationModel;
+import org.opendolphin.core.client.GClientPresentationModel;
 import org.opendolphin.core.client.comm.OnFinishedHandler;
 import org.opendolphin.core.client.comm.OnFinishedHandlerAdapter;
 import org.opendolphin.core.comm.NamedCommand;

@@ -3,8 +3,8 @@ package org.opendolphin.binding;
 import javafx.scene.Node;
 import org.opendolphin.core.PresentationModel;
 import org.opendolphin.core.Tag;
-import org.opendolphin.core.client.ClientAttribute;
-import org.opendolphin.core.client.ClientPresentationModel;
+import org.opendolphin.core.client.GClientAttribute;
+import org.opendolphin.core.client.GClientPresentationModel;
 
 public class JFXBindOfAble {
     public JFXBindToAble of(Node source) {
@@ -15,8 +15,8 @@ public class JFXBindOfAble {
         return Binder.bind(sourcePropertyName, tag).of(source);
     }
 
-    public BindClientToAble of(ClientPresentationModel source) {
-        return new BindClientToAble((ClientAttribute) source.findAttributeByPropertyNameAndTag(sourcePropertyName, tag));
+    public BindClientToAble of(GClientPresentationModel source) {
+        return new BindClientToAble((GClientAttribute) source.findAttributeByPropertyNameAndTag(sourcePropertyName, tag));
     }
 
     public BindPojoToAble of(Object source) {

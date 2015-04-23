@@ -16,10 +16,11 @@
 
 package org.opendolphin.core.client.comm
 
+import org.opendolphin.core.client.ClientDolphin
 import org.opendolphin.core.comm.Command
 import groovy.transform.InheritConstructors
 import groovy.util.logging.Log
-import org.opendolphin.core.client.ClientDolphin
+import org.opendolphin.core.client.GClientDolphin
 
 @Log @InheritConstructors
 class InMemoryClientConnector extends ClientConnector {

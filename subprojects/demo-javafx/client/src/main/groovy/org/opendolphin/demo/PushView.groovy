@@ -16,8 +16,8 @@
 
 package org.opendolphin.demo
 
-import org.opendolphin.core.client.ClientPresentationModel
 import org.opendolphin.core.client.ClientDolphin
+import org.opendolphin.core.client.GClientPresentationModel
 import org.opendolphin.logo.DolphinLogoBuilder
 import groovyx.javafx.SceneGraphBuilder
 import javafx.beans.value.ChangeListener
@@ -42,9 +42,9 @@ class PushView {
         def longPoll = null
         longPoll = { dolphin.send CMD_UPDATE, longPoll }
 
-        ClientPresentationModel selectedVehicle = dolphin.presentationModel(ID_SELECTED, ALL_ATTRIBUTES)
+        GClientPresentationModel selectedVehicle = dolphin.presentationModel(ID_SELECTED, ALL_ATTRIBUTES)
 
-        ObservableList<ClientPresentationModel> observableListOfPms = FXCollections.observableArrayList()
+        ObservableList<GClientPresentationModel> observableListOfPms = FXCollections.observableArrayList()
         Map<String, Rectangle> pmIdsToRect = [:] // pmId to rectangle
 
         start { app ->
@@ -96,7 +96,7 @@ class PushView {
             // when a new pm is added to the list, create the rectangles along with their animations
             observableListOfPms.addListener({ ListChangeListener.Change listChange ->
                 while(listChange.next()) { /*sigh*/
-                    for (ClientPresentationModel pm in listChange.addedSubList) {
+                    for (GClientPresentationModel pm in listChange.addedSubList) {
                         pmIdsToRect[pm.id] = sgb.rectangle(fill: sgb[pm.id], arcWidth:10, arcHeight:10, stroke: cyan, strokeWidth: 0, strokeType:'outside') {
                             //effect lighting()
                         }

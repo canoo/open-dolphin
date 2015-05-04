@@ -1,3 +1,19 @@
+/*
+ * Copyright 2012-2015 Canoo Engineering AG.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package org.opendolphin.core.server;
 
 import org.opendolphin.core.ModelStore;
@@ -8,7 +24,7 @@ import org.opendolphin.core.comm.Command;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class ServerModelStore extends ModelStore {
+public class ServerModelStore extends ModelStore<ServerAttribute, ServerPresentationModel> {
 
     protected List<Command> currentResponse = null;
 
@@ -39,10 +55,10 @@ public class ServerModelStore extends ModelStore {
     }
 
     @Override
-    public boolean add(PresentationModel model) {
+    public boolean add(ServerPresentationModel model) {
         boolean added = super.add(model);
         if (! added) return added;
-        ((ServerPresentationModel)model).modelStore = this;
+        ((GServerPresentationModel)model).setServerModelStore(this);
         return true;
     }
 }

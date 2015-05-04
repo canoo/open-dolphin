@@ -14,28 +14,18 @@
  * limitations under the License.
  */
 
-package org.opendolphin.core.server
+package org.opendolphin.core.server;
 
-import groovy.transform.CompileStatic
+import org.opendolphin.core.PresentationModel;
 
-@CompileStatic
-class DTO {
-    List<Slot> slots
+public interface ServerPresentationModel extends PresentationModel<ServerAttribute> {
 
-    DTO(List<Slot> newSlots) {
-        slots = newSlots
-    }
+    void syncWith(ServerPresentationModel sourcePresentationModel);
 
-    DTO(Slot... newSlots) {
-        slots = newSlots as LinkedList
+    void addAttribute(ServerAttribute attribute);
 
-    }
+    void rebase();
 
-    /**
-     * Create the representation that is used within commands.
-     */
-    List<Map<String, Object>> encodable() {
-        (List<Map<String, Object>>) slots.collect(new LinkedList()) {Slot slot -> slot.toMap() }
-    }
+    ServerModelStore getServerModelStore();
 
 }

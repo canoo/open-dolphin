@@ -4,7 +4,7 @@ import org.opendolphin.core.comm.CreatePresentationModelCommand
 import org.opendolphin.core.comm.InitializeAttributeCommand
 import org.opendolphin.core.comm.ValueChangedCommand
 import org.opendolphin.core.server.DTO
-import org.opendolphin.core.server.ServerAttribute
+import org.opendolphin.core.server.GServerAttribute
 import org.opendolphin.core.server.comm.ActionRegistry
 
 class DolphinServerActionTests extends GroovyTestCase {
@@ -31,7 +31,7 @@ class DolphinServerActionTests extends GroovyTestCase {
     }
 
     void testChangeValue() {
-        action.changeValue(new ServerAttribute('attr', 'initial'), 'newValue')
+        action.changeValue(new GServerAttribute('attr', 'initial'), 'newValue')
         assert 1 == action.dolphinResponse.size()
         assert ValueChangedCommand == action.dolphinResponse.first().class
     }

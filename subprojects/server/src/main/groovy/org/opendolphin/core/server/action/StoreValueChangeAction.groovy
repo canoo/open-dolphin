@@ -17,7 +17,7 @@
 package org.opendolphin.core.server.action
 
 import org.opendolphin.core.comm.ValueChangedCommand
-import org.opendolphin.core.server.ServerAttribute
+import org.opendolphin.core.server.GServerAttribute
 import org.opendolphin.core.server.comm.ActionRegistry
 import groovy.util.logging.Log
 
@@ -27,7 +27,7 @@ class StoreValueChangeAction extends DolphinServerAction {
 
     void registerIn(ActionRegistry registry) {
         registry.register(ValueChangedCommand) { ValueChangedCommand command, response ->
-            ServerAttribute attribute = serverDolphin.findAttributeById(command.attributeId)
+            GServerAttribute attribute = serverDolphin.findAttributeById(command.attributeId)
             if (attribute) {
                 if (attribute.value != command.oldValue) {
                     log.warning("S: updating attribute with id '$command.attributeId' to new value '$command.newValue' even though its old command value '$command.oldValue' does not conform to the old value of '$attribute.value'. Client overrules server.")

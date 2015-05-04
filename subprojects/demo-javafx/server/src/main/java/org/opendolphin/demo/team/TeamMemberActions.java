@@ -152,7 +152,7 @@ public class TeamMemberActions extends DolphinServerAction {
         @Override
         public void propertyChange(PropertyChangeEvent evt) {
             if (silent) return;
-            ServerAttribute attribute = (ServerAttribute) evt.getSource();
+            GServerAttribute attribute = (GServerAttribute) evt.getSource();
             boolean updated = updateHistory(attribute);
             if (updated)
                 teamBus.publish(memberQueue, new TeamEvent(TeamEvent.Type.CHANGE, attribute.getQualifier(), attribute.getValue()));

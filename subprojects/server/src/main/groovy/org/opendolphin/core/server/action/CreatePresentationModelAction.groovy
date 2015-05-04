@@ -20,8 +20,10 @@ import groovy.util.logging.Log
 import org.opendolphin.core.PresentationModel
 import org.opendolphin.core.Tag
 import org.opendolphin.core.comm.CreatePresentationModelCommand
-import org.opendolphin.core.server.ServerAttribute
+import org.opendolphin.core.server.GServerAttribute
 import org.opendolphin.core.server.GServerDolphin
+import org.opendolphin.core.server.GServerPresentationModel
+import org.opendolphin.core.server.ServerAttribute
 import org.opendolphin.core.server.ServerPresentationModel
 import org.opendolphin.core.server.comm.ActionRegistry
 import groovy.transform.CompileStatic
@@ -41,16 +43,16 @@ class CreatePresentationModelAction extends DolphinServerAction {
             log.info("Ignoring create PM '$command.pmId' since it is already in the model store.")
             return
         }
-        if (command.pmId.endsWith(ServerPresentationModel.AUTO_ID_SUFFIX)) {
+        if (command.pmId.endsWith(GServerPresentationModel.AUTO_ID_SUFFIX)) {
             log.info("Creating the PM '$command.pmId' with reserved server-auto-suffix.")
         }
         List<ServerAttribute> attributes = new LinkedList()
         for (Map<String, Object> attr in command.attributes) {
-            ServerAttribute attribute = new ServerAttribute((String) attr.propertyName, attr.value, (String) attr.qualifier, Tag.tagFor[(String) attr.tag])
+            ServerAttribute attribute = new GServerAttribute((String) attr.propertyName, attr.value, (String) attr.qualifier, Tag.tagFor[(String) attr.tag])
             attribute.id = attr.id
             attributes << attribute
         }
-        PresentationModel model = new ServerPresentationModel(command.pmId, attributes, serverDolphin.serverModelStore)
+        ServerPresentationModel model = new GServerPresentationModel(command.pmId, attributes, serverDolphin.serverModelStore)
         model.presentationModelType = command.pmType
         if (serverDolphin.serverModelStore.containsPresentationModel(model.id)) {
             log.info("There already is a PM with id ${model.id}. Create PM ignored.")

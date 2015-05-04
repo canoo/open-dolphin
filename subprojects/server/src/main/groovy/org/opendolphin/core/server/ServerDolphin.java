@@ -14,28 +14,21 @@
  * limitations under the License.
  */
 
-package org.opendolphin.core.server
+package org.opendolphin.core.server;
 
-import groovy.transform.CompileStatic
+import org.opendolphin.core.Dolphin;
+import org.opendolphin.core.server.action.DolphinServerAction;
+import org.opendolphin.core.server.comm.NamedCommandHandler;
 
-@CompileStatic
-class DTO {
-    List<Slot> slots
+public interface ServerDolphin extends Dolphin<ServerAttribute, ServerPresentationModel> {
 
-    DTO(List<Slot> newSlots) {
-        slots = newSlots
-    }
+    void registerDefaultActions();
 
-    DTO(Slot... newSlots) {
-        slots = newSlots as LinkedList
+    void register(DolphinServerAction action);
 
-    }
+    void action(String name, NamedCommandHandler namedCommandHandler);
 
-    /**
-     * Create the representation that is used within commands.
-     */
-    List<Map<String, Object>> encodable() {
-        (List<Map<String, Object>>) slots.collect(new LinkedList()) {Slot slot -> slot.toMap() }
-    }
+    ServerPresentationModel presentationModel(String id, String presentationModelType, DTO dto);
 
+    void removeAllPresentationModelsOfType(String type);
 }

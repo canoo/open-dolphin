@@ -29,9 +29,9 @@ import org.opendolphin.core.client.comm.SynchronousInMemoryClientConnector
 import org.opendolphin.core.client.comm.UiThreadHandler
 import org.opendolphin.core.client.comm.WithPresentationModelHandler
 import org.opendolphin.core.server.DTO
-import org.opendolphin.core.server.ServerAttribute
+import org.opendolphin.core.server.GServerAttribute
 import org.opendolphin.core.server.GServerDolphin
-import org.opendolphin.core.server.ServerPresentationModel
+import org.opendolphin.core.server.GServerPresentationModel
 import org.opendolphin.core.server.Slot
 import org.opendolphin.core.server.comm.NamedCommandHandler
 
@@ -323,7 +323,7 @@ class FunctionalPresentationModelTests extends GroovyTestCase {
         clientDolphin.clientConnector.send new BaseValueChangedCommand(attributeId: 0)
         clientDolphin.clientConnector.send new ValueChangedCommand(attributeId: 0)
         GServerDolphin.changeValue(null, null, null)
-        GServerDolphin.changeValue(null, new ServerAttribute('a',42), 42)
+        GServerDolphin.changeValue(null, new GServerAttribute('a',42), 42)
         context.assertionsDone()
     }
 
@@ -567,9 +567,9 @@ class FunctionalPresentationModelTests extends GroovyTestCase {
             serverDolphin.rebase([], null)
             serverDolphin.reset(null, serverDolphin['pm'])
             serverDolphin.reset([], '')
-            serverDolphin.reset([], (ServerAttribute) null)
-            serverDolphin.reset([], (ServerPresentationModel) null)
-            serverDolphin.delete([], (ServerPresentationModel) null)
+            serverDolphin.reset([], (GServerAttribute) null)
+            serverDolphin.reset([], (GServerPresentationModel) null)
+            serverDolphin.delete([], (GServerPresentationModel) null)
             serverDolphin.delete([], '')
             serverDolphin.delete(null, '')
             serverDolphin.presentationModel(null, null,null,null)

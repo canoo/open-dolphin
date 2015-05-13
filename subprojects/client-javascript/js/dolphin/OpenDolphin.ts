@@ -32,7 +32,7 @@ module opendolphin {
         var clientDolphin = new ClientDolphin();
         var transmitter;
         if (url != null && url.length > 0) {
-            transmitter = new CorsHttpTransmitter(url, reset);
+            transmitter = cors ? new CorsHttpTransmitter(url, reset) : new HttpTransmitter(url, reset);
         } else {
             transmitter = new NoTransmitter();
         }

@@ -1612,6 +1612,154 @@ var opendolphin;
     })();
     opendolphin.HttpTransmitter = HttpTransmitter;
 })(opendolphin || (opendolphin = {}));
+/// <reference path="Command.ts"/>
+/// <reference path="SignalCommand.ts"/>
+/// <reference path="ClientConnector.ts"/>
+/// <reference path="Codec.ts"/>
+var opendolphin;
+(function (opendolphin) {
+    var CorsHttpTransmitter = (function () {
+        function CorsHttpTransmitter(url, reset, charset) {
+            //this.http = new XMLHttpRequest();
+            //this.sig  = new XMLHttpRequest();
+            if (reset === void 0) { reset = true; }
+            if (charset === void 0) { charset = "UTF-8"; }
+            this.url = url;
+            this.charset = charset;
+            this.HttpCodes = {
+                finished: 4,
+                success: 200
+            };
+            this.makeNewCorsObjects();
+            if (!this.useXDomainRequest) {
+                this.http.withCredentials = true;
+            }
+            this.codec = new opendolphin.Codec();
+            if (reset) {
+                this.invalidate();
+            }
+        }
+        // see http://www.nczonline.net/blog/2010/05/25/cross-domain-ajax-with-cross-origin-resource-sharing/
+        CorsHttpTransmitter.prototype.makeNewCorsObjects = function () {
+            this.http = new XMLHttpRequest();
+            if ("withCredentials" in this.http) {
+                this.useXDomainRequest = false;
+                this.http.withCredentials = true;
+            }
+            else if (typeof XDomainRequest != "undefined") {
+                this.xdhttp = new XDomainRequest();
+                this.xdSig = new XDomainRequest();
+                this.useXDomainRequest = true;
+            }
+            else {
+                // todo: throw exception?
+                this.http = null; // browser does not support CORS
+                this.xdhttp = null;
+                this.xdSig = null;
+                this.useXDomainRequest = false;
+            }
+        };
+        CorsHttpTransmitter.prototype.transmit = function (commands, onDone) {
+            var _this = this;
+            if (this.useXDomainRequest) {
+                this.xdhttp.onerror = function (evt) {
+                    alert("could not fetch " + _this.url + ", message: " + evt.message); // todo dk: make this injectable
+                    onDone([]);
+                };
+                this.xdhttp.onload = function (evt) {
+                    var responseText = _this.xdhttp.responseText;
+                    var responseCommands = _this.codec.decode(responseText);
+                    onDone(responseCommands);
+                };
+                this.xdhttp.open('POST', this.url);
+                this.xdhttp.send(this.codec.encode(commands));
+            }
+            else {
+                this.http.onerror = function (evt) {
+                    alert("could not fetch " + _this.url + ", message: " + evt.message); // todo dk: make this injectable
+                    onDone([]);
+                };
+                this.http.onload = function (evt) {
+                    var responseText = _this.http.responseText;
+                    var responseCommands = _this.codec.decode(responseText);
+                    onDone(responseCommands);
+                };
+                this.http.open('POST', this.url, true);
+                this.http.overrideMimeType("application/json; charset=" + this.charset); // todo make injectable
+                this.http.send(this.codec.encode(commands));
+            }
+        };
+        CorsHttpTransmitter.prototype.signal = function (command) {
+            if (this.useXDomainRequest) {
+                this.xdSig.open('POST', this.url);
+                this.xdSig.send(this.codec.encode([command]));
+            }
+            else {
+                this.sig.open('POST', this.url, true);
+                this.sig.send(this.codec.encode([command]));
+            }
+        };
+        CorsHttpTransmitter.prototype.invalidate = function () {
+            if (this.useXDomainRequest) {
+                this.xdhttp.open('POST', this.url + 'invalidate?');
+                this.xdhttp.send();
+            }
+            else {
+                this.http.open('POST', this.url + 'invalidate?', false);
+                this.http.send();
+            }
+        };
+        return CorsHttpTransmitter;
+    })();
+    opendolphin.CorsHttpTransmitter = CorsHttpTransmitter;
+})(opendolphin || (opendolphin = {}));
+/// <reference path="ClientDolphin.ts"/>
+/// <reference path="ClientDolphin.ts"/>
+/// <reference path="ClientConnector.ts"/>
+/// <reference path="ClientModelStore.ts"/>
+/// <reference path="NoTransmitter.ts"/>
+/// <reference path="HttpTransmitter.ts"/>
+/// <reference path="CorsHttpTransmitter.ts"/>
+/// <reference path="ClientAttribute.ts"/>
+/**
+ * JS-friendly facade to avoid too many dependencies in plain JS code.
+ * The name of this file is also used for the initial lookup of the
+ * one javascript file that contains all the dolphin code.
+ * Changing the name requires the build support and all users
+ * to be updated as well.
+ * Dierk Koenig
+ */
+var opendolphin;
+(function (opendolphin) {
+    // factory method for the initialized dolphin
+    // Deprecated ! Use 'makeDolphin() instead
+    function dolphin(url, reset, slackMS) {
+        if (slackMS === void 0) { slackMS = 300; }
+        return makeDolphin().url(url).reset(reset).slackMS(slackMS).build();
+    }
+    opendolphin.dolphin = dolphin;
+    function makeDolphin() {
+        return new opendolphin.DolphinBuilder();
+    }
+    opendolphin.makeDolphin = makeDolphin;
+    function dolphinCors(url, reset, slackMS) {
+        if (slackMS === void 0) { slackMS = 300; }
+        console.log("OpenDolphin js found");
+        var clientDolphin = new opendolphin.ClientDolphin();
+        var transmitter;
+        if (url != null && url.length > 0) {
+            transmitter = new opendolphin.CorsHttpTransmitter(url, reset);
+        }
+        else {
+            transmitter = new opendolphin.NoTransmitter();
+        }
+        clientDolphin.setClientConnector(new opendolphin.ClientConnector(transmitter, clientDolphin, slackMS));
+        clientDolphin.setClientModelStore(new opendolphin.ClientModelStore(clientDolphin));
+        console.log("ClientDolphin initialized");
+        return clientDolphin;
+    }
+    opendolphin.dolphinCors = dolphinCors;
+})(opendolphin || (opendolphin = {}));
 /// <reference path="ClientDolphin.ts"/>
 /// <reference path="OpenDolphin.ts"/>
 /// <reference path="ClientConnector.ts"/>
@@ -1656,30 +1804,6 @@ var opendolphin;
         return DolphinBuilder;
     })();
     opendolphin.DolphinBuilder = DolphinBuilder;
-})(opendolphin || (opendolphin = {}));
-/// <reference path="ClientDolphin.ts"/>
-/// <reference path="DolphinBuilder.ts"/>
-/**
- * JS-friendly facade to avoid too many dependencies in plain JS code.
- * The name of this file is also used for the initial lookup of the
- * one javascript file that contains all the dolphin code.
- * Changing the name requires the build support and all users
- * to be updated as well.
- * Dierk Koenig
- */
-var opendolphin;
-(function (opendolphin) {
-    // factory method for the initialized dolphin
-    // Deprecated ! Use 'makeDolphin() instead
-    function dolphin(url, reset, slackMS) {
-        if (slackMS === void 0) { slackMS = 300; }
-        return makeDolphin().url(url).reset(reset).slackMS(slackMS).build();
-    }
-    opendolphin.dolphin = dolphin;
-    function makeDolphin() {
-        return new opendolphin.DolphinBuilder();
-    }
-    opendolphin.makeDolphin = makeDolphin;
 })(opendolphin || (opendolphin = {}));
 /// <reference path="Command.ts" />
 var opendolphin;

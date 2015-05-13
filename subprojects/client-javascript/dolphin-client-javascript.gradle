@@ -42,8 +42,6 @@ apply plugin: 'typescript'
 apply plugin: 'java'
 apply plugin: 'maven-publish'
 
-version = '0.12.0B2' // overwrite version here until we get a stable release
-
 task updateGrailsJs << {
     ant.delete dir: '../../dolphin-grails/web-app/js/dolphin'
     // copy single ts and js files for use with ts examples

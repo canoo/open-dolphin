@@ -4,6 +4,7 @@
 /// <reference path="ClientConnector.ts"/>
 /// <reference path="NoTransmitter.ts"/>
 /// <reference path="HttpTransmitter.ts"/>
+/// <reference path="CorsHttpTransmitter.ts"/>
 
 /**
  * JS-friendly facade to avoid too many dependencies in plain JS code.
@@ -22,6 +23,20 @@ module opendolphin {
         var transmitter;
         if (url != null && url.length > 0) {
             transmitter = new HttpTransmitter(url, reset);
+        } else {
+            transmitter = new NoTransmitter();
+        }
+        clientDolphin.setClientConnector(new ClientConnector(transmitter, clientDolphin, slackMS));
+        clientDolphin.setClientModelStore(new ClientModelStore(clientDolphin));
+        console.log("ClientDolphin initialized");
+        return clientDolphin;
+    }
+    export function dolphinCors(url:string, reset:boolean, slackMS:number = 300):ClientDolphin {
+        console.log("OpenDolphin js found");
+        var clientDolphin = new ClientDolphin();
+        var transmitter;
+        if (url != null && url.length > 0) {
+            transmitter = new CorsHttpTransmitter(url, reset);
         } else {
             transmitter = new NoTransmitter();
         }

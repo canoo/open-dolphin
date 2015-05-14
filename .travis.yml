@@ -1,5 +1,8 @@
 language: java
-install: true
+node_js:
+    - "0.11"
+install:
+    - "npm install -g typescript"
 script:
     - TERM=dumb ./gradlew build jacocoTestReport
 jdk:

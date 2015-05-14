@@ -16,13 +16,7 @@ module opendolphin {
         useXDomainRequest: boolean;
         codec:Codec;
 
-        HttpCodes = {
-            finished: 4,
-            success : 200
-        };
         constructor(public url: string, reset: boolean = true, public charset: string = "UTF-8") {
-            //this.http = new XMLHttpRequest();
-            //this.sig  = new XMLHttpRequest();
 
             this.makeNewCorsObjects();
 

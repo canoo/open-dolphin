@@ -1621,16 +1621,10 @@ var opendolphin;
 (function (opendolphin) {
     var CorsHttpTransmitter = (function () {
         function CorsHttpTransmitter(url, reset, charset) {
-            //this.http = new XMLHttpRequest();
-            //this.sig  = new XMLHttpRequest();
             if (reset === void 0) { reset = true; }
             if (charset === void 0) { charset = "UTF-8"; }
             this.url = url;
             this.charset = charset;
-            this.HttpCodes = {
-                finished: 4,
-                success: 200
-            };
             this.makeNewCorsObjects();
             if (!this.useXDomainRequest) {
                 this.http.withCredentials = true;
@@ -1732,13 +1726,14 @@ var opendolphin;
 var opendolphin;
 (function (opendolphin) {
     // factory method for the initialized dolphin
-    function dolphin(url, reset, slackMS) {
+    function dolphin(url, reset, slackMS, cors) {
         if (slackMS === void 0) { slackMS = 300; }
+        if (cors === void 0) { cors = false; }
         console.log("OpenDolphin js found");
         var clientDolphin = new opendolphin.ClientDolphin();
         var transmitter;
         if (url != null && url.length > 0) {
-            transmitter = new opendolphin.HttpTransmitter(url, reset);
+            transmitter = cors ? new opendolphin.CorsHttpTransmitter(url, reset) : new opendolphin.HttpTransmitter(url, reset);
         }
         else {
             transmitter = new opendolphin.NoTransmitter();
@@ -1749,23 +1744,6 @@ var opendolphin;
         return clientDolphin;
     }
     opendolphin.dolphin = dolphin;
-    function dolphinCors(url, reset, slackMS) {
-        if (slackMS === void 0) { slackMS = 300; }
-        console.log("OpenDolphin js found");
-        var clientDolphin = new opendolphin.ClientDolphin();
-        var transmitter;
-        if (url != null && url.length > 0) {
-            transmitter = new opendolphin.CorsHttpTransmitter(url, reset);
-        }
-        else {
-            transmitter = new opendolphin.NoTransmitter();
-        }
-        clientDolphin.setClientConnector(new opendolphin.ClientConnector(transmitter, clientDolphin, slackMS));
-        clientDolphin.setClientModelStore(new opendolphin.ClientModelStore(clientDolphin));
-        console.log("ClientDolphin initialized");
-        return clientDolphin;
-    }
-    opendolphin.dolphinCors = dolphinCors;
 })(opendolphin || (opendolphin = {}));
 /// <reference path="Command.ts" />
 var opendolphin;

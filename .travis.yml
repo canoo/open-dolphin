@@ -1,8 +1,7 @@
 language: java
 node_js:
-    - "0.11"
-install:
-    - "npm install -g typescript"
+    - "0.12"
+install: true
 script:
     - TERM=dumb ./gradlew build jacocoTestReport
 jdk:
@@ -10,5 +9,6 @@ jdk:
 before_install:
     - export DISPLAY=:99.0
     - sh -e /etc/init.d/xvfb start
+    - "npm install -g typescript"
 after_success:
     ./gradlew jacocoRootReport coveralls -i

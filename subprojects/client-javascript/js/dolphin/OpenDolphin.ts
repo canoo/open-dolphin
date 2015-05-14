@@ -27,7 +27,7 @@ module opendolphin {
         return new DolphinBuilder();
     }
 
-    export function dolphinCors(url:string, reset:boolean, slackMS:number = 300):ClientDolphin {
+    export function dolphinCors(url:string, reset:boolean, slackMS:number = 300, cors:boolean = false):ClientDolphin {
         console.log("OpenDolphin js found");
         var clientDolphin = new ClientDolphin();
         var transmitter;

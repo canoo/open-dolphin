@@ -310,10 +310,12 @@ var opendolphin;
                 return;
             }
             if (this.findAttributeByPropertyNameAndTag(attribute.propertyName, attribute.tag)) {
-                throw new Error("There already is an attribute with property name: " + attribute.propertyName + " and tag: " + attribute.tag + " in presentation model with id: " + this.id);
+                throw new Error("There already is an attribute with property name: " + attribute.propertyName
+                    + " and tag: " + attribute.tag + " in presentation model with id: " + this.id);
             }
             if (attribute.getQualifier() && this.findAttributeByQualifier(attribute.getQualifier())) {
-                throw new Error("There already is an attribute with qualifier: " + attribute.getQualifier() + " in presentation model with id: " + this.id);
+                throw new Error("There already is an attribute with qualifier: " + attribute.getQualifier()
+                    + " in presentation model with id: " + this.id);
             }
             attribute.setPresentationModel(this);
             this.attributes.push(attribute);
@@ -567,7 +569,10 @@ var opendolphin;
             else {
                 batch.push(candidate);
             }
-            if (!candidate.handler && !(candidate.command['className'] == "org.opendolphin.core.comm.NamedCommand") && !(candidate.command['className'] == "org.opendolphin.core.comm.EmptyNotification")) {
+            if (!candidate.handler &&
+                !(candidate.command['className'] == "org.opendolphin.core.comm.NamedCommand") &&
+                !(candidate.command['className'] == "org.opendolphin.core.comm.EmptyNotification") // and no unknown client side effect
+            ) {
                 this.processNext(queue, batch); // then we can proceed with batching
             }
         };
@@ -810,9 +815,7 @@ var opendolphin;
             this.currentlySending = true;
             var cmdsAndHandlers = this.commandBatcher.batch(this.commandQueue);
             var callback = cmdsAndHandlers[cmdsAndHandlers.length - 1].handler;
-            var commands = cmdsAndHandlers.map(function (cah) {
-                return cah.command;
-            });
+            var commands = cmdsAndHandlers.map(function (cah) { return cah.command; });
             this.transmitter.transmit(commands, function (response) {
                 //console.log("server response: [" + response.map(it => it.id).join(", ") + "] ");
                 var touchedPMs = [];
@@ -1026,9 +1029,9 @@ var opendolphin;
             this.waiting = true;
             var me = this; // oh, boy, this took some time to find...
             this.send(this.pushListener, { onFinished: function (models) {
-                me.waiting = false;
-                me.listen();
-            }, onFinishedData: null });
+                    me.waiting = false;
+                    me.listen();
+                }, onFinishedData: null });
         };
         ClientConnector.prototype.release = function () {
             if (!this.waiting)
@@ -1595,9 +1598,7 @@ var opendolphin;
                 }
             };
             this.http.open('POST', this.url, true);
-            if ("overrideMimeType" in this.http) {
-                this.http.overrideMimeType("application/json; charset=" + this.charset); // todo make injectable
-            }
+            this.http.overrideMimeType("application/json; charset=" + this.charset); // todo make injectable
             this.http.send(this.codec.encode(commands));
         };
         HttpTransmitter.prototype.signal = function (command) {
@@ -1707,58 +1708,13 @@ var opendolphin;
     })();
     opendolphin.CorsHttpTransmitter = CorsHttpTransmitter;
 })(opendolphin || (opendolphin = {}));
+/// <reference path="ClientAttribute.ts"/>
 /// <reference path="ClientDolphin.ts"/>
-/// <reference path="OpenDolphin.ts"/>
-/// <reference path="ClientConnector.ts"/>
 /// <reference path="ClientModelStore.ts"/>
+/// <reference path="ClientConnector.ts"/>
 /// <reference path="NoTransmitter.ts"/>
 /// <reference path="HttpTransmitter.ts"/>
 /// <reference path="CorsHttpTransmitter.ts"/>
-/// <reference path="ClientAttribute.ts"/>
-var opendolphin;
-(function (opendolphin) {
-    var DolphinBuilder = (function () {
-        function DolphinBuilder() {
-            this.reset_ = false;
-            this.slackMS_ = 300;
-            this.cors_ = false;
-        }
-        DolphinBuilder.prototype.url = function (url) {
-            this.url_ = url;
-            return this;
-        };
-        DolphinBuilder.prototype.reset = function (reset) {
-            this.reset_ = reset;
-            return this;
-        };
-        DolphinBuilder.prototype.slackMS = function (slackMS) {
-            this.slackMS_ = slackMS;
-            return this;
-        };
-        DolphinBuilder.prototype.cors = function (cors) {
-            this.cors_ = cors;
-            return this;
-        };
-        DolphinBuilder.prototype.build = function () {
-            console.log("OpenDolphin js found");
-            var clientDolphin = new opendolphin.ClientDolphin();
-            var transmitter;
-            if (this.url_ != null && this.url_.length > 0) {
-                transmitter = this.cors_ ? new opendolphin.CorsHttpTransmitter(this.url_, this.reset_) : new opendolphin.HttpTransmitter(this.url_, this.reset_);
-            }
-            else {
-                transmitter = new opendolphin.NoTransmitter();
-            }
-            clientDolphin.setClientConnector(new opendolphin.ClientConnector(transmitter, clientDolphin, this.slackMS_));
-            clientDolphin.setClientModelStore(new opendolphin.ClientModelStore(clientDolphin));
-            console.log("ClientDolphin initialized");
-            return clientDolphin;
-        };
-        return DolphinBuilder;
-    })();
-    opendolphin.DolphinBuilder = DolphinBuilder;
-})(opendolphin || (opendolphin = {}));
-/// <reference path="DolphinBuilder.ts"/>
 /**
  * JS-friendly facade to avoid too many dependencies in plain JS code.
  * The name of this file is also used for the initial lookup of the
@@ -1770,17 +1726,24 @@ var opendolphin;
 var opendolphin;
 (function (opendolphin) {
     // factory method for the initialized dolphin
-    // Deprecated ! Use 'makeDolphin() instead
-    function dolphin(url, reset, slackMS) {
+    function dolphin(url, reset, slackMS, cors) {
         if (slackMS === void 0) { slackMS = 300; }
-        return makeDolphin().url(url).reset(reset).slackMS(slackMS).build();
+        if (cors === void 0) { cors = false; }
+        console.log("OpenDolphin js found");
+        var clientDolphin = new opendolphin.ClientDolphin();
+        var transmitter;
+        if (url != null && url.length > 0) {
+            transmitter = cors ? new opendolphin.CorsHttpTransmitter(url, reset) : new opendolphin.HttpTransmitter(url, reset);
+        }
+        else {
+            transmitter = new opendolphin.NoTransmitter();
+        }
+        clientDolphin.setClientConnector(new opendolphin.ClientConnector(transmitter, clientDolphin, slackMS));
+        clientDolphin.setClientModelStore(new opendolphin.ClientModelStore(clientDolphin));
+        console.log("ClientDolphin initialized");
+        return clientDolphin;
     }
     opendolphin.dolphin = dolphin;
-    // factory method to build an initialized dolphin
-    function makeDolphin() {
-        return new opendolphin.DolphinBuilder();
-    }
-    opendolphin.makeDolphin = makeDolphin;
 })(opendolphin || (opendolphin = {}));
 /// <reference path="Command.ts" />
 var opendolphin;

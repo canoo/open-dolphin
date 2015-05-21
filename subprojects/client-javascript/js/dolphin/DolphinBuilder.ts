@@ -4,6 +4,7 @@
 /// <reference path="ClientModelStore.ts"/>
 /// <reference path="NoTransmitter.ts"/>
 /// <reference path="HttpTransmitter.ts"/>
+/// <reference path="CorsHttpTransmitter.ts"/>
 /// <reference path="ClientAttribute.ts"/>
 
 module opendolphin {
@@ -13,6 +14,7 @@ module opendolphin {
         private url_: string;
         private reset_: boolean = false;
         private slackMS_ :number = 300;
+        private cors_: boolean = false;
 
         constructor(){
 
@@ -30,12 +32,16 @@ module opendolphin {
             this.slackMS_ = slackMS;
             return this;
         }
+        public cors(cors:boolean):DolphinBuilder {
+            this.cors_ = cors;
+            return this;
+        }
         public build():ClientDolphin {
             console.log("OpenDolphin js found");
             var clientDolphin = new ClientDolphin();
             var transmitter;
             if (this.url_ != null && this.url_.length > 0) {
-                transmitter = new HttpTransmitter(this.url_, this.reset_);
+                transmitter = this.cors_ ? new CorsHttpTransmitter(this.url_, this.reset_) : new HttpTransmitter(this.url_, this.reset_);
             } else {
                 transmitter = new NoTransmitter();
             }

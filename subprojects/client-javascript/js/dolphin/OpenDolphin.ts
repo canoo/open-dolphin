@@ -1,4 +1,3 @@
-/// <reference path="ClientDolphin.ts"/>
 /// <reference path="DolphinBuilder.ts"/>
 
 /**
@@ -17,6 +16,7 @@ module opendolphin {
         return makeDolphin().url(url).reset(reset).slackMS(slackMS).build();
     }
 
+    // factory method to build an initialized dolphin
     export function makeDolphin():DolphinBuilder {
         return new DolphinBuilder();
     }

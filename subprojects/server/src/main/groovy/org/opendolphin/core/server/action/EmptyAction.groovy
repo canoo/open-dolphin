@@ -28,7 +28,7 @@ import groovy.util.logging.Log
  * in the expected sequence.
  */
 
-//CompileStatic
+@CompileStatic
 @Log
 class EmptyAction implements ServerAction {
 

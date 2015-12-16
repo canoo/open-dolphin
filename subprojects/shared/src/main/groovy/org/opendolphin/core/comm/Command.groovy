@@ -32,7 +32,7 @@ import org.codehaus.groovy.runtime.StringGroovyMethods
  * The receiving side is responsible for finding the appropriate action.
  */
 
-//CompileStatic
+@CompileStatic
 class Command {
 
     String getId() { idFor this.class }

@@ -16,6 +16,7 @@
 
 package org.opendolphin.core.server.action
 
+import groovy.transform.CompileStatic
 import groovy.util.logging.Log
 import org.opendolphin.core.PresentationModel
 import org.opendolphin.core.Tag
@@ -26,7 +27,7 @@ import org.opendolphin.core.server.ServerPresentationModel
 import org.opendolphin.core.server.comm.ActionRegistry
 
 @Log
-//CompileStatic
+@CompileStatic
 class CreatePresentationModelAction extends DolphinServerAction {
 
     void registerIn(ActionRegistry registry) {

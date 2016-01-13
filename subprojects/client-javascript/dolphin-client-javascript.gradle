@@ -29,7 +29,7 @@ buildscript {
     }
     dependencies {
 		classpath 'de.richsource.gradle.plugins:typescript-gradle-plugin:1.0.6'
-        classpath 'com.moowork.gradle:gradle-node-plugin:0.6'
+        classpath 'com.moowork.gradle:gradle-node-plugin:0.11'
     }
 }
 
@@ -41,6 +41,11 @@ apply plugin: 'typescript'
 
 // used to enable run node scripts
 apply plugin: 'com.moowork.node'
+// configured plugin to use specific node version when running node tasks
+node {
+    version = '4.2.4'
+    download = true
+}
 
 // used to produce webjar:
 apply plugin: 'java'
@@ -85,9 +90,9 @@ npm_install {
     args = ['--prefix=./testrunner','--loglevel', 'warn']
 }
 
-task runKarmaJsTestRunner(dependsOn: [npm_install], type: Exec) {
-    description 'Execute js test runner karma'
-    commandLine 'sh', '-c', 'cd ./testrunner && ./node_modules/karma/bin/karma start'
+task runKarmaJsTestRunner(dependsOn: [npm_install], type: NodeTask) {
+    script = file('testrunner/node_modules/karma/bin/karma')
+    args = ['start', 'testrunner/karma.conf.js']
 }
 
 //include js unit tests into project build lifecycle

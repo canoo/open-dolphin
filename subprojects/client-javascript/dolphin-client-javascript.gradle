@@ -86,17 +86,27 @@ compileTypeScript {
 	out = file('build/opendolphin.js')
 }
 
+project.ext {
+    karmaExec = file('testrunner/node_modules/karma/bin/karma')
+    karmaConfig = 'testrunner/karma.conf.js'
+}
+
+if (!project.hasProperty("runJsTest")) {
+    println 'runKarmaJsTest EXCLUDED'
+    gradle.startParameter.excludedTaskNames += "runKarmaJsTest"
+}
+
 npm_install {
     args = ['--prefix=./testrunner','--loglevel', 'warn']
 }
 
-task runKarmaJsTestRunner(dependsOn: [npm_install], type: NodeTask) {
-    script = file('testrunner/node_modules/karma/bin/karma')
-    args = ['start', 'testrunner/karma.conf.js']
+task runKarmaJsTest(dependsOn: [npm_install], type: NodeTask) {
+    script = karmaExec
+    args = ['start', karmaConfig]
 }
 
 //include js unit tests into project build lifecycle
-test.dependsOn runKarmaJsTestRunner
+test.dependsOn runKarmaJsTest
 
 task install (dependsOn: [compileTypeScript, jsZip, updateGrailsJs])
 

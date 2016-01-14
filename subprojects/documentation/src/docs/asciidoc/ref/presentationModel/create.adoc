@@ -1,6 +1,6 @@
 Presentation models can be created on the client and on the server side via the dolphin facade.
 
-== Create a Presentation Model from the (client) view
+=== Create a Presentation Model from the (client) view
 
 The link:http://open-dolphin.org/download/api/org/opendolphin/core/client/ClientDolphin.html[client dolphin]
 has a _presentationModel_ factory method that instantiates a link:http://open-dolphin.org/download/api/org/opendolphin/core/client/ClientPresentationModel.html[ClientPresentationModel]
@@ -47,7 +47,7 @@ def pm = clientDolphin.presentationModel("myPmId", (FIRST):"Dierk", (LAST):"Koen
 var instantUpdateAttributePM = clientDolphin.attribute("FIRST", null, "Dierk");
 clientDolphin.presentationModel("myPmId", undefined, instantUpdateAttributePM);
 
-== Create a Presentation Model from the (server) controller
+=== Create a Presentation Model from the (server) controller
 
 On the server side, the construction of a presentation model looks very similar
 but works quite differently behind the scenes. The reason is that on the server
@@ -105,7 +105,7 @@ Otherwise the calls are identical
 Map data = [firstName: "Dierk", lastName:"Koenig"]
 presentationModel "MyPmId", "MyType", new DTO(Slot.slots(data))
 
-== Create client-side-only Presentation Models
+=== Create client-side-only Presentation Models
 
 OpenDolphin supports presentation models that are only created on the
 client (view) and synchronized back to the server (controller).
@@ -128,4 +128,3 @@ getServerDolphin().clientSideModel(response, "MyPmId", "MyType", new DTO(
     new Slot("firstName", "Dierk"),
     new Slot("lastName",  "Koenig")
 );
-

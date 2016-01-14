@@ -55,7 +55,7 @@ serverDolphin.action("saveActionName", (command, response) -> {
 ----
 
 Web example
-[source,html]
+[source,javascript]
 ----
 saveButton.onclick = function () {
    dolphin.send("saveActionName", {

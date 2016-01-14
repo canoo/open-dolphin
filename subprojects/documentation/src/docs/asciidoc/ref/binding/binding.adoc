@@ -22,7 +22,7 @@ bind "text" of field to "text" of input
 ----
 
 Html example of binding input of textfield to the "text" attribute of the input presentation model
-[source,html]
+[source,javascript]
 ----
 htmlInput.oninput = function (event) {
    attributePM.setValue(htmlInput.value);

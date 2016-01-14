@@ -29,7 +29,7 @@ are totally generic.
 
 Here is how the code looks like:
 
-[source,html]
+[source,javascript]
 ----
 var PM_PERSON = "modelId"
 var ATT_FIRSTNAME = "attrId"

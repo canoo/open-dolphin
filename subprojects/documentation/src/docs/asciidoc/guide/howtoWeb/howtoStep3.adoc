@@ -10,7 +10,7 @@ image::./img/dolphin_pics/OpenDolphin-HowTo-Web-step3.png[width=500,height=500]
 
 Here is how the code to rebase looks like:
 
-[source,html]
+[source,javascript]
 ----
 var rebaseButton = document.getElementById("rebase-button");
 

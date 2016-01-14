@@ -1,8 +1,4 @@
-Attribute contains unique Id and unique property name per presentation model.
 Attributes can be created on the client via the dolphin facade.
-
-== Create client-side Attributes
-
 To create a new clientAttribute in java the preferred constructor
 
 [NOTE]
@@ -23,7 +19,7 @@ To create a new clientAttribute in web use the constructor
 ====
 
 A javascript example
-[source,html]
+[source,javascript]
 ----
 var firstNameAttr = clientDolphin.attribute(ATT_FIRSTNAME, null, "Initial Value");
 ----

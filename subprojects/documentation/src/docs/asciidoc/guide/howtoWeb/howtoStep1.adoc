@@ -11,7 +11,7 @@ image::./img/dolphin_pics/OpenDolphin-HowTo-Web-step1.png[width=500,height=500]
 
 Here is how the code to bind looks like:
 
-[source,html]
+[source,javascript]
 ----
 var dirtyStatusHtmlElement = document.getElementById("dirty-status"); // <1>
 

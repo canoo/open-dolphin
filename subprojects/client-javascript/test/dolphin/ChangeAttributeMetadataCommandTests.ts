@@ -12,6 +12,7 @@ module opendolphin {
             this.areIdentical(changedAttrMDCommand.attributeId, "10");
             this.areIdentical(changedAttrMDCommand.metadataName,"MDName");
             this.areIdentical(changedAttrMDCommand.value,20);
+
         }
 
     }

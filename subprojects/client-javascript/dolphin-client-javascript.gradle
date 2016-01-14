@@ -89,6 +89,7 @@ compileTypeScript {
 project.ext {
     karmaExec = file('testrunner/node_modules/karma/bin/karma')
     karmaConfig = 'testrunner/karma.conf.js'
+    karmaCiConfig = 'testrunner/karma.conf-ci.js'
 }
 
 if (!project.hasProperty("runJsTest")) {
@@ -103,6 +104,11 @@ npm_install {
 task runKarmaJsTest(dependsOn: [npm_install], type: NodeTask) {
     script = karmaExec
     args = ['start', karmaConfig]
+}
+
+task runKarmaJsTestInSauceLabs(dependsOn: [npm_install], type: NodeTask) {
+    script = karmaExec
+    args = ['start', karmaCiConfig]
 }
 
 //include js unit tests into project build lifecycle

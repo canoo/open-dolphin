@@ -2,7 +2,7 @@
 <html>
 <head>
     <title>Basic Functional Form Tests with form data</title>
-    <script data-main="../../js/dolphin/"  src="../../libs/require.js"></script>
+    <script data-main="../../../dolphin-grails/web-app/dolphin/"  src="../../../dolphin-grails/web-app/libs/require.js"></script>
     <link href="functional_tests.css" rel="stylesheet">
 </head>
 <body>
@@ -42,10 +42,10 @@
     </table>
 
 <script>
-    require([ 'opendolphin' ], function (dol) {
+    require([ 'opendolphin' ], function () {
 
         // setting up the dolphin
-        var dolphin = dol.dolphin(null, false);
+        var dolphin = opendolphin.dolphin(null, false);
         // make two attributes
         var nameAttribute = dolphin.attribute("person-name", "person.name", "");
         var ageAttribute  = dolphin.attribute("person-age",  "person.age",  "");

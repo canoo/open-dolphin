@@ -2,7 +2,7 @@
 <html>
 <head>
     <title>Basic Server Connect Tests</title>
-    <script data-main="../../js/dolphin/"  src="../../libs/require.js"></script>
+    <script data-main="../../../dolphin-grails/web-app/dolphin/"  src="../../../dolphin-grails/web-app/libs/require.js"></script>
     <link href="functional_tests.css" rel="stylesheet">
 </head>
 <body>
@@ -33,7 +33,7 @@
 </p>
 
 <script>
-    require([ 'opendolphin' ], function (dol) {
+    require([ 'opendolphin' ], function () {
 
         const SERVER_URL   = "http://localhost:8080/dolphin-grails/dolphin/";
 
@@ -43,7 +43,7 @@
         const CMD_ADD      = "org.opendolphin.demo.Tutorial.add"
 
         // setting up the dolphin
-        var dolphin = dol.dolphin(SERVER_URL, false);
+        var dolphin = opendolphin.dolphin(SERVER_URL, false);
 
         // make the known PM
         var instantUpdateAttribute = dolphin.attribute(ATTR_ID, null, "");

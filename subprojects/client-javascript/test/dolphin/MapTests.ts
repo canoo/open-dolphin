@@ -1,4 +1,4 @@
-/// <reference path="../../testsuite/tsUnit.ts"/>
+/// <reference path="../../testrunner/tsUnit.ts"/>
 /// <reference path="../../js/dolphin/ClientAttribute.ts"/>
 /// <reference path="../../js/dolphin/ClientPresentationModel.ts"/>
 /// <reference path="../../js/dolphin/Map.ts"/>

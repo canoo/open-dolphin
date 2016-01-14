@@ -1,4 +1,4 @@
-/// <reference path="../testsuite/tsUnit.ts"/>
+/// <reference path="tsUnit.ts"/>
 /// <reference path="../test/dolphin/ClientAttributeTests.ts"/>
 /// <reference path="../test/dolphin/ClientPresentationModelTests.ts"/>
 /// <reference path="../test/dolphin/NamedCommandTests.ts"/>

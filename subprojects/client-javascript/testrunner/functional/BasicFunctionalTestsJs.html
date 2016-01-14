@@ -2,7 +2,7 @@
 <html>
 <head>
     <title>Basic Functional Tests</title>
-    <script data-main="../../js/dolphin/" src="../../libs/require.js"></script>
+    <script data-main="../../../dolphin-grails/web-app/dolphin/"  src="../../../dolphin-grails/web-app/libs/require.js"></script>
     <link href="functional_tests.css" rel="stylesheet">
 </head>
 <body>
@@ -27,10 +27,10 @@ IsDirty
 
 <script>
 
-    require([ 'opendolphin' ], function (dol) {
+    require([ 'opendolphin' ], function () {
 
         // setting up the dolphin
-        const dolphin = dol.dolphin(null, false);
+        const dolphin = opendolphin.dolphin(null, false);
         // make two attributes
         const instantUpdateAttribute = dolphin.attribute("instant-update",   "same-qualifier", "");
         const qualifiedAttribute     = dolphin.attribute("qualified-update", "same-qualifier","");

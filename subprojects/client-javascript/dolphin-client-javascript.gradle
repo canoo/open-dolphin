@@ -43,8 +43,9 @@ apply plugin: 'typescript'
 apply plugin: 'com.moowork.node'
 // configured plugin to use specific node version when running node tasks
 node {
-    version = '4.2.4'
-    download = true
+    // at the moment deactivated, as typescript plugin is not integrated with node plugin node has to be globally installed
+    //version = '4.2.4'
+    download = false
 }
 
 // used to produce webjar:
@@ -101,12 +102,16 @@ npm_install {
     args = ['--prefix=./testrunner','--loglevel', 'warn']
 }
 
-task runKarmaJsTest(dependsOn: [npm_install], type: NodeTask) {
+task compileTscLocal(dependsOn: [npm_install],type: Exec) {
+    commandLine 'sh', '-c', "./testrunner/node_modules/typescript/bin/tsc js/dolphin/*.ts --outFile build/opendolphin.js --sourceMap --module amd"
+}
+
+task runKarmaJsTest(dependsOn: [compileTscLocal], type: NodeTask) {
     script = karmaExec
     args = ['start', karmaConfig]
 }
 
-task runKarmaJsTestInSauceLabs(dependsOn: [npm_install], type: NodeTask) {
+task runKarmaJsTestInSauceLabs(dependsOn: [npm_install, compileTscLocal], type: NodeTask) {
     script = karmaExec
     args = ['start', karmaCiConfig]
 }

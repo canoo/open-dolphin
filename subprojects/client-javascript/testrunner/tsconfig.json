@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "module": "amd",
+    "outDir": "./../build/compile",
+    "rootDir": "./../",
+    "sourceMap": false
+  },
+  "exclude": [
+    "functional",
+    "reports",
+    "node_modules"
+  ]
+}

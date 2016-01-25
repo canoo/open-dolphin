@@ -43,9 +43,8 @@ apply plugin: 'typescript'
 apply plugin: 'com.moowork.node'
 // configured plugin to use specific node version when running node tasks
 node {
-    // at the moment deactivated, as typescript plugin is not integrated with node plugin node has to be globally installed
-    //version = '4.2.4'
-    download = false
+    version = '4.2.4'
+    download = true
 }
 
 // used to produce webjar:
@@ -79,6 +78,7 @@ task jsZip (type: Zip) {
     }
 }
 
+// typescript plugin is not integrated with node plugin node and tsc have to be globally installed to run this task
 compileTypeScript {
 	source = 'js/dolphin'
 	outputDir = file('js/dolphin')
@@ -91,9 +91,12 @@ project.ext {
     karmaExec = file('testrunner/node_modules/karma/bin/karma')
     karmaConfig = 'testrunner/karma.conf.js'
     karmaCiConfig = 'testrunner/karma.conf-ci.js'
+
+    tscLocalExec = file('testrunner/node_modules/typescript/lib/tsc.js')
+    tscLocalConfigPath = './testrunner'
 }
 
-if (!project.hasProperty("runJsTest")) {
+if (!project.hasProperty("withJsTest")) {
     println 'runKarmaJsTest EXCLUDED'
     gradle.startParameter.excludedTaskNames += "runKarmaJsTest"
 }
@@ -102,8 +105,9 @@ npm_install {
     args = ['--prefix=./testrunner','--loglevel', 'warn']
 }
 
-task compileTscLocal(dependsOn: [npm_install],type: Exec) {
-    commandLine 'sh', '-c', "./testrunner/node_modules/typescript/bin/tsc js/dolphin/*.ts --outFile build/opendolphin.js --sourceMap --module amd"
+task compileTscLocal(dependsOn: [npm_install], type: NodeTask) {
+    script = tscLocalExec
+    args = ['-p', tscLocalConfigPath]
 }
 
 task runKarmaJsTest(dependsOn: [compileTscLocal], type: NodeTask) {
@@ -111,12 +115,12 @@ task runKarmaJsTest(dependsOn: [compileTscLocal], type: NodeTask) {
     args = ['start', karmaConfig]
 }
 
-task runKarmaJsTestInSauceLabs(dependsOn: [npm_install, compileTscLocal], type: NodeTask) {
+task runKarmaJsTestInSauceLabs(dependsOn: [compileTscLocal], type: NodeTask) {
     script = karmaExec
     args = ['start', karmaCiConfig]
 }
 
-//include js unit tests into project build lifecycle
+//include js unit tests into project build lifecycle depending on parameter -PwithJsTest
 test.dependsOn runKarmaJsTest
 
 task install (dependsOn: [compileTypeScript, jsZip, updateGrailsJs])

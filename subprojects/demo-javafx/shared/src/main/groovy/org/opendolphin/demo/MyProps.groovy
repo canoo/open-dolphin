@@ -19,10 +19,11 @@ package org.opendolphin.demo
 class MyProps {
 
     static class ATT {
-        static final String TITLE       = 'title'
-        static final String PURPOSE     = 'purpose'
-        static final String NAME        = 'name'
-        static final String LASTNAME    = 'lastname'
+        static final String TITLE           = 'title'
+        static final String PURPOSE         = 'purpose'
+        static final String NAME            = 'name'
+        static final String LASTNAME        = 'lastname'
+        static final String OBSERVATIONS    = 'observations'
     }
 
     static class CMD {

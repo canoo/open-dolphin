@@ -20,6 +20,7 @@ import org.opendolphin.core.Tag
 import org.opendolphin.core.server.DTO
 import org.opendolphin.core.server.Slot
 import org.opendolphin.demo.projector.SimpleFormView
+import org.opendolphin.demo.projector.UiControl
 
 import static org.opendolphin.demo.MyProps.ATT.*
 
@@ -38,6 +39,10 @@ dolphin.action "init", { cmd, response ->
 
         new Slot(LASTNAME,  'Smith'),
         new Slot(LASTNAME,  "Last name: ",          null, Tag.LABEL),
+
+        new Slot(OBSERVATIONS, 'Some observations from this person'),
+        new Slot(OBSERVATIONS, 'Observations: ', null, Tag.LABEL),
+        new Slot(OBSERVATIONS, UiControl.TEXTAREA.toString(), null, Tag.WIDGET_HINT),
     ))
 
     dolphin.presentationModel('person.actions', null, new DTO( // we could also use pm types
@@ -56,6 +61,7 @@ dolphin.action "person.toGerman", { cmd, response ->
     def person = dolphin.getAt('person')
     person.getAt(NAME,     Tag.LABEL   ).value = "Vorname: "
     person.getAt(LASTNAME, Tag.LABEL   ).value = "Nachname: "
+    person.getAt(OBSERVATIONS, Tag.LABEL   ).value = "Beobachtungen: "
     person.getAt(NAME,     Tag.TOOLTIP ).value = "muss ein 'a' enthalten "
 }
 dolphin.action "person.reset", { cmd, response ->

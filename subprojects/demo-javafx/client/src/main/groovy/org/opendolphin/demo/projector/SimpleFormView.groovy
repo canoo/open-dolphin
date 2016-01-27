@@ -20,7 +20,6 @@ import javafx.scene.Parent
 import javafx.scene.Scene
 import javafx.scene.control.Button
 import javafx.scene.control.Label
-import javafx.scene.control.TextField
 import javafx.scene.control.Tooltip
 import javafx.scene.layout.GridPane
 import javafx.scene.layout.HBox
@@ -29,6 +28,8 @@ import org.opendolphin.core.client.ClientAttribute
 import org.opendolphin.core.client.ClientDolphin
 import org.opendolphin.core.client.ClientPresentationModel
 import org.opendolphin.demo.FX
+import org.opendolphin.demo.projector.components.IJavaFxComponentsRegistry
+import org.opendolphin.demo.projector.components.JavaFxComponentRegistry
 
 import static groovyx.javafx.GroovyFX.start
 import static org.opendolphin.binding.JFXBinder.bind
@@ -56,7 +57,7 @@ class SimpleFormView {
             JavaFxProjector projector = new JavaFxProjector(dolphin: dolphin, stage: primaryStage)
 
             IPresentation form  = projector.createSimpleForm("person")    // using the specific projector
-            IPresentation frame = projector.createFrame(form, 400, 200)   // composing presentations
+            IPresentation frame = projector.createFrame(form, 1200, 600)   // composing presentations
 
             style delegate // styling could also be part of the projection
             frame.visible = true
@@ -109,6 +110,10 @@ class JavaFxProjector implements IProjector {
     }
 
     JavaFxPresentation createSimpleForm(String pmId) {
+        createSimpleForm(pmId, JavaFxComponentRegistry.instance)
+    }
+
+    JavaFxPresentation createSimpleForm(String pmId, IJavaFxComponentsRegistry javaFxComponentRegistry) {
         def grid = new GridPane()
 
         dolphin.send 'init', { pms ->        // only do binding after server has initialized the tags
@@ -124,25 +129,11 @@ class JavaFxProjector implements IProjector {
                 if (labelAtt) {
                     bind propName, LABEL of model to FX.TEXT of label  // label may change at runtime
                 }
-                def input = new TextField()           // we currently assume text fields only. More is to come here
+
+                UiControl uiControlType = UiControl.uiControlFor(model, propName)
+                def input = javaFxComponentRegistry.create(uiControlType, [propName: propName, model: model])
+
                 grid.add(input, 1, row)
-                bind propName of model to FX.TEXT of input
-
-                if (model.getAt(propName, REGEX)) {   // bind regex validator if applicable
-                    Closure regexer = { newVal ->
-                        boolean matches = newVal ==~ model.getAt(propName, REGEX).value
-                        putStyle(input, !matches, 'invalid')
-                        return newVal
-                    }
-                    bind FX.TEXT of input using regexer to propName of model
-                } else {
-                    bind FX.TEXT of input to propName of model
-                }
-
-                if (model.getAt(propName, TOOLTIP)) {
-                    bind propName, TOOLTIP of model to FX.TOOLTIP of input, { new Tooltip(it) }
-                }
-
                 row++
             }
 
@@ -170,11 +161,4 @@ class JavaFxProjector implements IProjector {
         return new JavaFxPresentation(node: grid)
     }
 
-    static void putStyle(node, boolean addOrRemove, String styleClassName) {
-        if (addOrRemove) {
-            node.styleClass.add(styleClassName)
-        } else {
-            node.styleClass.remove(styleClassName)
-        }
-    }
 }

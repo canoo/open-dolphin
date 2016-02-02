@@ -130,7 +130,7 @@ class JavaFxProjector implements IProjector {
                     bind propName, LABEL of model to FX.TEXT of label  // label may change at runtime
                 }
 
-                UiControl uiControlType = UiControl.uiControlFor(model, propName)
+                UiControlType uiControlType = UiControlType.getValueOf(model, propName)
                 def input = javaFxComponentRegistry.create(uiControlType, [propName: propName, model: model])
 
                 grid.add(input, 1, row)

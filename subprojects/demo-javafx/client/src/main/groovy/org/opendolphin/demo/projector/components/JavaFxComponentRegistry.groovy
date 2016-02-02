@@ -1,25 +1,22 @@
 package org.opendolphin.demo.projector.components
 
-import org.opendolphin.demo.projector.UiControl
-
-import static org.opendolphin.demo.projector.UiControl.INPUTFIELD
-import static org.opendolphin.demo.projector.UiControl.TEXTAREA
+import org.opendolphin.demo.projector.UiControlType
 
 @Singleton(strict = false)
 class JavaFxComponentRegistry implements IJavaFxComponentsRegistry {
 
-    private final Map<UiControl, IJavaFxComponentFactory> componentRegistry = new HashMap<>();
+    private final Map<UiControlType, IJavaFxComponentFactory> componentRegistry = new HashMap<>();
 
     private JavaFxComponentRegistry() {
         init();
     }
 
     private void init() {
-        register(INPUTFIELD, new JavaFxInputFieldFactory());
-        register(TEXTAREA, new JavaFxTextAreaFactory());
+        register(UiControlType.INPUTFIELD, new JavaFxInputFieldFactory());
+        register(UiControlType.TEXTAREA, new JavaFxTextAreaFactory());
     }
 
-    void register(UiControl controlType, IJavaFxComponentFactory factory) {
+    void register(UiControlType controlType, IJavaFxComponentFactory factory) {
         assert controlType
         componentRegistry.put(controlType, factory)
     }

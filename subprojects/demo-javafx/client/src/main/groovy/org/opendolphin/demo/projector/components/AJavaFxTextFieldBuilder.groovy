@@ -40,9 +40,7 @@ abstract class AJavaFxTextFieldBuilder {
 
     protected void tooltipBind() {
         if (model.getAt(propName, TOOLTIP)) {
-            String value = model.getAt(propName, TOOLTIP).value
-            input.setTooltip(new Tooltip(value))
-            bind propName, TOOLTIP of model to FX.TOOLTIP of input
+            bind propName, TOOLTIP of model to FX.TOOLTIP of input, { new Tooltip(it) }
         }
     }
 

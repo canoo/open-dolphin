@@ -10,9 +10,8 @@ import org.opendolphin.core.server.comm.ActionRegistry
 import static org.opendolphin.demo.crud.PortfolioConstants.*
 import static org.opendolphin.demo.crud.PortfolioConstants.ATT.DOMAIN_ID
 import static org.opendolphin.demo.crud.PortfolioConstants.ATT.TOTAL
-import static org.opendolphin.demo.crud.PortfolioConstants.PM_ID.SELECTED
 import static org.opendolphin.demo.crud.PortfolioConstants.TYPE.PORTFOLIO
-import static org.opendolphin.demo.crud.PositionConstants.ATT.PORTFOLIO_ID
+import static org.opendolphin.demo.crud.PositionConstants.ATT.PORTFOLIO_DOMAIN_ID
 import static org.opendolphin.demo.crud.PositionConstants.ATT.WEIGHT
 import static org.opendolphin.demo.crud.PositionConstants.TYPE.POSITION
 
@@ -36,11 +35,12 @@ class CrudActions extends DolphinServerAction {
          * Pull all positions for the selected portfolio from service lookup
          */
         serverDolphin.action PositionConstants.CMD.PULL, { cmd, response ->
-            def visiblePortfolio  = serverDolphin.findPresentationModelById(SELECTED)
-            def selectedPortfolio = serverDolphin.findPresentationModelById(visiblePortfolio[PORTFOLIO_ID].value as String)
-            def positions = crudService.listPositions(selectedPortfolio[DOMAIN_ID].value.toLong())
+            PortfolioSelection visiblePortfolio = PortfolioSelection.selection(serverDolphin)
+            def selectedPortfolioPm = serverDolphin.findPresentationModelById(visiblePortfolio.getPortfolioId())
+            Portfolio selectedPortfolio = new Portfolio(selectedPortfolioPm)
+            def positions = crudService.listPositions(selectedPortfolio.getDomainId())
             positions.eachWithIndex { positionDTO, index ->
-                positionDTO.slots << new Slot(PORTFOLIO_ID, selectedPortfolio[DOMAIN_ID].value)
+                positionDTO.slots << new Slot(PORTFOLIO_DOMAIN_ID, selectedPortfolio[DOMAIN_ID].value)
                 presentationModel null, POSITION, positionDTO
             }
         }
@@ -66,7 +66,7 @@ class CrudActions extends DolphinServerAction {
 
     protected void recalculateTotal(PresentationModel position) {
 
-        def portfolioDomainId = position[PORTFOLIO_ID].value
+        def portfolioDomainId = position[PORTFOLIO_DOMAIN_ID].value
         def allPortfolios     = serverDolphin.findAllPresentationModelsByType(PORTFOLIO);
         def currentPortfolio  = allPortfolios.find { it[DOMAIN_ID].value == portfolioDomainId }
         if (! currentPortfolio) {
@@ -74,7 +74,7 @@ class CrudActions extends DolphinServerAction {
             return
         }
         def allPositions = serverDolphin.findAllPresentationModelsByType(POSITION)
-        def positions    = allPositions.findAll { it[PORTFOLIO_ID].value == portfolioDomainId }
+        def positions    = allPositions.findAll { it[PORTFOLIO_DOMAIN_ID].value == portfolioDomainId }
         def total        = positions.sum { it[WEIGHT].value }
 
         currentPortfolio[TOTAL].value = total

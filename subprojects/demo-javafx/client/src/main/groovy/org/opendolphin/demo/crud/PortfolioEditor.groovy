@@ -21,7 +21,7 @@ import static org.opendolphin.demo.crud.PortfolioConstants.ATT.NAME
 import static org.opendolphin.demo.crud.PortfolioConstants.ATT.TOTAL
 import static org.opendolphin.demo.crud.PortfolioConstants.PM_ID.SELECTED
 import static org.opendolphin.demo.crud.PositionConstants.ATT.INSTRUMENT
-import static org.opendolphin.demo.crud.PositionConstants.ATT.PORTFOLIO_ID
+import static org.opendolphin.demo.crud.PositionConstants.ATT.PORTFOLIO_DOMAIN_ID
 import static org.opendolphin.demo.crud.PositionConstants.ATT.WEIGHT
 import static org.opendolphin.demo.crud.PositionConstants.CMD.PULL
 import static org.opendolphin.demo.crud.PositionConstants.TYPE.POSITION
@@ -117,7 +117,7 @@ class PortfolioEditor {
             // bind available positions to table
             clientDolphin.addModelStoreListener POSITION, { ModelStoreEvent event ->
                 PresentationModel position = event.presentationModel
-                if (position[PORTFOLIO_ID].value != portfolioPM[DOMAIN_ID].value) return // only consider positions that refer to us
+                if (position[PORTFOLIO_DOMAIN_ID].value != portfolioPM[DOMAIN_ID].value) return // only consider positions that refer to us
                 switch (event.type){
                     case ModelStoreEvent.Type.ADDED:
                         observableListOfPositions << position
@@ -131,7 +131,7 @@ class PortfolioEditor {
             // bind available positions to chart
             clientDolphin.addModelStoreListener POSITION, { ModelStoreEvent event ->
                 PresentationModel position = event.presentationModel
-                if (position[PORTFOLIO_ID].value != portfolioPM[DOMAIN_ID].value) return // only consider positions that refer to us
+                if (position[PORTFOLIO_DOMAIN_ID].value != portfolioPM[DOMAIN_ID].value) return // only consider positions that refer to us
                 switch (event.type){
                     case ModelStoreEvent.Type.ADDED:
                         def pieDataPoint = new PieChart.Data("",0)
@@ -181,7 +181,7 @@ class PortfolioEditor {
 
     def void setCurrentPortfolio() {
         def visiblePortfolio = clientDolphin.findPresentationModelById(SELECTED)
-        visiblePortfolio[PORTFOLIO_ID].value = portfolioPM.id
+        visiblePortfolio[PORTFOLIO_DOMAIN_ID].value = portfolioPM.id
     }
 
 }

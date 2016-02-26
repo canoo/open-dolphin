@@ -19,7 +19,7 @@ class PortfolioConstants {
     }
 
     static class PM_ID {
-        public static final String SELECTED  = PortfolioConstants.unique 'selected'
+        public static final String SELECTED  = PortfolioSelection.ATT_PORTFOLIO_ID
     }
 
     static String unique(String s) { PortfolioConstants.class.name + '.'+ s }

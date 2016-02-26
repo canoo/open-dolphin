@@ -5,7 +5,7 @@ import org.opendolphin.core.PresentationModel
 import org.opendolphin.core.Attribute
 
 @Canonical
-class Portfolio {
+final class Portfolio {
 
     PresentationModel presentationModel
 

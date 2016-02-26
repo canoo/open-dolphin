@@ -8,10 +8,7 @@ import spock.lang.Specification
 
 import java.util.concurrent.TimeUnit
 
-import static org.opendolphin.demo.crud.PortfolioConstants.*
 import static org.opendolphin.demo.crud.PortfolioConstants.PM_ID.SELECTED
-import static org.opendolphin.demo.crud.PositionConstants.*
-
 
 class CrudTests extends Specification {
 
@@ -21,7 +18,7 @@ class CrudTests extends Specification {
     protected TestInMemoryConfig initApp() {
         def result = new TestInMemoryConfig()
         result.serverDolphin.register(new CrudActions(crudService: new CrudInMemoryService()))
-        result.clientDolphin.presentationModel(SELECTED, null, portfolioId: null)
+        result.clientDolphin.presentationModel((PortfolioSelection.PM_ID_SELECTED), null, (PortfolioSelection.ATT_PORTFOLIO_ID): null)
         result.syncPoint(1)
         result
     }
@@ -49,7 +46,8 @@ class CrudTests extends Specification {
             portfolio.getAttributes().size() == 4
         }
         and: "there is no selection"
-        clientDolphin[SELECTED].portfolioId.value == null
+        println "xyy"
+        PortfolioSelection.selection(clientDolphin).getPortfolioId() == null
     }
 
     void "when we select a portfolio and change a position, the total is updated"() {
@@ -59,7 +57,7 @@ class CrudTests extends Specification {
         when: "we select a portfolio and pull its positions"
         def portfolioPm = clientDolphin.findAllPresentationModelsByType(Portfolio.TYPE).first()
         def portfolio = new Portfolio(portfolioPm)
-        clientDolphin[SELECTED].portfolioId.value = portfolioPm.id
+        PortfolioSelection.selection(clientDolphin).setPortfolioId( portfolioPm.id )
         app.sendSynchronously PositionConstants.CMD.PULL
 
         then: "the total is 100"
@@ -68,8 +66,7 @@ class CrudTests extends Specification {
         when: "we add 10 to one position"
         def positions = clientDolphin.findAllPresentationModelsByType(PositionConstants.TYPE.POSITION)
         def domId = portfolio.getDomainId()
-
-        def position = positions.find { it[PositionConstants.ATT.PORTFOLIO_ID].value == domId }
+        def position = positions.find { it[PositionConstants.ATT.PORTFOLIO_DOMAIN_ID].value == domId }
         position[PositionConstants.ATT.WEIGHT].value += 10
 
         then: "the total is 110"

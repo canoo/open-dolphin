@@ -43,7 +43,7 @@ class CrudTests extends Specification {
         when: "we call init"
         app.sendSynchronously PortfolioConstants.CMD.PULL
         then: "we have 4 portfolios with 4 positions each"
-        def portfolios = clientDolphin.findAllPresentationModelsByType(PortfolioConstants.TYPE.PORTFOLIO)
+        def portfolios = clientDolphin.findAllPresentationModelsByType(Portfolio.TYPE)
         portfolios.size() == 4
         portfolios.each { portfolio ->
             portfolio.getAttributes().size() == 4
@@ -57,22 +57,24 @@ class CrudTests extends Specification {
         app.sendSynchronously PortfolioConstants.CMD.PULL
 
         when: "we select a portfolio and pull its positions"
-        def portfolio = clientDolphin.findAllPresentationModelsByType(PortfolioConstants.TYPE.PORTFOLIO).first()
-        clientDolphin[SELECTED].portfolioId.value = portfolio.id
+        def portfolioPm = clientDolphin.findAllPresentationModelsByType(Portfolio.TYPE).first()
+        def portfolio = new Portfolio(portfolioPm)
+        clientDolphin[SELECTED].portfolioId.value = portfolioPm.id
         app.sendSynchronously PositionConstants.CMD.PULL
 
         then: "the total is 100"
-        portfolio[PortfolioConstants.ATT.TOTAL].value == 100
+        portfolio.getTotal() == 100
 
         when: "we add 10 to one position"
         def positions = clientDolphin.findAllPresentationModelsByType(PositionConstants.TYPE.POSITION)
-        def domId = portfolio[PortfolioConstants.ATT.DOMAIN_ID].value
+        def domId = portfolio.getDomainId()
+
         def position = positions.find { it[PositionConstants.ATT.PORTFOLIO_ID].value == domId }
         position[PositionConstants.ATT.WEIGHT].value += 10
 
         then: "the total is 110"
         app.syncPoint(1) // since a server-side listener needs to be triggered, we have to wait for the roundtrip
-        portfolio[PortfolioConstants.ATT.TOTAL].value == 110
+        portfolio.getTotal() == 110
     }
 
 

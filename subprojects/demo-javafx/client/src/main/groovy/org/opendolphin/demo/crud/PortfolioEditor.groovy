@@ -15,32 +15,27 @@ import javafx.scene.control.TableView
 import static org.opendolphin.binding.JFXBinder.bind
 import static org.opendolphin.binding.JavaFxUtil.cellEdit
 import static org.opendolphin.binding.JavaFxUtil.value
-import static org.opendolphin.demo.crud.PortfolioConstants.ATT.DOMAIN_ID
-import static org.opendolphin.demo.crud.PortfolioConstants.ATT.FIXED
-import static org.opendolphin.demo.crud.PortfolioConstants.ATT.NAME
-import static org.opendolphin.demo.crud.PortfolioConstants.ATT.TOTAL
-import static org.opendolphin.demo.crud.PortfolioConstants.PM_ID.SELECTED
-import static org.opendolphin.demo.crud.PositionConstants.ATT.INSTRUMENT
-import static org.opendolphin.demo.crud.PositionConstants.ATT.PORTFOLIO_DOMAIN_ID
-import static org.opendolphin.demo.crud.PositionConstants.ATT.WEIGHT
+import static org.opendolphin.demo.crud.PortfolioConstants.ATT.*
+import static org.opendolphin.demo.crud.PositionConstants.ATT.*
 import static org.opendolphin.demo.crud.PositionConstants.CMD.PULL
-import static org.opendolphin.demo.crud.PositionConstants.TYPE.POSITION
 import static javafx.scene.layout.GridPane.REMAINING
 
 @SuppressWarnings("GroovyAssignabilityCheck")
 class PortfolioEditor {
 
-    ClientPresentationModel portfolioPM
+    final ClientPresentationModel portfolioPM
+    final Portfolio portfolio
 
     private javafx.scene.Node view
     private ClientDolphin clientDolphin
     private ObservableList<ClientPresentationModel> observableListOfPositions  = FXCollections.observableArrayList()
     private plus, minus, nameField, tableBox, positions, totalField, fixedField, chart
 
-    private ClientPresentationModel selectedPosition = null
+    private ClientPresentationModel selectedPositionPm = null
 
     PortfolioEditor(ClientPresentationModel portfolioPM, ClientDolphin clientDolphin) {
         this.portfolioPM = portfolioPM
+        this.portfolio = new Portfolio(portfolioPM)
         this.clientDolphin = clientDolphin
     }
 
@@ -111,46 +106,48 @@ class PortfolioEditor {
             TableView<ClientPresentationModel> positions = positions
 
             positions.selectionModel.selectedItemProperty().addListener( { val, oldModel, newModel ->
-                selectedPosition = newModel
+                selectedPositionPm = newModel
             } as ChangeListener )
 
             // bind available positions to table
-            clientDolphin.addModelStoreListener POSITION, { ModelStoreEvent event ->
-                PresentationModel position = event.presentationModel
-                if (position[PORTFOLIO_DOMAIN_ID].value != portfolioPM[DOMAIN_ID].value) return // only consider positions that refer to us
+            clientDolphin.addModelStoreListener Position.TYPE, { ModelStoreEvent event ->
+                PresentationModel positionPm = event.presentationModel
+                Position position = new Position(positionPm)
+                if (position.getPortfolioDomainId() != portfolio.getDomainId()) return // only consider positions that refer to us
                 switch (event.type){
                     case ModelStoreEvent.Type.ADDED:
-                        observableListOfPositions << position
+                        observableListOfPositions << positionPm
                         break
                     case ModelStoreEvent.Type.REMOVED:
-                        observableListOfPositions.remove position
+                        observableListOfPositions.remove positionPm
                         break
                 }
             }
 
             // bind available positions to chart
-            clientDolphin.addModelStoreListener POSITION, { ModelStoreEvent event ->
-                PresentationModel position = event.presentationModel
-                if (position[PORTFOLIO_DOMAIN_ID].value != portfolioPM[DOMAIN_ID].value) return // only consider positions that refer to us
+            clientDolphin.addModelStoreListener Position.TYPE, { ModelStoreEvent event ->
+                PresentationModel positionPm = event.presentationModel
+                Position position = new Position(positionPm)
+                if (position.getPortfolioDomainId() != portfolio.getDomainId()) return // only consider positions that refer to us
                 switch (event.type){
                     case ModelStoreEvent.Type.ADDED:
                         def pieDataPoint = new PieChart.Data("",0)
-                        bind INSTRUMENT of position to FX.NAME      of pieDataPoint
-                        bind WEIGHT     of position to FX.PIE_VALUE of pieDataPoint, { it.toDouble() }
+                        bind INSTRUMENT of positionPm to FX.NAME      of pieDataPoint
+                        bind WEIGHT     of positionPm to FX.PIE_VALUE of pieDataPoint, { it.toDouble() }
 
-                        position[INSTRUMENT].addPropertyChangeListener FX.VALUE, { // Workaround for http://javafx-jira.kenai.com/browse/RT-26845
+                        position.instrument().addPropertyChangeListener FX.VALUE, { // Workaround for http://javafx-jira.kenai.com/browse/RT-26845
                             def index = chart.data.indexOf pieDataPoint
                             def newDataPoint = new PieChart.Data(it.newValue, pieDataPoint.pieValue)
-                            bind INSTRUMENT of position to FX.NAME      of newDataPoint
-                            bind WEIGHT     of position to FX.PIE_VALUE of newDataPoint, { it.toDouble() }
+                            bind INSTRUMENT of positionPm to FX.NAME      of newDataPoint
+                            bind WEIGHT     of positionPm to FX.PIE_VALUE of newDataPoint, { it.toDouble() }
                             chart.data[index] = newDataPoint       // consider unbinding pieDataPoint
                         }
                         chart.data.add pieDataPoint
                         break
                     case ModelStoreEvent.Type.REMOVED:
                         def entry = chart.data.find { dataPoint ->
-                           dataPoint[FX.NAME]      == position[INSTRUMENT].value && // todo dk: check &&
-                           dataPoint[FX.PIE_VALUE] == position[WEIGHT].value
+                           dataPoint[FX.NAME]      == position.getInstrument()
+                           dataPoint[FX.PIE_VALUE] == position.getWeight()
                         }
                         chart.data.remove entry
                         break
@@ -158,30 +155,26 @@ class PortfolioEditor {
             }
 
             plus.onAction {
-                clientDolphin.presentationModel(null, POSITION,
-                    instrument:'changeme',
-                    weight:10,
-                    portfolioId:portfolioPM[DOMAIN_ID].value
+                clientDolphin.presentationModel(null, Position.TYPE,
+                    (INSTRUMENT):         'changeme',
+                    (WEIGHT):              10,
+                    (PORTFOLIO_DOMAIN_ID): portfolio.getDomainId()
                 )
             }
 
             minus.onAction {
-                if (! selectedPosition) return
-                clientDolphin.delete(selectedPosition)
+                if (! selectedPositionPm) return
+                clientDolphin.delete(selectedPositionPm)
             }
         }
     }
 
     private void pull(SceneGraphBuilder sgb) {
-        setCurrentPortfolio()
+        PortfolioSelection.select(clientDolphin, portfolio)
         clientDolphin.send PULL, {
             sgb.fadeTransition(1.s, node: view, to: 1).playFromStart()
         }
     }
 
-    def void setCurrentPortfolio() {
-        def visiblePortfolio = clientDolphin.findPresentationModelById(SELECTED)
-        visiblePortfolio[PORTFOLIO_DOMAIN_ID].value = portfolioPM.id
-    }
 
 }

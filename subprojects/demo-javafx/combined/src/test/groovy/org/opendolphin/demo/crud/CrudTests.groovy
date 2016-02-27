@@ -39,14 +39,15 @@ class CrudTests extends Specification {
     void "initialize app and check the initial values"() {
         when: "we call init"
         app.sendSynchronously PortfolioConstants.CMD.PULL
-        then: "we have 4 portfolios with 4 positions each"
+        then: "we have 4 portfolios with 4 attributes each"
         def portfolios = clientDolphin.findAllPresentationModelsByType(Portfolio.TYPE)
         portfolios.size() == 4
-        portfolios.each { portfolio ->
-            portfolio.getAttributes().size() == 4
+        portfolios.each { portfolioPm ->
+            portfolioPm.getAttributes().size() == 4                         // some general test
+            // there are no positions, yet, since we haven't pulled any
+            new Portfolio(portfolioPm).positions(clientDolphin).isEmpty()   // some specific test
         }
         and: "there is no selection"
-        println "xyy"
         PortfolioSelection.selection(clientDolphin).getPortfolioId() == null
     }
 
@@ -57,17 +58,16 @@ class CrudTests extends Specification {
         when: "we select a portfolio and pull its positions"
         def portfolioPm = clientDolphin.findAllPresentationModelsByType(Portfolio.TYPE).first()
         def portfolio = new Portfolio(portfolioPm)
-        PortfolioSelection.selection(clientDolphin).setPortfolioId( portfolioPm.id )
+        PortfolioSelection.select(clientDolphin, portfolio)
         app.sendSynchronously PositionConstants.CMD.PULL
 
         then: "the total is 100"
         portfolio.getTotal() == 100
 
         when: "we add 10 to one position"
-        def positions = clientDolphin.findAllPresentationModelsByType(PositionConstants.TYPE.POSITION)
-        def domId = portfolio.getDomainId()
-        def position = positions.find { it[PositionConstants.ATT.PORTFOLIO_DOMAIN_ID].value == domId }
-        position[PositionConstants.ATT.WEIGHT].value += 10
+        Position position = portfolio.positions(clientDolphin).first()
+//        position.weight += 10 // Groovy variant is much nicer
+        position.setWeight(position.getWeight() + 10)
 
         then: "the total is 110"
         app.syncPoint(1) // since a server-side listener needs to be triggered, we have to wait for the roundtrip

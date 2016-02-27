@@ -15,7 +15,6 @@ class PortfolioConstants {
 
     static class CMD {
         public static final String PULL      = PortfolioConstants.unique 'pull'
-        public static final String UPDATE    = PortfolioConstants.unique 'update'
     }
 
     static class PM_ID {

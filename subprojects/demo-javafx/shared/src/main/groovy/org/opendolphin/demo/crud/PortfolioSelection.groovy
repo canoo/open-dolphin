@@ -19,12 +19,19 @@ final class PortfolioSelection {
     String getPortfolioId() {
         portfolioId().value
     }
-    void setPortfolioId(String name) {
-        portfolioId().value = name
+    void setPortfolioId(String newValue) {
+        portfolioId().value = newValue
     }
 
     static PortfolioSelection selection(Dolphin dolphin) {
         new PortfolioSelection(dolphin.getAt(PM_ID_SELECTED))
+    }
+
+    static void select(Dolphin dolphin, Portfolio portfolio) {
+        selection(dolphin).setPortfolioId( portfolio.getPresentationModel().id )
+    }
+    static Portfolio getSelected(Dolphin dolphin) {
+        new Portfolio(dolphin.getAt(selection(dolphin).getPortfolioId()))
     }
 
 }

@@ -35,12 +35,10 @@ class CrudActions extends DolphinServerAction {
          * Pull all positions for the selected portfolio from service lookup
          */
         serverDolphin.action PositionConstants.CMD.PULL, { cmd, response ->
-            PortfolioSelection visiblePortfolio = PortfolioSelection.selection(serverDolphin)
-            def selectedPortfolioPm = serverDolphin.findPresentationModelById(visiblePortfolio.getPortfolioId())
-            Portfolio selectedPortfolio = new Portfolio(selectedPortfolioPm)
+            Portfolio selectedPortfolio = PortfolioSelection.getSelected(serverDolphin)
             def positions = crudService.listPositions(selectedPortfolio.getDomainId())
             positions.eachWithIndex { positionDTO, index ->
-                positionDTO.slots << new Slot(PORTFOLIO_DOMAIN_ID, selectedPortfolio[DOMAIN_ID].value)
+                positionDTO.slots << new Slot(PORTFOLIO_DOMAIN_ID, selectedPortfolio.getDomainId())
                 presentationModel null, POSITION, positionDTO
             }
         }
@@ -64,19 +62,12 @@ class CrudActions extends DolphinServerAction {
         }
     }
 
-    protected void recalculateTotal(PresentationModel position) {
+    protected void recalculateTotal(PresentationModel positionPm) {
+        Position position = new Position(positionPm)
+        Portfolio currentPortfolio = position.findPortfolio(serverDolphin)
+        def positions    = Portfolio.positionsFor(serverDolphin, currentPortfolio )
+        def total        = positions.sum { Position p -> p.getWeight() }
 
-        def portfolioDomainId = position[PORTFOLIO_DOMAIN_ID].value
-        def allPortfolios     = serverDolphin.findAllPresentationModelsByType(PORTFOLIO);
-        def currentPortfolio  = allPortfolios.find { it[DOMAIN_ID].value == portfolioDomainId }
-        if (! currentPortfolio) {
-            println "cannot find portfolio for position ${position.dump()}"
-            return
-        }
-        def allPositions = serverDolphin.findAllPresentationModelsByType(POSITION)
-        def positions    = allPositions.findAll { it[PORTFOLIO_DOMAIN_ID].value == portfolioDomainId }
-        def total        = positions.sum { it[WEIGHT].value }
-
-        currentPortfolio[TOTAL].value = total
+        currentPortfolio.setTotal(total)
     }
 }

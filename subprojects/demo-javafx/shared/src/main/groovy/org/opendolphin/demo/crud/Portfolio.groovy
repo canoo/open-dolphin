@@ -1,6 +1,7 @@
 package org.opendolphin.demo.crud
 
 import groovy.transform.Canonical
+import org.opendolphin.core.Dolphin
 import org.opendolphin.core.PresentationModel
 import org.opendolphin.core.Attribute
 
@@ -15,18 +16,18 @@ final class Portfolio {
     String getName() {
         name().value
     }
-    void setName(String name) {
-        name().value = name
+    void setName(String newValue) {
+        name().value = newValue
     }
 
     Attribute domainId() {
         presentationModel.getAt(PortfolioConstants.ATT.DOMAIN_ID)
     }
-    int getDomainId() {
+    long getDomainId() {
         domainId().value
     }
-    void setDomainId(int domainId) {
-        domainId().value = domainId
+    void setDomainId(long newValue) {
+        domainId().value = newValue
     }
 
 
@@ -36,8 +37,8 @@ final class Portfolio {
     boolean getFixed() {
         fixed().value
     }
-    void setFixed(boolean fixed) {
-        fixed().value = fixed
+    void setFixed(boolean newValue) {
+        fixed().value = newValue
     }
 
 
@@ -47,10 +48,21 @@ final class Portfolio {
     int getTotal() {
         total().value
     }
-    void setTotal(int total) {
-        total().value = total
+    void setTotal(int newValue) {
+        total().value = newValue
     }
 
     static TYPE = PortfolioConstants.TYPE.PORTFOLIO
 
+    List<Position> positions(Dolphin dolphin) {
+        positionsFor(dolphin, this)
+    }
+
+    static List<Position> positionsFor(Dolphin dolphin, Portfolio portfolio) {
+        def all = dolphin.findAllPresentationModelsByType(Position.TYPE)
+        def mine = all.findAll { pos ->
+            pos.getAt(PositionConstants.ATT.PORTFOLIO_DOMAIN_ID).value == portfolio.getDomainId()
+        }
+        return mine.collect { new Position(it) }
+    }
 }

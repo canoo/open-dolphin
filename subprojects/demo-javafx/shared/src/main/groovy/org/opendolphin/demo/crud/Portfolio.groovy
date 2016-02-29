@@ -55,14 +55,10 @@ final class Portfolio {
     static TYPE = PortfolioConstants.TYPE.PORTFOLIO
 
     List<Position> positions(Dolphin dolphin) {
-        positionsFor(dolphin, this)
-    }
-
-    static List<Position> positionsFor(Dolphin dolphin, Portfolio portfolio) {
         def all = dolphin.findAllPresentationModelsByType(Position.TYPE)
-        def mine = all.findAll { pos ->
-            pos.getAt(PositionConstants.ATT.PORTFOLIO_DOMAIN_ID).value == portfolio.getDomainId()
+        def mine = all.collect { new Position(it) }.findAll { pos ->
+            pos.getPortfolioDomainId() == getDomainId()
         }
-        return mine.collect { new Position(it) }
+        return mine
     }
 }

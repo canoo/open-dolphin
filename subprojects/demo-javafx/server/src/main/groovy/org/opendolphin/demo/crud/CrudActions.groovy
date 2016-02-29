@@ -65,7 +65,7 @@ class CrudActions extends DolphinServerAction {
     protected void recalculateTotal(PresentationModel positionPm) {
         Position position = new Position(positionPm)
         Portfolio currentPortfolio = position.findPortfolio(serverDolphin)
-        def positions    = Portfolio.positionsFor(serverDolphin, currentPortfolio )
+        def positions    = currentPortfolio.positions(serverDolphin)
         def total        = positions.sum { Position p -> p.getWeight() }
 
         currentPortfolio.setTotal(total)

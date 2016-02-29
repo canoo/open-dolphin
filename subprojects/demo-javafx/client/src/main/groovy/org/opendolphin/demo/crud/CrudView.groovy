@@ -43,7 +43,8 @@ class CrudView {
         // having a pm that captures the (dolphin) portfolio id
         // This is used on the server to find out the portfolio context for a named command.
         // A "mold" is not used in this case since "apply" produces too much overhead.
-        def visiblePortfolio = clientDolphin.presentationModel((PortfolioSelection.PM_ID_SELECTED), null, (PortfolioSelection.ATT_PORTFOLIO_ID): null)
+        def portfolioSelectionPm = clientDolphin.presentationModel((PortfolioSelection.PM_ID_SELECTED), null, (PortfolioSelection.ATT_PORTFOLIO_ID): null)
+        def portfolioSelection = new PortfolioSelection(portfolioSelectionPm)
 
         start { app ->
             def sgb = delegate
@@ -71,7 +72,7 @@ class CrudView {
 
             portfolios.selectionModel.selectedItemProperty().addListener({ o, oldVal, selectedPm ->
                 if (null == selectedPm) return // happens on deselect
-                 visiblePortfolio.portfolioId.value = selectedPm.id
+                 portfolioSelection.select(clientDolphin, new Portfolio(selectedPm))
 
                 def gotoTab = sgb.portfolioTabs.tabs.find { it.id == selectedPm.id }
                 if (! gotoTab) {

@@ -146,7 +146,7 @@ class PortfolioEditor {
                         break
                     case ModelStoreEvent.Type.REMOVED:
                         def entry = chart.data.find { dataPoint ->
-                           dataPoint[FX.NAME]      == position.getInstrument()
+                           dataPoint[FX.NAME]      == position.getInstrument() &&
                            dataPoint[FX.PIE_VALUE] == position.getWeight()
                         }
                         chart.data.remove entry

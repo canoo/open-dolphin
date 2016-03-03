@@ -16,6 +16,7 @@
 
 package org.opendolphin.core.comm
 
+import groovy.json.internal.CharScanner
 import org.opendolphin.core.Tag
 
 public class JsonCodecTest extends GroovyTestCase {
@@ -89,7 +90,7 @@ public class JsonCodecTest extends GroovyTestCase {
         assertCodingCommand(new CreatePresentationModelCommand())
         assertCodingCommand(new ChangeAttributeMetadataCommand())
         assertCodingCommand(new GetPresentationModelCommand())
-        assertCodingCommand(new DataCommand([a:1, b:2.5d]))
+        assertCodingCommand(new DataCommand([a: 1, b: 2.5d]))
         assertCodingCommand(new DeleteAllPresentationModelsOfTypeCommand())
         assertCodingCommand(new DeletedAllPresentationModelsOfTypeNotification())
         assertCodingCommand(new DeletedPresentationModelNotification())
@@ -114,15 +115,20 @@ public class JsonCodecTest extends GroovyTestCase {
     }
 
     void testProperTypeEnAndDecoding() {
+
         assertCorrectEnAndDecoding('n', 't')
         assertCorrectEnAndDecoding('\n', '\t')
         assertCorrectEnAndDecoding("String", "newString")
         assertCorrectEnAndDecoding(true, false)
         assertCorrectEnAndDecoding(Integer.MAX_VALUE, Integer.MIN_VALUE)
         assertCorrectEnAndDecoding(Long.MAX_VALUE, Long.MIN_VALUE)
+        assertCorrectEnAndDecoding(0.2f, 0.1f)
+        assertCorrectEnAndDecoding(0.2d, 0.1d)
         assertCorrectEnAndDecoding(new Date(0, 0, 1900), new Date(1, 1, 2000))
-        assertCorrectEnAndDecoding(new BigDecimal(Double.MAX_VALUE), new BigDecimal(Double.MIN_VALUE))
-        // is decoded as Long !
+        assertCorrectEnAndDecoding(BigDecimal.valueOf(Double.MAX_VALUE), BigDecimal.valueOf(Double.MIN_VALUE))
+        assertCorrectEnAndDecoding(BigDecimal.valueOf(0.2), BigDecimal.valueOf(0.1))
+        assertCorrectEnAndDecoding(BigInteger.valueOf(Integer.MIN_VALUE).multiply(1e6), BigInteger.valueOf(Integer.MAX_VALUE).multiply(1e6))
+        assertCorrectEnAndDecoding(new BigDecimal("0.100000001490116123456"), new BigDecimal("0.10000000149011612")) // this first decimal number is too big for a double
         assertCorrectEnAndDecoding(Double.MAX_VALUE, Double.MIN_VALUE)              // is decoded as BigDecimal !
         assertCorrectEnAndDecoding(Float.MAX_VALUE, Float.MIN_VALUE)                // is decoded as BigDecimal !
     }
@@ -135,10 +141,40 @@ public class JsonCodecTest extends GroovyTestCase {
         def out_command = codec.decode(coded)[0];
         assert in_command != out_command;
         assert in_command.attributeId == out_command.attributeId
-        assert in_command.oldValue.class == out_command.oldValue.class
-        assert in_command.oldValue == out_command.oldValue
-        assert in_command.newValue.class == out_command.newValue.class
-        assert in_command.newValue == out_command.newValue
+
+        if (out_command.oldValue instanceof BigDecimal) {
+            switch (in_command.oldValue) {
+                case Float:
+                    assert BigDecimal.class.cast(out_command.oldValue).compareTo(new BigDecimal(Float.toString(in_command.oldValue))) == 0
+                    break
+                case BigDecimal:
+                    assert BigDecimal.class.cast(out_command.oldValue).compareTo(in_command.oldValue) == 0
+                    break
+                case Double:
+                    assert BigDecimal.class.cast(out_command.oldValue).compareTo(new BigDecimal(Double.toString(in_command.oldValue))) == 0
+                    break
+                default:
+                    assert false
+            }
+        }
+        if (out_command.newValue instanceof BigDecimal) {
+            switch (in_command.newValue) {
+                case Float:
+                    assert BigDecimal.class.cast(out_command.newValue).compareTo(new BigDecimal(Float.toString(in_command.newValue))) == 0
+                    break
+                case BigDecimal:
+                    assert BigDecimal.class.cast(out_command.newValue).compareTo(in_command.newValue) == 0
+                    break
+                case Double:
+                    assert BigDecimal.class.cast(out_command.newValue).compareTo(new BigDecimal(Double.toString(in_command.newValue))) == 0
+                    break
+                default:
+                    assert false
+            }
+        } else {
+            assert in_command.oldValue == out_command.oldValue
+            assert in_command.newValue == out_command.newValue
+        }
     }
 
     /**

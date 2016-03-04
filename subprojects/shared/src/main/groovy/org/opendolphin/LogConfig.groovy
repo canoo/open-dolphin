@@ -16,24 +16,43 @@
 
 package org.opendolphin
 
-/** Keep logging details in one place **/
+import java.util.logging.*
 
+/**
+ * Helper class that can be used to configure the logging of the Open Dolphin library
+ */
 class LogConfig {
 
-    private static final Logger ROOT_LOGGER = Logger.getLogger("")
+    /**
+     * Root logger of Open Dolphin
+     */
+    private static final Logger OPEN_DOLPHIN_ROOT_LOGGER = Logger.getLogger("org.opendolphin")
 
+    /**
+     * Defines OFF as logging {@link Level} for all Open Dolphin classes
+     */
     static noLogs() {
-        logOnLevel(ROOT_LOGGER, Level.OFF)
+        logOnLevel(OPEN_DOLPHIN_ROOT_LOGGER, Level.OFF)
     }
 
+    /**
+     * Defines INFO as logging {@link Level} for all Open Dolphin classes
+     */
     static logCommunication() {
-        logOnLevel(ROOT_LOGGER, Level.INFO)
+        logOnLevel(OPEN_DOLPHIN_ROOT_LOGGER, Level.INFO)
     }
 
+    /**
+     * Defines the given {@link Level} as logging {@link Level} for all Open Dolphin classes
+     */
     static logOnLevel(Level level) {
-        logOnLevel(ROOT_LOGGER, level)
+        logOnLevel(OPEN_DOLPHIN_ROOT_LOGGER, level)
     }
 
+    /**
+     * Helper method to define the given {@link Level} for the given {@link Logger}. In addition a
+     * short logging {@link Formatter} is defined.
+     */
     static logOnLevel(Logger logger, Level level) {
         logger.level = level
         logger.handlers.each { it.setLevel(level) }
@@ -41,8 +60,9 @@ class LogConfig {
     }
 }
 
-import java.util.logging.*
-
+/**
+ * A {@link Formatter} that formats a logging message in a minimized format. The output contains the level and the message
+ */
 class ShortFormatter extends SimpleFormatter {
     synchronized String format(LogRecord record) {
         "[$record.level] $record.message\n"

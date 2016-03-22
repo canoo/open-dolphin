@@ -4,10 +4,8 @@ buildscript {
     }
     dependencies {
         classpath 'org.asciidoctor:asciidoctor-gradle-plugin:1.5.3'
-        classpath 'org.asciidoctor:asciidoctorj-pdf:1.5.0-alpha.9'
-        classpath 'com.github.jruby-gradle:jruby-gradle-plugin:0.1.11'
-        classpath 'com.github.ben-manes:gradle-versions-plugin:0.7'
-//        classpath 'com.bluepapa32:gradle-watch-plugin:0.1.4'
+        classpath 'org.asciidoctor:asciidoctorj-pdf:1.5.0-alpha.11'
+        classpath 'com.github.jruby-gradle:jruby-gradle-plugin:1.2.1'
     }
 }
 
@@ -16,16 +14,16 @@ apply plugin: 'com.github.jruby-gradle.base'
 apply plugin: 'com.github.ben-manes.versions'
 
 dependencies {
-    gems 'rubygems:asciidoctor-diagram:1.2.1'
+    gems 'rubygems:asciidoctor-diagram:1.4.0'
 }
 
 asciidoctor {
     // let jruby-gradle download and install gems
-    dependsOn jrubyPrepareGems
+    dependsOn jrubyPrepare
 
     // include the diagram gem
     requires = ['asciidoctor-diagram']
-    gemPath = jrubyPrepareGems.outputDir
+    gemPath = jrubyPrepare.outputDir
 
     options doctype: 'book'
 

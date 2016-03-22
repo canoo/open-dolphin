@@ -30,7 +30,7 @@ buildscript {
 }
 
 plugins {
-    id "com.jfrog.bintray" version "1.0"
+    id "com.jfrog.bintray" version "1.6"
     id "de.richsource.gradle.plugins.typescript" version "1.7.1"
 }
 

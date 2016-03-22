@@ -34,6 +34,8 @@ apply plugin: 'com.github.kt3k.coveralls'
 subprojects {
     apply plugin: 'groovy'
 
+    task allDeps(type: DependencyReportTask) {}
+
     plugins.withType(JavaPlugin) {
         configurations {
             compileOnly
@@ -83,7 +85,7 @@ subprojects {
         groovyAnt  "org.codehaus.groovy:groovy-ant:$groovyVersion"
 
         testCompile "org.codehaus.groovy:groovy-test:$groovyVersion"
-        testCompile 'org.spockframework:spock-core:0.7-groovy-2.0', {
+        testCompile 'org.spockframework:spock-core:1.0-groovy-2.4', {
             exclude group: 'org.codehaus.groovy'
         }
     }

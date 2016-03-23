@@ -20,12 +20,32 @@ buildscript {
     }
     dependencies {
         classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.0.1'
+        classpath 'nl.javadude.gradle.plugins:license-gradle-plugin:0.11.0'
     }
 }
 
 allprojects {
     apply plugin: 'idea'
     apply plugin: 'eclipse'
+    apply plugin: 'com.github.hierynomus.license'
+
+    license {
+        header = rootProject.file('config/HEADER')
+        strictCheck = true
+        ignoreFailures = true
+        mapping {
+            java   = 'SLASHSTAR_STYLE'
+            groovy = 'SLASHSTAR_STYLE'
+            gdsl   = 'SLASHSTAR_STYLE'
+            dsld   = 'SLASHSTAR_STYLE'
+            fxml   = 'XML_STYLE'
+        }
+        ext.year = '2012-2016'
+        exclude '**/*.png'
+        exclude '**/*.ttf'
+        exclude '**/*.csv'
+        exclude '**/*.mp3'
+    }
 }
 
 apply plugin: 'jacoco'
@@ -218,7 +238,7 @@ configure(mavenizedProjects()) {
                         }
 
                         licenses {
-                            license {
+                            license([:]) {
                                 name 'The Apache Software License, Version 2.0'
                                 url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
                                 distribution 'repo'
@@ -333,7 +353,7 @@ demos.each { demo ->
             description: "start the ${demo} demo") {}
 }
 
-task clean(type: Delete) {
+task clean(type: Delete, overwrite: true) {
     delete 'build'
     delete 'dist'
 }

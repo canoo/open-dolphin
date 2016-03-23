@@ -4,13 +4,13 @@ import org.opendolphin.core.comm.ZippedJsonCodec
 import org.opendolphin.core.server.EventBus
 import org.opendolphin.core.server.DefaultServerDolphin
 import org.opendolphin.core.server.ServerConnector
-
 import org.springframework.jms.connection.SingleConnectionFactory
 import org.apache.activemq.ActiveMQConnectionFactory
 
 beans = {
 
-    jmsConnectionFactory(SingleConnectionFactory) {
+    jmsConnectionFactory(SingleConnectionFactory) { bean ->
+        bean.scope = 'singleton'
         targetConnectionFactory = { ActiveMQConnectionFactory cf ->
             brokerURL = 'tcp://localhost:61616' // requires starting the activemq server externally
         }
@@ -50,6 +50,15 @@ beans = {
         bean.scope = 'session'
     }
 
+    eventRelaySpringBean(
+        EventRelaySpringBean,
+        ref('chatterBus'),
+        ref('jmsService'),
+        ref('grailsApplication')
+    ) { bean ->
+        bean.scope = 'singleton'
+    }
+
     dolphinBean(
         DolphinSpringBean,
         ref('serverDolphin'),
@@ -62,4 +71,5 @@ beans = {
     ) { bean ->
         bean.scope = 'session'
     }
+
 }

@@ -1,4 +1,5 @@
 import groovyx.gpars.agent.Agent
+import groovyx.gpars.dataflow.DataflowQueue
 import org.opendolphin.LogConfig
 import org.opendolphin.core.server.DTO
 import org.opendolphin.core.server.EventBus
@@ -65,6 +66,12 @@ class DolphinSpringBean {
         dolphin.getServerConnector().register(new ChatterRelease(chatterBus));
 
         dolphin.register(new TesselAction())
+
+
+
+        println "DolphinSpringBean chatter bus $chatterBus"
+
+        println "init done."
 
     }
 }

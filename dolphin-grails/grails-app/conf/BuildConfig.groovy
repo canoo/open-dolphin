@@ -54,11 +54,17 @@ grails.project.dependency.resolution = {
         compile "org.open-dolphin:dolphin-server:$dolphinVersion"
         compile "org.open-dolphin:dolphin-demo-javafx-server:$dolphinVersion"
         compile "org.open-dolphin:dolphin-demo-javafx-shared:$dolphinVersion"
+
+
+        compile 'org.apache.activemq:activemq-core:5.5.0'
     }
 
     plugins {
         // plugins for the build system only
         build ":tomcat:7.0.55"
+
+        compile "org.grails.plugins:activemq:0.5"
+        compile "org.grails.plugins:jms:1.3"
 
         // plugins for the compile step
 //        compile ":scaffolding:2.1.2"

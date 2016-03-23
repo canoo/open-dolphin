@@ -77,10 +77,34 @@
           <root url="jar://$MAVEN_REPOSITORY$/org/codehaus/groovy/groovy/2.3.6/groovy-2.3.6.jar!/" />
           <root url="jar://$MAVEN_REPOSITORY$/org/codehaus/groovy/groovy-json/2.3.6/groovy-json-2.3.6.jar!/" />
           <root url="jar://$MAVEN_REPOSITORY$/org/multiverse/multiverse-core/0.7.0/multiverse-core-0.7.0.jar!/" />
-          <root url="jar://$MAVEN_REPOSITORY$/org/open-dolphin/dolphin-demo-javafx-shared/1.0-RC2-SNAPSHOT/dolphin-demo-javafx-shared-1.0-RC2-SNAPSHOT.jar!/" />
-          <root url="jar://$MAVEN_REPOSITORY$/org/open-dolphin/dolphin-demo-javafx-server/1.0-RC2-SNAPSHOT/dolphin-demo-javafx-server-1.0-RC2-SNAPSHOT.jar!/" />
-          <root url="jar://$MAVEN_REPOSITORY$/org/open-dolphin/dolphin-server/1.0-RC2-SNAPSHOT/dolphin-server-1.0-RC2-SNAPSHOT.jar!/" />
-          <root url="jar://$MAVEN_REPOSITORY$/org/open-dolphin/dolphin-shared/1.0-RC2-SNAPSHOT/dolphin-shared-1.0-RC2-SNAPSHOT.jar!/" />
+          <root url="jar://$MAVEN_REPOSITORY$/org/open-dolphin/dolphin-demo-javafx-shared/1.0-RC3/dolphin-demo-javafx-shared-1.0-RC3.jar!/" />
+          <root url="jar://$MAVEN_REPOSITORY$/org/open-dolphin/dolphin-demo-javafx-server/1.0-RC3/dolphin-demo-javafx-server-1.0-RC3.jar!/" />
+          <root url="jar://$MAVEN_REPOSITORY$/org/open-dolphin/dolphin-server/1.0-RC3/dolphin-server-1.0-RC3.jar!/" />
+          <root url="jar://$MAVEN_REPOSITORY$/org/open-dolphin/dolphin-shared/1.0-RC3/dolphin-shared-1.0-RC3.jar!/" />
+          <root url="jar://$MAVEN_REPOSITORY$/org/springframework/spring-jms/4.0.6.RELEASE/spring-jms-4.0.6.RELEASE.jar!/" />
+          <root url="jar://$MAVEN_REPOSITORY$/commons-pool/commons-pool/1.6/commons-pool-1.6.jar!/" />
+          <root url="jar://$MAVEN_REPOSITORY$/org/apache/geronimo/specs/geronimo-jta_1.0.1B_spec/1.0.1/geronimo-jta_1.0.1B_spec-1.0.1.jar!/" />
+          <root url="jar://$MAVEN_REPOSITORY$/org/apache/activemq/activemq-jms-pool/5.10.1/activemq-jms-pool-5.10.1.jar!/" />
+          <root url="jar://$MAVEN_REPOSITORY$/org/apache/activemq/activemq-pool/5.10.1/activemq-pool-5.10.1.jar!/" />
+          <root url="jar://$MAVEN_REPOSITORY$/org/apache/activemq/activemq-openwire-legacy/5.10.1/activemq-openwire-legacy-5.10.1.jar!/" />
+          <root url="jar://$MAVEN_REPOSITORY$/org/fusesource/hawtbuf/hawtbuf/1.10/hawtbuf-1.10.jar!/" />
+          <root url="jar://$MAVEN_REPOSITORY$/org/apache/activemq/activemq-client/5.10.1/activemq-client-5.10.1.jar!/" />
+          <root url="jar://$MAVEN_REPOSITORY$/org/apache/activemq/activemq-broker/5.10.1/activemq-broker-5.10.1.jar!/" />
+          <root url="jar://$MAVEN_REPOSITORY$/org/apache/xbean/xbean-spring/3.16/xbean-spring-3.16.jar!/" />
+          <root url="jar://$MAVEN_REPOSITORY$/org/apache/activemq/activemq-spring/5.10.1/activemq-spring-5.10.1.jar!/" />
+          <root url="jar://$MAVEN_REPOSITORY$/org/jasypt/jasypt/1.7/jasypt-1.7.jar!/" />
+          <root url="jar://$MAVEN_REPOSITORY$/commons-net/commons-net/2.0/commons-net-2.0.jar!/" />
+          <root url="jar://$MAVEN_REPOSITORY$/org/apache/geronimo/specs/geronimo-j2ee-management_1.1_spec/1.0.1/geronimo-j2ee-management_1.1_spec-1.0.1.jar!/" />
+          <root url="jar://$MAVEN_REPOSITORY$/org/osgi/org.osgi.core/4.1.0/org.osgi.core-4.1.0.jar!/" />
+          <root url="jar://$MAVEN_REPOSITORY$/org/apache/activemq/protobuf/activemq-protobuf/1.1/activemq-protobuf-1.1.jar!/" />
+          <root url="jar://$MAVEN_REPOSITORY$/org/apache/activemq/kahadb/5.5.0/kahadb-5.5.0.jar!/" />
+          <root url="jar://$MAVEN_REPOSITORY$/javax/servlet/servlet-api/2.3/servlet-api-2.3.jar!/" />
+          <root url="jar://$MAVEN_REPOSITORY$/avalon-framework/avalon-framework/4.1.3/avalon-framework-4.1.3.jar!/" />
+          <root url="jar://$MAVEN_REPOSITORY$/logkit/logkit/1.0.1/logkit-1.0.1.jar!/" />
+          <root url="jar://$MAVEN_REPOSITORY$/commons-logging/commons-logging/1.1/commons-logging-1.1.jar!/" />
+          <root url="jar://$MAVEN_REPOSITORY$/org/apache/activemq/activeio-core/3.1.2/activeio-core-3.1.2.jar!/" />
+          <root url="jar://$MAVEN_REPOSITORY$/org/apache/geronimo/specs/geronimo-jms_1.1_spec/1.1.1/geronimo-jms_1.1_spec-1.1.1.jar!/" />
+          <root url="jar://$MAVEN_REPOSITORY$/org/apache/activemq/activemq-core/5.5.0/activemq-core-5.5.0.jar!/" />
         </CLASSES>
         <JAVADOC>
           <root url="jar://$MAVEN_REPOSITORY$/org/open-dolphin/dolphin-demo-javafx-shared/1.0-SNAPSHOT/dolphin-demo-javafx-shared-1.0-SNAPSHOT-javadoc.jar!/" />
@@ -103,6 +127,10 @@
           <root url="jar://$MAVEN_REPOSITORY$/org/open-dolphin/dolphin-demo-javafx-server/1.0-RC2-SNAPSHOT/dolphin-demo-javafx-server-1.0-RC2-SNAPSHOT-javadoc.jar!/" />
           <root url="jar://$MAVEN_REPOSITORY$/org/open-dolphin/dolphin-server/1.0-RC2-SNAPSHOT/dolphin-server-1.0-RC2-SNAPSHOT-javadoc.jar!/" />
           <root url="jar://$MAVEN_REPOSITORY$/org/open-dolphin/dolphin-shared/1.0-RC2-SNAPSHOT/dolphin-shared-1.0-RC2-SNAPSHOT-javadoc.jar!/" />
+          <root url="jar://$MAVEN_REPOSITORY$/org/open-dolphin/dolphin-demo-javafx-shared/1.0-RC3/dolphin-demo-javafx-shared-1.0-RC3-javadoc.jar!/" />
+          <root url="jar://$MAVEN_REPOSITORY$/org/open-dolphin/dolphin-demo-javafx-server/1.0-RC3/dolphin-demo-javafx-server-1.0-RC3-javadoc.jar!/" />
+          <root url="jar://$MAVEN_REPOSITORY$/org/open-dolphin/dolphin-server/1.0-RC3/dolphin-server-1.0-RC3-javadoc.jar!/" />
+          <root url="jar://$MAVEN_REPOSITORY$/org/open-dolphin/dolphin-shared/1.0-RC3/dolphin-shared-1.0-RC3-javadoc.jar!/" />
         </JAVADOC>
         <SOURCES>
           <root url="jar://$MAVEN_REPOSITORY$/org/open-dolphin/dolphin-demo-javafx-shared/1.0-SNAPSHOT/dolphin-demo-javafx-shared-1.0-SNAPSHOT-sources.jar!/" />
@@ -125,10 +153,15 @@
           <root url="jar://$MAVEN_REPOSITORY$/org/open-dolphin/dolphin-demo-javafx-server/1.0-RC2-SNAPSHOT/dolphin-demo-javafx-server-1.0-RC2-SNAPSHOT-sources.jar!/" />
           <root url="jar://$MAVEN_REPOSITORY$/org/open-dolphin/dolphin-server/1.0-RC2-SNAPSHOT/dolphin-server-1.0-RC2-SNAPSHOT-sources.jar!/" />
           <root url="jar://$MAVEN_REPOSITORY$/org/open-dolphin/dolphin-shared/1.0-RC2-SNAPSHOT/dolphin-shared-1.0-RC2-SNAPSHOT-sources.jar!/" />
+          <root url="jar://$MAVEN_REPOSITORY$/org/open-dolphin/dolphin-demo-javafx-shared/1.0-RC3/dolphin-demo-javafx-shared-1.0-RC3-sources.jar!/" />
+          <root url="jar://$MAVEN_REPOSITORY$/org/open-dolphin/dolphin-demo-javafx-server/1.0-RC3/dolphin-demo-javafx-server-1.0-RC3-sources.jar!/" />
+          <root url="jar://$MAVEN_REPOSITORY$/org/open-dolphin/dolphin-server/1.0-RC3/dolphin-server-1.0-RC3-sources.jar!/" />
+          <root url="jar://$MAVEN_REPOSITORY$/org/open-dolphin/dolphin-shared/1.0-RC3/dolphin-shared-1.0-RC3-sources.jar!/" />
         </SOURCES>
         <jarDirectory url="file://$MODULE_DIR$/lib" recursive="false" />
       </library>
     </orderEntry>
     <orderEntry type="module" module-name="Dolphin-grails-grailsPlugins" />
+    <orderEntry type="library" name="grails-2.4.3 (2)" level="application" />
   </component>
 </module>

@@ -124,3 +124,6 @@ log4j.main = {
 grails.plugins.activemq.port=61616          // default
 grails.plugins.activemq.useJmx=false        // default
 grails.plugins.activemq.persistent=false    // default
+
+uuid = UUID.randomUUID().toString()
+println "using uuid $uuid"

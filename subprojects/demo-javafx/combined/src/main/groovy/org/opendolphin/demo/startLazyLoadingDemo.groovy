@@ -29,6 +29,6 @@ clientDolphin.clientConnector.commandBatcher.deferMillis = 30
 serverDolphin.action   LazyLoadingConstants.CMD.PULL, new FullDataRequestCommandHandler(numEntries)
 serverDolphin.register new LazyLoadingAction(numEntries)
 
-LogConfig.noLogs()
+//LogConfig.noLogs()
 
 LazyLoadingView.show clientDolphin

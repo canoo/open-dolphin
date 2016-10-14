@@ -40,6 +40,7 @@ class ServerControlledFunctionalTests extends GroovyTestCase {
         context = new TestInMemoryConfig()
         serverDolphin = context.serverDolphin
         clientDolphin = context.clientDolphin
+        clientDolphin.clientConnector.strictMode = false
 //        LogConfig.noLogs()
     }
 

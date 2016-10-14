@@ -40,6 +40,8 @@ import static groovyx.gpars.GParsPool.withPool
 @Log
 abstract class ClientConnector {
     boolean strictMode = true // disallow value changes that are based on improper old values
+    protected boolean skipNextCommand = false // do not send the next command
+
     Codec codec
     UiThreadHandler uiThreadHandler // must be set from the outside - toolkit specific
 
@@ -104,6 +106,13 @@ abstract class ClientConnector {
 
     @CompileStatic
     void send(Command command, OnFinishedHandler callback = null) {
+        if (skipNextCommand) {
+            skipNextCommand = false
+            if (!strictMode) { // in strictMode, we send all notifications, in lenient mode, we might skip
+                log.info("C: ------  Lenient mode. Skipped notification '$command'")
+                return
+            }
+        }
         // we have some change so regardless of the batching we may have to release a push
         if (command != pushListener) {
             release()
@@ -183,11 +192,13 @@ abstract class ClientConnector {
     ClientPresentationModel handle(DeletePresentationModelCommand serverCommand) {
         ClientPresentationModel model = clientDolphin.findPresentationModelById(serverCommand.pmId)
         if (!model) return null
+        skipNextCommand = true
         clientModelStore.delete(model)
         return model
     }
 
     ClientPresentationModel handle(DeleteAllPresentationModelsOfTypeCommand serverCommand) {
+        skipNextCommand = true
         clientDolphin.deleteAllPresentationModelsOfType(serverCommand.pmType)
         return null // we cannot really return a single pm here
     }
@@ -215,8 +226,9 @@ abstract class ClientConnector {
         if (serverCommand.clientSideOnly) {
             model.clientSideOnly = true
         }
+        skipNextCommand = true
         clientModelStore.add(model)
-        clientDolphin.updateQualifiers(model)
+        clientDolphin.updateQualifiers(model) // this will still send VCCs to the server if any qualifiers are present
         return model
     }
 
@@ -235,7 +247,9 @@ abstract class ClientConnector {
             return null
         }
         log.info "C: updating '$attribute.propertyName' id '$serverCommand.attributeId' from '$attribute.value' to '$serverCommand.newValue'"
+        skipNextCommand = true
         attribute.value = serverCommand.newValue
+        skipNextCommand = false // no send attempt may have been reached, so we need to be defensive
         return null // this command is not expected to be sent explicitly, so no pm needs to be returned
     }
 
@@ -313,7 +327,9 @@ abstract class ClientConnector {
     ClientPresentationModel handle(AttributeMetadataChangedCommand serverCommand) {
         ClientAttribute attribute = clientModelStore.findAttributeById(serverCommand.attributeId)
         if (!attribute) return null
+        skipNextCommand = true
         attribute[serverCommand.metadataName] = serverCommand.value
+        skipNextCommand = false
         return null
     }
 

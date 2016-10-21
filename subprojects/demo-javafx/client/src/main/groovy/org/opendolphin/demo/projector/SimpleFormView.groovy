@@ -53,7 +53,7 @@ class SimpleFormView {
     static show(ClientDolphin dolphin) {
         start { // we have UI-toolkit specific starting sequence
 
-            JavaFxProjector projector = new JavaFxProjector(dolphin: dolphin, stage: primaryStage)
+            IProjector projector = new JavaFxProjector(dolphin: dolphin, stage: primaryStage)
 
             IPresentation form  = projector.createSimpleForm("person")    // using the specific projector
             IPresentation frame = projector.createFrame(form, 400, 200)   // composing presentations

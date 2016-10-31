@@ -100,6 +100,27 @@ class ServerControlledFunctionalTests extends GroovyTestCase {
         clientDolphin.send("assertRetainedServerState")
     }
 
+    void testValueChangesInOnFinishedHandlerAreSentToTheServer() {
+        def oldValue = 0
+        def newValue = 1
+        assert oldValue != newValue // sanity check
+
+        // a pm created on the client side
+        clientDolphin.presentationModel("pm", new ClientAttribute("a", oldValue ))
+
+        serverDolphin.action("checkPM") { cmd, list ->
+            assert serverDolphin.getAt("pm").a.value == newValue
+        }
+        clientDolphin.sync { // using sync's EmptyCommand as some arbitrary command
+            // a value change in response to a server command
+            clientDolphin.getAt("pm").a.value = newValue
+
+            clientDolphin.send("checkPM") {
+                context.assertionsDone()
+            }
+        }
+    }
+
     void testChangeValueMultipleTimesAndBackToBase() { // Alex issue
         // register a server-side action that creates a PM
         serverDolphin.action("createPM") { cmd, list ->

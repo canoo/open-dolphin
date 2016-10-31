@@ -32,7 +32,6 @@ import groovy.util.logging.Log
 import org.codehaus.groovy.runtime.StackTraceUtils
 
 import java.util.concurrent.atomic.AtomicBoolean
-import java.util.concurrent.atomic.AtomicInteger
 import java.util.logging.Level
 
 import static groovyx.gpars.GParsPool.withPool
@@ -141,10 +140,15 @@ abstract class ClientConnector {
         def callback = commandsAndHandlers.first().handler // there can only be one relevant handler anyway
         // added != null check instead of using simple Groovy truth because of NPE through GROOVY-7709
         if (callback !=null) {
+            boolean oldSkip = skipNextCommand
+            skipNextCommand = false             // make sure that commands in onFinished handlers are not silenced.
+
             callback.onFinished((List<ClientPresentationModel>) touchedPresentationModels.unique { ((ClientPresentationModel) it).id })
             if (callback instanceof OnFinishedData) {
                 callback.onFinishedData(touchedDataMaps)
             }
+
+            skipNextCommand = oldSkip
         }
     }
 

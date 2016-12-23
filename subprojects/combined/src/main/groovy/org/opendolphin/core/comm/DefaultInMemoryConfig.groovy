@@ -31,8 +31,8 @@ import org.opendolphin.core.server.ServerDolphinFactory
  */
 class DefaultInMemoryConfig {
 
-    ClientDolphin clientDolphin = new ClientDolphin()
-    DefaultServerDolphin serverDolphin = ServerDolphinFactory.create()
+    volatile ClientDolphin clientDolphin = new ClientDolphin()
+    volatile DefaultServerDolphin serverDolphin = ServerDolphinFactory.create()
 
     DefaultInMemoryConfig() {
         LogConfig.logCommunication()

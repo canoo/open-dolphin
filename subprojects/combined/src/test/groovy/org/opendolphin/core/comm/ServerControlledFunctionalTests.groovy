@@ -32,15 +32,16 @@ import java.util.concurrent.TimeUnit
 class ServerControlledFunctionalTests extends GroovyTestCase {
 
     volatile TestInMemoryConfig context
-    DefaultServerDolphin serverDolphin
-    ClientDolphin clientDolphin
+    volatile DefaultServerDolphin serverDolphin
+    volatile ClientDolphin clientDolphin
 
     @Override
     protected void setUp() {
         context = new TestInMemoryConfig()
         serverDolphin = context.serverDolphin
         clientDolphin = context.clientDolphin
-        clientDolphin.clientConnector.strictMode = false
+        clientDolphin.clientConnector.strictMode = false // enabling server-mode
+//        clientDolphin.clientConnector.sleepMillis = 1
 //        LogConfig.noLogs()
     }
 
@@ -56,7 +57,7 @@ class ServerControlledFunctionalTests extends GroovyTestCase {
         // register a server-side action that sees the second PM
         serverDolphin.action("checkPmIsThere") { cmd, list ->
             assert serverDolphin.getAt("pm1").a.value == 1
-            assert clientDolphin.getAt("pm1").a.value == 1
+            assert clientDolphin.getAt("pm1").a.value == 1 // well, maybe not a good idea...
             context.assertionsDone()
         }
 
@@ -130,13 +131,16 @@ class ServerControlledFunctionalTests extends GroovyTestCase {
             def myPm = serverDolphin.getAt("myPm")
             myPm.a.value = 1
             myPm.a.value = 2
+            assert myPm.a.dirty
             myPm.a.value = 0
+            assert ! myPm.a.dirty
         }
 
         clientDolphin.send("createPM")
         clientDolphin.send("changeValueMultipleTimesAndBackToBase") {
             def myPm = clientDolphin.getAt("myPm")
             assert myPm.a.value == 0
+            assert ! myPm.a.dirty
             context.assertionsDone()
         }
     }
@@ -186,9 +190,9 @@ class ServerControlledFunctionalTests extends GroovyTestCase {
     }
 
     void testServerSideSetQualifierPlusServerSideApply() {
-        serverDolphin.action("createPM") { cmd, list ->
+        serverDolphin.action("createPM1") { cmd, list ->
             serverDolphin.presentationModel(null, "myType", new DTO(new Slot('a',0)))
-            serverDolphin.presentationModel("target", null, new DTO(new Slot('a',1)))
+            serverDolphin.presentationModel("target1", null, new DTO(new Slot('a',1)))
         }
         serverDolphin.action("setQualifier") { cmd, list ->
             def myPm = serverDolphin.findAllPresentationModelsByType("myType").first()
@@ -196,21 +200,21 @@ class ServerControlledFunctionalTests extends GroovyTestCase {
         }
         serverDolphin.action("apply") { cmd, list ->
             def source = serverDolphin.findAllPresentationModelsByType("myType").first()
-            def target = serverDolphin.getAt("target")
+            def target = serverDolphin.getAt("target1")
             target.syncWith(source)
             assert target.a.value == 0
             assert target.a.qualifier == "myQualifier"
         }
 
-        clientDolphin.send("createPM"){
+        clientDolphin.send("createPM1"){
             assert clientDolphin.findAllPresentationModelsByType("myType").first()
         }
         clientDolphin.send("setQualifier") {
             assert clientDolphin.findAllPresentationModelsByType("myType").first().a.qualifier == "myQualifier"
         }
         clientDolphin.send("apply") {
-            assert clientDolphin.getAt("target").a.value == 0
-            assert clientDolphin.getAt("target").a.qualifier == "myQualifier"
+            assert clientDolphin.getAt("target1").a.value == 0
+            assert clientDolphin.getAt("target1").a.qualifier == "myQualifier"
             context.assertionsDone()
         }
     }

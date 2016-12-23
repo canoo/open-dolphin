@@ -16,9 +16,12 @@
 
 package org.opendolphin.core.client.comm
 
+import groovy.transform.CompileStatic
+import groovy.util.logging.Log
 import groovyx.gpars.dataflow.KanbanFlow
 import groovyx.gpars.dataflow.KanbanTray
 import groovyx.gpars.dataflow.ProcessingNode
+import org.codehaus.groovy.runtime.StackTraceUtils
 import org.opendolphin.core.Attribute
 import org.opendolphin.core.PresentationModel
 import org.opendolphin.core.Tag
@@ -27,9 +30,6 @@ import org.opendolphin.core.client.ClientDolphin
 import org.opendolphin.core.client.ClientModelStore
 import org.opendolphin.core.client.ClientPresentationModel
 import org.opendolphin.core.comm.*
-import groovy.transform.CompileStatic
-import groovy.util.logging.Log
-import org.codehaus.groovy.runtime.StackTraceUtils
 
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.logging.Level
@@ -39,7 +39,7 @@ import static groovyx.gpars.GParsPool.withPool
 @Log
 abstract class ClientConnector {
     boolean strictMode = true // disallow value changes that are based on improper old values
-    protected boolean skipNextCommand = false // do not send the next command
+    protected boolean skipCommands = false // do not send commands, only to be used through methods silentyIfNonStrict and verbosely
 
     Codec codec
     UiThreadHandler uiThreadHandler // must be set from the outside - toolkit specific
@@ -103,14 +103,30 @@ abstract class ClientConnector {
 
     abstract List<Command> transmit(List<Command> commands)
 
+//    @CompileStatic
+    def silentlyIfNonStrict(Closure doIt) {
+        if (strictMode) { return doIt() } // guard: we never silence in strict mode
+        def oldState = skipCommands
+        skipCommands = true
+        def result = doIt()
+        skipCommands = oldState
+        return result
+    }
+
+//    @CompileStatic
+    def verbosely(Closure doIt) {
+        def oldState = skipCommands
+        skipCommands = false
+        def result = doIt()
+        skipCommands = oldState
+        return result
+    }
+
     @CompileStatic
     void send(Command command, OnFinishedHandler callback = null) {
-        if (skipNextCommand) {
-            skipNextCommand = false
-            if (!strictMode) { // in strictMode, we send all notifications, in lenient mode, we might skip
-                log.info("C: ------  Lenient mode. Skipped notification '$command'")
-                return
-            }
+        if (skipCommands) {
+            log.info("C: ------  Lenient mode. Skipped notification '$command'")
+            return
         }
         // we have some change so regardless of the batching we may have to release a push
         if (command != pushListener) {
@@ -139,16 +155,15 @@ abstract class ClientConnector {
         }
         def callback = commandsAndHandlers.first().handler // there can only be one relevant handler anyway
         // added != null check instead of using simple Groovy truth because of NPE through GROOVY-7709
-        if (callback !=null) {
-            boolean oldSkip = skipNextCommand
-            skipNextCommand = false             // make sure that commands in onFinished handlers are not silenced.
-
-            callback.onFinished((List<ClientPresentationModel>) touchedPresentationModels.unique { ((ClientPresentationModel) it).id })
-            if (callback instanceof OnFinishedData) {
-                callback.onFinishedData(touchedDataMaps)
+        if (callback != null) {
+            verbosely {
+                callback.onFinished((List<ClientPresentationModel>) touchedPresentationModels.unique {
+                    ((ClientPresentationModel) it).id
+                })
+                if (callback instanceof OnFinishedData) {
+                    callback.onFinishedData(touchedDataMaps)
+                }
             }
-
-            skipNextCommand = oldSkip
         }
     }
 
@@ -157,7 +172,9 @@ abstract class ClientConnector {
     }
 
     Object dispatchHandle(Command command) {
-        handle command
+        silentlyIfNonStrict {
+            handle command
+        }
     }
 
     @CompileStatic
@@ -196,13 +213,13 @@ abstract class ClientConnector {
     ClientPresentationModel handle(DeletePresentationModelCommand serverCommand) {
         ClientPresentationModel model = clientDolphin.findPresentationModelById(serverCommand.pmId)
         if (!model) return null
-        skipNextCommand = true
+//        skipCommands = true
         clientModelStore.delete(model)
         return model
     }
 
     ClientPresentationModel handle(DeleteAllPresentationModelsOfTypeCommand serverCommand) {
-        skipNextCommand = true
+//        skipCommands = true
         clientDolphin.deleteAllPresentationModelsOfType(serverCommand.pmType)
         return null // we cannot really return a single pm here
     }
@@ -230,7 +247,7 @@ abstract class ClientConnector {
         if (serverCommand.clientSideOnly) {
             model.clientSideOnly = true
         }
-        skipNextCommand = true
+//        skipCommands = true
         clientModelStore.add(model)
         clientDolphin.updateQualifiers(model) // this will still send VCCs to the server if any qualifiers are present
         return model
@@ -251,9 +268,9 @@ abstract class ClientConnector {
             return null
         }
         log.info "C: updating '$attribute.propertyName' id '$serverCommand.attributeId' from '$attribute.value' to '$serverCommand.newValue'"
-        skipNextCommand = true
+//        skipCommands = true
         attribute.value = serverCommand.newValue
-        skipNextCommand = false // no send attempt may have been reached, so we need to be defensive
+//        skipCommands = false // no send attempt may have been reached, so we need to be defensive
         return null // this command is not expected to be sent explicitly, so no pm needs to be returned
     }
 
@@ -331,14 +348,16 @@ abstract class ClientConnector {
     ClientPresentationModel handle(AttributeMetadataChangedCommand serverCommand) {
         ClientAttribute attribute = clientModelStore.findAttributeById(serverCommand.attributeId)
         if (!attribute) return null
-        skipNextCommand = true
+//        skipCommands = true
         attribute[serverCommand.metadataName] = serverCommand.value
-        skipNextCommand = false
+//        skipCommands = false
         return null
     }
 
     ClientPresentationModel handle(CallNamedActionCommand serverCommand) {
-        clientDolphin.send(serverCommand.actionName)
+        verbosely {
+            clientDolphin.send(serverCommand.actionName)
+        }
         return null
     }
 

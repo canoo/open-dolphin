@@ -105,20 +105,27 @@ abstract class ClientConnector {
 
 //    @CompileStatic
     def silentlyIfNonStrict(Closure doIt) {
-        if (strictMode) { return doIt() } // guard: we never silence in strict mode
-        def oldState = skipCommands
-        skipCommands = true
-        def result = doIt()
-        skipCommands = oldState
-        return result
+        if (strictMode) { // guard: we never silence in strict mode
+            return verbosely(doIt)
+        } else {
+            return doMaySkipCommands(true, doIt)
+        }
     }
 
 //    @CompileStatic
     def verbosely(Closure doIt) {
+        return doMaySkipCommands(false, doIt)
+    }
+
+    private doMaySkipCommands(boolean skip, Closure doIt) {
         def oldState = skipCommands
-        skipCommands = false
-        def result = doIt()
-        skipCommands = oldState
+        def result = null
+        try {
+            skipCommands = skip
+            result = doIt()
+        } finally {
+            skipCommands = oldState
+        }
         return result
     }
 
@@ -213,13 +220,11 @@ abstract class ClientConnector {
     ClientPresentationModel handle(DeletePresentationModelCommand serverCommand) {
         ClientPresentationModel model = clientDolphin.findPresentationModelById(serverCommand.pmId)
         if (!model) return null
-//        skipCommands = true
         clientModelStore.delete(model)
         return model
     }
 
     ClientPresentationModel handle(DeleteAllPresentationModelsOfTypeCommand serverCommand) {
-//        skipCommands = true
         clientDolphin.deleteAllPresentationModelsOfType(serverCommand.pmType)
         return null // we cannot really return a single pm here
     }
@@ -247,7 +252,6 @@ abstract class ClientConnector {
         if (serverCommand.clientSideOnly) {
             model.clientSideOnly = true
         }
-//        skipCommands = true
         clientModelStore.add(model)
         clientDolphin.updateQualifiers(model) // this will still send VCCs to the server if any qualifiers are present
         return model
@@ -268,9 +272,7 @@ abstract class ClientConnector {
             return null
         }
         log.info "C: updating '$attribute.propertyName' id '$serverCommand.attributeId' from '$attribute.value' to '$serverCommand.newValue'"
-//        skipCommands = true
         attribute.value = serverCommand.newValue
-//        skipCommands = false // no send attempt may have been reached, so we need to be defensive
         return null // this command is not expected to be sent explicitly, so no pm needs to be returned
     }
 
@@ -348,9 +350,7 @@ abstract class ClientConnector {
     ClientPresentationModel handle(AttributeMetadataChangedCommand serverCommand) {
         ClientAttribute attribute = clientModelStore.findAttributeById(serverCommand.attributeId)
         if (!attribute) return null
-//        skipCommands = true
         attribute[serverCommand.metadataName] = serverCommand.value
-//        skipCommands = false
         return null
     }
 

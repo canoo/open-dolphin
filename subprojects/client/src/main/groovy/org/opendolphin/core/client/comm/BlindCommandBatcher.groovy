@@ -32,11 +32,6 @@ class BlindCommandBatcher extends CommandBatcher {
     protected boolean shallWeEvenTryToMerge      = false // do not even try if there is no value change cmd in the batch
 
     @Override
-    boolean isEmpty() {
-        return waitingBatches.length() < 1
-    }
-
-    @Override
     void batch(CommandAndHandler commandWithHandler) {
         log.finest "batching $commandWithHandler.command with${commandWithHandler.handler ? '' : 'out' } handler"
 

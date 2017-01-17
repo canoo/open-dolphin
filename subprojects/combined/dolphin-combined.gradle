@@ -21,3 +21,8 @@ dependencies {
     compileOnly project.files(project.jfxrtLocation)
     testCompile project.files(project.jfxrtLocation)
 }
+
+test {
+  forkEvery = 1 // it appears we need to isolate all ServerControlledFunctionalTests in their own fork
+  maxParallelForks = 3
+}

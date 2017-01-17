@@ -19,6 +19,8 @@ package org.opendolphin.core.comm
 import org.opendolphin.LogConfig
 import org.opendolphin.core.client.ClientDolphin
 import org.opendolphin.core.client.ClientModelStore
+import org.opendolphin.core.client.comm.BlindCommandBatcher
+import org.opendolphin.core.client.comm.CommandBatcher
 import org.opendolphin.core.client.comm.InMemoryClientConnector
 import org.opendolphin.core.server.DefaultServerDolphin
 import org.opendolphin.core.server.ServerDolphinFactory

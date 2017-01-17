@@ -18,6 +18,8 @@ package org.opendolphin.core.comm
 
 import org.opendolphin.core.client.ClientAttribute
 import org.opendolphin.core.client.ClientDolphin
+import org.opendolphin.core.client.comm.RunLaterUiThreadHandler
+import org.opendolphin.core.client.comm.SynchronousUiThreadHandler
 import org.opendolphin.core.server.*
 
 import java.beans.PropertyChangeEvent
@@ -40,7 +42,7 @@ class ServerControlledFunctionalTests extends GroovyTestCase {
         context = new TestInMemoryConfig()
         serverDolphin = context.serverDolphin
         clientDolphin = context.clientDolphin
-        clientDolphin.clientConnector.strictMode = false // enabling server-mode
+//        clientDolphin.clientConnector.strictMode = true // true is default
 //        clientDolphin.clientConnector.sleepMillis = 1
 //        LogConfig.noLogs()
     }
@@ -50,6 +52,14 @@ class ServerControlledFunctionalTests extends GroovyTestCase {
         assert context.done.await(2, TimeUnit.SECONDS)
     }
 
+    void nonStrict() {
+        clientDolphin.clientConnector.strictMode = false
+    }
+
+    void testPMsWereDeletedAndRecreatedNonStrict() {
+        nonStrict()
+        testPMsWereDeletedAndRecreated()
+    }
     void testPMsWereDeletedAndRecreated() {
         // a pm created on the client side
         clientDolphin.presentationModel("pm1", new ClientAttribute("a", 0 ))
@@ -68,6 +78,10 @@ class ServerControlledFunctionalTests extends GroovyTestCase {
     }
 
 
+    void testPMsWereCreatedOnServerSideDeletedByTypeRecreatedOnServerNonStrict() {
+        nonStrict()
+        testPMsWereCreatedOnServerSideDeletedByTypeRecreatedOnServer()
+    }
     void testPMsWereCreatedOnServerSideDeletedByTypeRecreatedOnServer() { // the "Baerbel" problem
         serverDolphin.action("createPM") { cmd, list ->
             serverDolphin.presentationModel(null, "myType", new DTO(new Slot('a',0)))
@@ -86,7 +100,6 @@ class ServerControlledFunctionalTests extends GroovyTestCase {
             assert serverDolphin.findAllPresentationModelsByType("myType").size() == 2
             assert serverDolphin.findAllPresentationModelsByType("myType")[0].a.value == 0
             assert serverDolphin.findAllPresentationModelsByType("myType")[1].a.value == 1
-            context.assertionsDone()
         }
 
         clientDolphin.send("createPM"){
@@ -98,9 +111,15 @@ class ServerControlledFunctionalTests extends GroovyTestCase {
             assert clientDolphin.findAllPresentationModelsByType("myType")[0].a.value == 0
             assert clientDolphin.findAllPresentationModelsByType("myType")[1].a.value == 1
         }
-        clientDolphin.send("assertRetainedServerState")
+        clientDolphin.send("assertRetainedServerState") {
+            context.assertionsDone()
+        }
     }
 
+    void testValueChangesInOnFinishedHandlerAreSentToTheServerNonStrict() {
+        nonStrict()
+        testValueChangesInOnFinishedHandlerAreSentToTheServer()
+    }
     void testValueChangesInOnFinishedHandlerAreSentToTheServer() {
         def oldValue = 0
         def newValue = 1
@@ -122,6 +141,10 @@ class ServerControlledFunctionalTests extends GroovyTestCase {
         }
     }
 
+    void testChangeValueMultipleTimesAndBackToBaseNonStrict() {
+        nonStrict()
+        testChangeValueMultipleTimesAndBackToBase()
+    }
     void testChangeValueMultipleTimesAndBackToBase() { // Alex issue
         // register a server-side action that creates a PM
         serverDolphin.action("createPM") { cmd, list ->
@@ -145,6 +168,10 @@ class ServerControlledFunctionalTests extends GroovyTestCase {
         }
     }
 
+    void testServerSideRemoveNonStrict() {
+        nonStrict()
+        testServerSideRemove()
+    }
     void testServerSideRemove() {
         serverDolphin.action("createPM") { cmd, list ->
             serverDolphin.presentationModel("myPm", null, new DTO(new Slot('a',0)))
@@ -164,6 +191,10 @@ class ServerControlledFunctionalTests extends GroovyTestCase {
         }
     }
 
+    void testServerSideSetAndUnsetQualifierNonStrict() {
+        nonStrict()
+        testServerSideSetAndUnsetQualifier()
+    }
     void testServerSideSetAndUnsetQualifier() {
         serverDolphin.action("createPM") { cmd, list ->
             serverDolphin.presentationModel(null, "myType", new DTO(new Slot('a',0)))
@@ -189,6 +220,10 @@ class ServerControlledFunctionalTests extends GroovyTestCase {
         }
     }
 
+    void testServerSideSetQualifierPlusServerSideApplyNonStrict() {
+        nonStrict()
+        testServerSideSetQualifierPlusServerSideApply()
+    }
     void testServerSideSetQualifierPlusServerSideApply() {
         serverDolphin.action("createPM1") { cmd, list ->
             serverDolphin.presentationModel(null, "myType", new DTO(new Slot('a',0)))
@@ -220,6 +255,10 @@ class ServerControlledFunctionalTests extends GroovyTestCase {
     }
 
 
+    void testServerSideRebaseNonStrict() {
+        nonStrict()
+        testServerSideRebase()
+    }
     void testServerSideRebase() {
         serverDolphin.action("createPM") { cmd, list ->
             serverDolphin.presentationModel(null, "myType", new DTO(new Slot('a',0)))

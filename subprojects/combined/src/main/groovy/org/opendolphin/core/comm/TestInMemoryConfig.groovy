@@ -17,6 +17,7 @@
 package org.opendolphin.core.comm
 
 import org.opendolphin.core.client.comm.RunLaterUiThreadHandler
+import org.opendolphin.core.client.comm.UiThreadHandler
 
 import java.util.concurrent.CountDownLatch
 

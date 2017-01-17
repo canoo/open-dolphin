@@ -42,6 +42,10 @@ class ServerConnector {
     /** doesn't fail on missing commands **/
     List<Command> receive(Command command) {
         log.info "S:     received $command"
+        if (null == serverModelStore) {
+            log.severe("server model store not set in ServerConnector. Skipping receive.")
+            return Collections.EMPTY_LIST
+        }
         List<Command> response = new LinkedList() // collecting parameter pattern
 
         if ( ! (command instanceof SignalCommand)) { // signal commands must not update thread-confined state

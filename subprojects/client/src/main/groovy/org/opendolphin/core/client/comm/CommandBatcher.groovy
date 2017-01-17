@@ -11,7 +11,7 @@ class CommandBatcher implements ICommandBatcher {
 	}
 
 	boolean isEmpty() {
-		true
+		return waitingBatches.length() < 1
 	}
 
 }

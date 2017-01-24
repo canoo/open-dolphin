@@ -19,13 +19,21 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.0.1'
+        classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.6.3'
+        classpath 'com.github.ben-manes:gradle-versions-plugin:0.12.0'
     }
 }
 
 allprojects {
     apply plugin: 'idea'
     apply plugin: 'eclipse'
+    apply plugin: 'com.github.ben-manes.versions'
+
+    if (JavaVersion.current().isJava8Compatible()) {
+        tasks.withType(Javadoc) {
+            options.addStringOption('Xdoclint:none', '-quiet')
+        }
+    }
 }
 
 apply plugin: 'jacoco'
@@ -33,6 +41,8 @@ apply plugin: 'com.github.kt3k.coveralls'
 
 subprojects {
     apply plugin: 'groovy'
+
+    task allDeps(type: DependencyReportTask) {}
 
     plugins.withType(JavaPlugin) {
         configurations {
@@ -83,7 +93,7 @@ subprojects {
         groovyAnt  "org.codehaus.groovy:groovy-ant:$groovyVersion"
 
         testCompile "org.codehaus.groovy:groovy-test:$groovyVersion"
-        testCompile 'org.spockframework:spock-core:0.7-groovy-2.0', {
+        testCompile 'org.spockframework:spock-core:1.0-groovy-2.4', {
             exclude group: 'org.codehaus.groovy'
         }
         testCompile 'cglib:cglib-nodep:3.2.0'

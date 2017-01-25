@@ -27,7 +27,7 @@ GroovyFX.start { app ->
     def logo = new DolphinLogoBuilder().width(401).height(257).build()
     def strokes = new ArrayList<Node>(logo.getChildren())
 
-    AudioClip sonar = new AudioClip('file:///projects/git/open-dolphin/subprojects/client-javafx/src/main/groovy/org/opendolphin/logo/pulse.mp3');
+    AudioClip sonar = new AudioClip('file:///projects/git/open-dolphin/subprojects/logo-javafx/src/main/groovy/org/opendolphin/logo/pulse.mp3');
     sonar.cycleCount = 1
 
     stage title: "Tickle the Dolphin!", {

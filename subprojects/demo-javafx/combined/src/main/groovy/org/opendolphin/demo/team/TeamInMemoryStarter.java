@@ -21,6 +21,7 @@ public class TeamInMemoryStarter {
         final JavaFxInMemoryConfig config = new JavaFxInMemoryConfig();
         ClientDolphin clientDolphin = config.getClientDolphin();
         ((InMemoryClientConnector)clientDolphin.getClientConnector()).setSleepMillis(0);
+        clientDolphin.getClientConnector().setStrictMode(false);  // works fine both strict and non-strict
         DefaultServerDolphin serverDolphin = config.getServerDolphin();
         serverDolphin.register(new TeamMemberActions(teamBus, history));
         serverDolphin.getServerConnector().register(new TeamBusRelease(teamBus));

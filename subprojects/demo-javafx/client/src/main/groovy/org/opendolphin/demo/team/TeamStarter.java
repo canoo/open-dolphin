@@ -19,8 +19,8 @@ import java.util.HashMap;
 public class TeamStarter {
     public static void main(String[] args) throws Exception {
 
-//        final String servletUrl = "http://localhost:8080/dolphin-grails/dolphin/";
-        final String servletUrl = "https://klondike.canoo.com/dolphin-grails/dolphin/";
+        final String servletUrl = "http://localhost:8080/dolphin-grails/dolphin/";
+//        final String servletUrl = "https://klondike.canoo.com/dolphin-grails/dolphin/";
 
         ClientDolphin clientDolphin = new ClientDolphin();
         clientDolphin.setClientModelStore(new ClientModelStore(clientDolphin));
@@ -28,10 +28,12 @@ public class TeamStarter {
         batcher.setMergeValueChanges(true);
         batcher.setDeferMillis(100);
         HttpClientConnector connector = new HttpClientConnector(clientDolphin, batcher, servletUrl);
+
         final JsonCodec codec = new JsonCodec();
         connector.setCodec(codec);
         final JavaFXUiThreadHandler uiThreadHandler = new JavaFXUiThreadHandler();
         connector.setUiThreadHandler(uiThreadHandler);
+        connector.setStrictMode(false);  // works fine both strict and non-strict
         clientDolphin.setClientConnector(connector);
 
         TeamApplication.clientDolphin = clientDolphin;

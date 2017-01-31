@@ -26,6 +26,7 @@ class StarterUtil {
         println "use -Dremote=... to override"
         def batcher = new BlindCommandBatcher(deferMillis: 50, mergeValueChanges: false)
         def connector = new HttpClientConnector(dolphin, batcher, url)
+//        connector.strictMode = false // default is true, some demos like CrudDemo rely on strictMode.
         connector.codec = new JsonCodec()
         dolphin.clientConnector = connector
 

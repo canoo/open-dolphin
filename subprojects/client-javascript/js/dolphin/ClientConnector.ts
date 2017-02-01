@@ -48,22 +48,22 @@ module opendolphin {
         private currentlySending :  boolean = false;
         private slackMS:            number; // slack milliseconds for rendering and batching
         private transmitter :       Transmitter;
-        private codec :              Codec;
-        private clientDolphin :      ClientDolphin;
-        private commandBatcher:      CommandBatcher;
+        private codec :             Codec;
+        private clientDolphin :     ClientDolphin;
+        private commandBatcher:     CommandBatcher;
 
         /////// push support state  ///////
-        private pushListener:        NamedCommand;
-        private releaseCommand:      SignalCommand;
+        private pushListener:       NamedCommand;
+        private releaseCommand:     SignalCommand;
         private pushEnabled:        boolean = false;
         private waiting:            boolean = false;
 
 
         constructor(transmitter:Transmitter, clientDolphin: ClientDolphin, slackMS: number = 0, maxBatchSize : number = 50) {
-            this.transmitter = transmitter;
-            this.clientDolphin = clientDolphin;
-            this.slackMS = slackMS;
-            this.codec = new  Codec();
+            this.transmitter    = transmitter;
+            this.clientDolphin  = clientDolphin;
+            this.slackMS        = slackMS;
+            this.codec          = new  Codec();
             this.commandBatcher = new BlindCommandBatcher(true, maxBatchSize);
         }
 

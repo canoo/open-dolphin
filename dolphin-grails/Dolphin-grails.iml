@@ -178,6 +178,10 @@
           <root url="jar://$USER_HOME$/.sdkman/candidates/grails/2.4.3/lib/net.java.dev.jna/jna/jars/jna-4.0.0.jar!/" />
           <root url="jar://$USER_HOME$/.sdkman/candidates/grails/2.4.3/lib/org.apache.ant/ant-junit/jars/ant-junit-1.8.4.jar!/" />
           <root url="jar://$USER_HOME$/.sdkman/candidates/grails/2.4.3/lib/org.apache.ant/ant-trax/jars/ant-trax-1.7.1.jar!/" />
+          <root url="jar://$MAVEN_REPOSITORY$/org/open-dolphin/dolphin-demo-javafx-shared/1.0-RC4-SNAPSHOT/dolphin-demo-javafx-shared-1.0-RC4-SNAPSHOT.jar!/" />
+          <root url="jar://$MAVEN_REPOSITORY$/org/open-dolphin/dolphin-demo-javafx-server/1.0-RC4-SNAPSHOT/dolphin-demo-javafx-server-1.0-RC4-SNAPSHOT.jar!/" />
+          <root url="jar://$MAVEN_REPOSITORY$/org/open-dolphin/dolphin-server/1.0-RC4-SNAPSHOT/dolphin-server-1.0-RC4-SNAPSHOT.jar!/" />
+          <root url="jar://$MAVEN_REPOSITORY$/org/open-dolphin/dolphin-shared/1.0-RC4-SNAPSHOT/dolphin-shared-1.0-RC4-SNAPSHOT.jar!/" />
         </CLASSES>
         <JAVADOC>
           <root url="jar://$MAVEN_REPOSITORY$/org/open-dolphin/dolphin-demo-javafx-shared/1.0-SNAPSHOT/dolphin-demo-javafx-shared-1.0-SNAPSHOT-javadoc.jar!/" />
@@ -200,6 +204,10 @@
           <root url="jar://$MAVEN_REPOSITORY$/org/open-dolphin/dolphin-demo-javafx-server/1.0-RC2-SNAPSHOT/dolphin-demo-javafx-server-1.0-RC2-SNAPSHOT-javadoc.jar!/" />
           <root url="jar://$MAVEN_REPOSITORY$/org/open-dolphin/dolphin-server/1.0-RC2-SNAPSHOT/dolphin-server-1.0-RC2-SNAPSHOT-javadoc.jar!/" />
           <root url="jar://$MAVEN_REPOSITORY$/org/open-dolphin/dolphin-shared/1.0-RC2-SNAPSHOT/dolphin-shared-1.0-RC2-SNAPSHOT-javadoc.jar!/" />
+          <root url="jar://$MAVEN_REPOSITORY$/org/open-dolphin/dolphin-demo-javafx-shared/1.0-RC4-SNAPSHOT/dolphin-demo-javafx-shared-1.0-RC4-SNAPSHOT-javadoc.jar!/" />
+          <root url="jar://$MAVEN_REPOSITORY$/org/open-dolphin/dolphin-demo-javafx-server/1.0-RC4-SNAPSHOT/dolphin-demo-javafx-server-1.0-RC4-SNAPSHOT-javadoc.jar!/" />
+          <root url="jar://$MAVEN_REPOSITORY$/org/open-dolphin/dolphin-server/1.0-RC4-SNAPSHOT/dolphin-server-1.0-RC4-SNAPSHOT-javadoc.jar!/" />
+          <root url="jar://$MAVEN_REPOSITORY$/org/open-dolphin/dolphin-shared/1.0-RC4-SNAPSHOT/dolphin-shared-1.0-RC4-SNAPSHOT-javadoc.jar!/" />
         </JAVADOC>
         <SOURCES>
           <root url="jar://$MAVEN_REPOSITORY$/org/open-dolphin/dolphin-demo-javafx-shared/1.0-SNAPSHOT/dolphin-demo-javafx-shared-1.0-SNAPSHOT-sources.jar!/" />
@@ -262,6 +270,13 @@
           <root url="jar://$USER_HOME$/.sdkman/candidates/grails/2.4.3/dist/grails-plugin-testing-2.4.3-sources.jar!/" />
           <root url="jar://$USER_HOME$/.sdkman/candidates/grails/2.4.3/dist/grails-docs-2.4.3-sources.jar!/" />
           <root url="jar://$USER_HOME$/.sdkman/candidates/grails/2.4.3/dist/grails-scripts-2.4.3-sources.jar!/" />
+          <root url="jar://$USER_HOME$/.sdkman/candidates/grails/2.4.3/src/grails-datastore-simple-3.1.2.RELEASE-sources.jar!/" />
+          <root url="jar://$USER_HOME$/.sdkman/candidates/grails/2.4.3/src/grails-datastore-gorm-3.1.2.RELEASE-sources.jar!/" />
+          <root url="jar://$USER_HOME$/.sdkman/candidates/grails/2.4.3/src/grails-datastore-core-3.1.2.RELEASE-sources.jar!/" />
+          <root url="jar://$MAVEN_REPOSITORY$/org/open-dolphin/dolphin-demo-javafx-shared/1.0-RC4-SNAPSHOT/dolphin-demo-javafx-shared-1.0-RC4-SNAPSHOT-sources.jar!/" />
+          <root url="jar://$MAVEN_REPOSITORY$/org/open-dolphin/dolphin-demo-javafx-server/1.0-RC4-SNAPSHOT/dolphin-demo-javafx-server-1.0-RC4-SNAPSHOT-sources.jar!/" />
+          <root url="jar://$MAVEN_REPOSITORY$/org/open-dolphin/dolphin-server/1.0-RC4-SNAPSHOT/dolphin-server-1.0-RC4-SNAPSHOT-sources.jar!/" />
+          <root url="jar://$MAVEN_REPOSITORY$/org/open-dolphin/dolphin-shared/1.0-RC4-SNAPSHOT/dolphin-shared-1.0-RC4-SNAPSHOT-sources.jar!/" />
         </SOURCES>
         <jarDirectory url="file://$MODULE_DIR$/lib" recursive="false" />
       </library>

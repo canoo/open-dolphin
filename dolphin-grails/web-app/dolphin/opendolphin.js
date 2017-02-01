@@ -8,13 +8,13 @@ var opendolphin;
     var Attribute = (function () {
         function Attribute() {
         }
-        Attribute.QUALIFIER_PROPERTY = "qualifier";
-        Attribute.DIRTY_PROPERTY = "dirty";
-        Attribute.BASE_VALUE = "baseValue";
-        Attribute.VALUE = "value";
-        Attribute.TAG = "tag";
         return Attribute;
     }());
+    Attribute.QUALIFIER_PROPERTY = "qualifier";
+    Attribute.DIRTY_PROPERTY = "dirty";
+    Attribute.BASE_VALUE = "baseValue";
+    Attribute.VALUE = "value";
+    Attribute.TAG = "tag";
     opendolphin.Attribute = Attribute;
 })(opendolphin || (opendolphin = {}));
 var opendolphin;
@@ -32,45 +32,45 @@ var opendolphin;
     var Tag = (function () {
         function Tag() {
         }
-        //Implemented as function so that it will never be changed from outside
-        /** The actual value of the attribute. This is the default if no tag is given.*/
-        Tag.value = function () {
-            return "VALUE";
-        };
-        /** the to-be-displayed String, not the key. I18N happens on the server. */
-        Tag.label = function () {
-            return "LABEL";
-        };
-        /** If the attribute represent tooltip**/
-        Tag.tooltip = function () {
-            return "TOOLTIP";
-        };
-        /** "true" or "false", maps to Grails constraint nullable:false */
-        Tag.mandatory = function () {
-            return "MANDATORY";
-        };
-        /** "true" or "false", maps to Grails constraint display:true */
-        Tag.visible = function () {
-            return "VISIBLE";
-        };
-        /** "true" or "false" */
-        Tag.enabled = function () {
-            return "ENABLED";
-        };
-        /** regular expression for local, syntactical constraints like in "rejectField" */
-        Tag.regex = function () {
-            return "REGEX";
-        };
-        /** a single text; e.g. "textArea" if the String value should be displayed in a text area instead of a textField */
-        Tag.widgetHint = function () {
-            return "WIDGET_HINT";
-        };
-        /** a single text; e.g. "java.util.Date" if the value String represents a date */
-        Tag.valueType = function () {
-            return "VALUE_TYPE";
-        };
         return Tag;
     }());
+    //Implemented as function so that it will never be changed from outside
+    /** The actual value of the attribute. This is the default if no tag is given.*/
+    Tag.value = function () {
+        return "VALUE";
+    };
+    /** the to-be-displayed String, not the key. I18N happens on the server. */
+    Tag.label = function () {
+        return "LABEL";
+    };
+    /** If the attribute represent tooltip**/
+    Tag.tooltip = function () {
+        return "TOOLTIP";
+    };
+    /** "true" or "false", maps to Grails constraint nullable:false */
+    Tag.mandatory = function () {
+        return "MANDATORY";
+    };
+    /** "true" or "false", maps to Grails constraint display:true */
+    Tag.visible = function () {
+        return "VISIBLE";
+    };
+    /** "true" or "false" */
+    Tag.enabled = function () {
+        return "ENABLED";
+    };
+    /** regular expression for local, syntactical constraints like in "rejectField" */
+    Tag.regex = function () {
+        return "REGEX";
+    };
+    /** a single text; e.g. "textArea" if the String value should be displayed in a text area instead of a textField */
+    Tag.widgetHint = function () {
+        return "WIDGET_HINT";
+    };
+    /** a single text; e.g. "java.util.Date" if the value String represents a date */
+    Tag.valueType = function () {
+        return "VALUE_TYPE";
+    };
     opendolphin.Tag = Tag;
 })(opendolphin || (opendolphin = {}));
 /// <reference path="Command.ts" />
@@ -81,15 +81,16 @@ var opendolphin;
         __extends(AttributeCreatedNotification, _super);
         function AttributeCreatedNotification(pmId, attributeId, propertyName, newValue, qualifier, tag) {
             if (tag === void 0) { tag = opendolphin.Tag.value(); }
-            _super.call(this);
-            this.pmId = pmId;
-            this.attributeId = attributeId;
-            this.propertyName = propertyName;
-            this.newValue = newValue;
-            this.qualifier = qualifier;
-            this.tag = tag;
-            this.id = 'AttributeCreated';
-            this.className = "org.opendolphin.core.comm.AttributeCreatedNotification";
+            var _this = _super.call(this) || this;
+            _this.pmId = pmId;
+            _this.attributeId = attributeId;
+            _this.propertyName = propertyName;
+            _this.newValue = newValue;
+            _this.qualifier = qualifier;
+            _this.tag = tag;
+            _this.id = 'AttributeCreated';
+            _this.className = "org.opendolphin.core.comm.AttributeCreatedNotification";
+            return _this;
         }
         return AttributeCreatedNotification;
     }(opendolphin.Command));
@@ -101,12 +102,13 @@ var opendolphin;
     var AttributeMetadataChangedCommand = (function (_super) {
         __extends(AttributeMetadataChangedCommand, _super);
         function AttributeMetadataChangedCommand(attributeId, metadataName, value) {
-            _super.call(this);
-            this.attributeId = attributeId;
-            this.metadataName = metadataName;
-            this.value = value;
-            this.id = 'AttributeMetadataChanged';
-            this.className = "org.opendolphin.core.comm.AttributeMetadataChangedCommand";
+            var _this = _super.call(this) || this;
+            _this.attributeId = attributeId;
+            _this.metadataName = metadataName;
+            _this.value = value;
+            _this.id = 'AttributeMetadataChanged';
+            _this.className = "org.opendolphin.core.comm.AttributeMetadataChangedCommand";
+            return _this;
         }
         return AttributeMetadataChangedCommand;
     }(opendolphin.Command));
@@ -118,10 +120,11 @@ var opendolphin;
     var CallNamedActionCommand = (function (_super) {
         __extends(CallNamedActionCommand, _super);
         function CallNamedActionCommand(actionName) {
-            _super.call(this);
-            this.actionName = actionName;
-            this.id = 'CallNamedAction';
-            this.className = "org.opendolphin.core.comm.CallNamedActionCommand";
+            var _this = _super.call(this) || this;
+            _this.actionName = actionName;
+            _this.id = 'CallNamedAction';
+            _this.className = "org.opendolphin.core.comm.CallNamedActionCommand";
+            return _this;
         }
         return CallNamedActionCommand;
     }(opendolphin.Command));
@@ -133,12 +136,13 @@ var opendolphin;
     var ChangeAttributeMetadataCommand = (function (_super) {
         __extends(ChangeAttributeMetadataCommand, _super);
         function ChangeAttributeMetadataCommand(attributeId, metadataName, value) {
-            _super.call(this);
-            this.attributeId = attributeId;
-            this.metadataName = metadataName;
-            this.value = value;
-            this.id = 'ChangeAttributeMetadata';
-            this.className = "org.opendolphin.core.comm.ChangeAttributeMetadataCommand";
+            var _this = _super.call(this) || this;
+            _this.attributeId = attributeId;
+            _this.metadataName = metadataName;
+            _this.value = value;
+            _this.id = 'ChangeAttributeMetadata';
+            _this.className = "org.opendolphin.core.comm.ChangeAttributeMetadataCommand";
+            return _this;
         }
         return ChangeAttributeMetadataCommand;
     }(opendolphin.Command));
@@ -150,9 +154,31 @@ var opendolphin;
         function EventBus() {
             this.eventHandlers = [];
         }
+        /**
+         * Registers eventHandler on this EventBus.
+         * The returned function can be used to unregister the handler later on.
+         *
+         * @param eventHandler
+         * @returns {function(): undefined} to unregister eventHandler
+         */
         EventBus.prototype.onEvent = function (eventHandler) {
+            var _this = this;
             this.eventHandlers.push(eventHandler);
+            return function () {
+                _this.unregister(eventHandler);
+            };
         };
+        /**
+         * Unregisters eventHandler from this EventBus.
+         * @param eventHandler
+        */
+        EventBus.prototype.unregister = function (eventHandler) {
+            var idx = this.eventHandlers.indexOf(eventHandler);
+            if (idx > -1) {
+                this.eventHandlers.splice(idx, 1);
+            }
+        };
+        ;
         EventBus.prototype.trigger = function (event) {
             this.eventHandlers.forEach(function (handle) { return handle(event); });
         };
@@ -258,10 +284,10 @@ var opendolphin;
             });
         };
         ClientPresentationModel.prototype.onDirty = function (eventHandler) {
-            this.dirtyValueChangeBus.onEvent(eventHandler);
+            return this.dirtyValueChangeBus.onEvent(eventHandler);
         };
         ClientPresentationModel.prototype.onInvalidated = function (handleInvalidate) {
-            this.invalidBus.onEvent(handleInvalidate);
+            return this.invalidBus.onEvent(handleInvalidate);
         };
         /** returns a copy of the internal state */
         ClientPresentationModel.prototype.getAttributes = function () {
@@ -332,6 +358,7 @@ var opendolphin;
 /// <reference path="ClientPresentationModel.ts" />
 /// <reference path="EventBus.ts" />
 /// <reference path="Tag.ts" />
+///<reference path="Dispose.ts"/>
 var opendolphin;
 (function (opendolphin) {
     var ClientAttribute = (function () {
@@ -448,17 +475,17 @@ var opendolphin;
             return result;
         };
         ClientAttribute.prototype.onValueChange = function (eventHandler) {
-            this.valueChangeBus.onEvent(eventHandler);
             eventHandler({ "oldValue": this.value, "newValue": this.value });
+            return this.valueChangeBus.onEvent(eventHandler);
         };
         ClientAttribute.prototype.onQualifierChange = function (eventHandler) {
-            this.qualifierChangeBus.onEvent(eventHandler);
+            return this.qualifierChangeBus.onEvent(eventHandler);
         };
         ClientAttribute.prototype.onDirty = function (eventHandler) {
-            this.dirtyValueChangeBus.onEvent(eventHandler);
+            return this.dirtyValueChangeBus.onEvent(eventHandler);
         };
         ClientAttribute.prototype.onBaseValueChange = function (eventHandler) {
-            this.baseValueChangeBus.onEvent(eventHandler);
+            return this.baseValueChangeBus.onEvent(eventHandler);
         };
         ClientAttribute.prototype.syncWith = function (sourceAttribute) {
             if (sourceAttribute) {
@@ -467,10 +494,10 @@ var opendolphin;
                 this.setValue(sourceAttribute.value);
             }
         };
-        ClientAttribute.SUPPORTED_VALUE_TYPES = ["string", "number", "boolean"];
-        ClientAttribute.clientAttributeInstanceCount = 0;
         return ClientAttribute;
     }());
+    ClientAttribute.SUPPORTED_VALUE_TYPES = ["string", "number", "boolean"];
+    ClientAttribute.clientAttributeInstanceCount = 0;
     opendolphin.ClientAttribute = ClientAttribute;
 })(opendolphin || (opendolphin = {}));
 /// <reference path="Command.ts"/>
@@ -479,12 +506,13 @@ var opendolphin;
     var ValueChangedCommand = (function (_super) {
         __extends(ValueChangedCommand, _super);
         function ValueChangedCommand(attributeId, oldValue, newValue) {
-            _super.call(this);
-            this.attributeId = attributeId;
-            this.oldValue = oldValue;
-            this.newValue = newValue;
-            this.id = "ValueChanged";
-            this.className = "org.opendolphin.core.comm.ValueChangedCommand";
+            var _this = _super.call(this) || this;
+            _this.attributeId = attributeId;
+            _this.oldValue = oldValue;
+            _this.newValue = newValue;
+            _this.id = "ValueChanged";
+            _this.className = "org.opendolphin.core.comm.ValueChangedCommand";
+            return _this;
         }
         return ValueChangedCommand;
     }(opendolphin.Command));
@@ -496,9 +524,10 @@ var opendolphin;
     var NamedCommand = (function (_super) {
         __extends(NamedCommand, _super);
         function NamedCommand(name) {
-            _super.call(this);
-            this.id = name;
-            this.className = "org.opendolphin.core.comm.NamedCommand";
+            var _this = _super.call(this) || this;
+            _this.id = name;
+            _this.className = "org.opendolphin.core.comm.NamedCommand";
+            return _this;
         }
         return NamedCommand;
     }(opendolphin.Command));
@@ -510,9 +539,10 @@ var opendolphin;
     var EmptyNotification = (function (_super) {
         __extends(EmptyNotification, _super);
         function EmptyNotification() {
-            _super.call(this);
-            this.id = "Empty";
-            this.className = "org.opendolphin.core.comm.EmptyNotification";
+            var _this = _super.call(this) || this;
+            _this.id = "Empty";
+            _this.className = "org.opendolphin.core.comm.EmptyNotification";
+            return _this;
         }
         return EmptyNotification;
     }(opendolphin.Command));
@@ -612,9 +642,10 @@ var opendolphin;
     var SignalCommand = (function (_super) {
         __extends(SignalCommand, _super);
         function SignalCommand(name) {
-            _super.call(this);
-            this.id = name;
-            this.className = "org.opendolphin.core.comm.SignalCommand";
+            var _this = _super.call(this) || this;
+            _this.id = name;
+            _this.className = "org.opendolphin.core.comm.SignalCommand";
+            return _this;
         }
         return SignalCommand;
     }(opendolphin.Command));
@@ -628,14 +659,14 @@ var opendolphin;
     var CreatePresentationModelCommand = (function (_super) {
         __extends(CreatePresentationModelCommand, _super);
         function CreatePresentationModelCommand(presentationModel) {
-            _super.call(this);
-            this.attributes = [];
-            this.clientSideOnly = false;
-            this.id = "CreatePresentationModel";
-            this.className = "org.opendolphin.core.comm.CreatePresentationModelCommand";
-            this.pmId = presentationModel.id;
-            this.pmType = presentationModel.presentationModelType;
-            var attrs = this.attributes;
+            var _this = _super.call(this) || this;
+            _this.attributes = [];
+            _this.clientSideOnly = false;
+            _this.id = "CreatePresentationModel";
+            _this.className = "org.opendolphin.core.comm.CreatePresentationModelCommand";
+            _this.pmId = presentationModel.id;
+            _this.pmType = presentationModel.presentationModelType;
+            var attrs = _this.attributes;
             presentationModel.getAttributes().forEach(function (attr) {
                 attrs.push({
                     propertyName: attr.propertyName,
@@ -645,6 +676,7 @@ var opendolphin;
                     tag: attr.tag
                 });
             });
+            return _this;
         }
         return CreatePresentationModelCommand;
     }(opendolphin.Command));
@@ -708,10 +740,11 @@ var opendolphin;
     var DeletedAllPresentationModelsOfTypeNotification = (function (_super) {
         __extends(DeletedAllPresentationModelsOfTypeNotification, _super);
         function DeletedAllPresentationModelsOfTypeNotification(pmType) {
-            _super.call(this);
-            this.pmType = pmType;
-            this.id = 'DeletedAllPresentationModelsOfType';
-            this.className = "org.opendolphin.core.comm.DeletedAllPresentationModelsOfTypeNotification";
+            var _this = _super.call(this) || this;
+            _this.pmType = pmType;
+            _this.id = 'DeletedAllPresentationModelsOfType';
+            _this.className = "org.opendolphin.core.comm.DeletedAllPresentationModelsOfTypeNotification";
+            return _this;
         }
         return DeletedAllPresentationModelsOfTypeNotification;
     }(opendolphin.Command));
@@ -723,10 +756,11 @@ var opendolphin;
     var DeletedPresentationModelNotification = (function (_super) {
         __extends(DeletedPresentationModelNotification, _super);
         function DeletedPresentationModelNotification(pmId) {
-            _super.call(this);
-            this.pmId = pmId;
-            this.id = 'DeletedPresentationModel';
-            this.className = "org.opendolphin.core.comm.DeletedPresentationModelNotification";
+            var _this = _super.call(this) || this;
+            _this.pmId = pmId;
+            _this.id = 'DeletedPresentationModel';
+            _this.className = "org.opendolphin.core.comm.DeletedPresentationModelNotification";
+            return _this;
         }
         return DeletedPresentationModelNotification;
     }(opendolphin.Command));
@@ -747,11 +781,11 @@ var opendolphin;
 /// <reference path="DeletedPresentationModelNotification.ts"/>
 var opendolphin;
 (function (opendolphin) {
+    var Type;
     (function (Type) {
         Type[Type["ADDED"] = 'ADDED'] = "ADDED";
         Type[Type["REMOVED"] = 'REMOVED'] = "REMOVED";
-    })(opendolphin.Type || (opendolphin.Type = {}));
-    var Type = opendolphin.Type;
+    })(Type = opendolphin.Type || (opendolphin.Type = {}));
     var ClientModelStore = (function () {
         function ClientModelStore(clientDolphin) {
             this.clientDolphin = clientDolphin;
@@ -982,10 +1016,10 @@ var opendolphin;
             return this.attributesPerQualifier.get(qualifier).slice(0); // slice is used to clone the array
         };
         ClientModelStore.prototype.onModelStoreChange = function (eventHandler) {
-            this.modelStoreChangeBus.onEvent(eventHandler);
+            return this.modelStoreChangeBus.onEvent(eventHandler);
         };
         ClientModelStore.prototype.onModelStoreChangeForType = function (presentationModelType, eventHandler) {
-            this.modelStoreChangeBus.onEvent(function (pmStoreEvent) {
+            return this.modelStoreChangeBus.onEvent(function (pmStoreEvent) {
                 if (pmStoreEvent.clientPresentationModel.presentationModelType == presentationModelType) {
                     eventHandler(pmStoreEvent);
                 }
@@ -1118,10 +1152,11 @@ var opendolphin;
     var PresentationModelResetedCommand = (function (_super) {
         __extends(PresentationModelResetedCommand, _super);
         function PresentationModelResetedCommand(pmId) {
-            _super.call(this);
-            this.pmId = pmId;
-            this.id = 'PresentationModelReseted';
-            this.className = "org.opendolphin.core.comm.PresentationModelResetedCommand";
+            var _this = _super.call(this) || this;
+            _this.pmId = pmId;
+            _this.id = 'PresentationModelReseted';
+            _this.className = "org.opendolphin.core.comm.PresentationModelResetedCommand";
+            return _this;
         }
         return PresentationModelResetedCommand;
     }(opendolphin.Command));
@@ -1133,10 +1168,11 @@ var opendolphin;
     var SavedPresentationModelNotification = (function (_super) {
         __extends(SavedPresentationModelNotification, _super);
         function SavedPresentationModelNotification(pmId) {
-            _super.call(this);
-            this.pmId = pmId;
-            this.id = 'SavedPresentationModel';
-            this.className = "org.opendolphin.core.comm.SavedPresentationModelNotification";
+            var _this = _super.call(this) || this;
+            _this.pmId = pmId;
+            _this.id = 'SavedPresentationModel';
+            _this.className = "org.opendolphin.core.comm.SavedPresentationModelNotification";
+            return _this;
         }
         return SavedPresentationModelNotification;
     }(opendolphin.Command));
@@ -1152,15 +1188,16 @@ var opendolphin;
         __extends(InitializeAttributeCommand, _super);
         function InitializeAttributeCommand(pmId, pmType, propertyName, qualifier, newValue, tag) {
             if (tag === void 0) { tag = opendolphin.Tag.value(); }
-            _super.call(this);
-            this.pmId = pmId;
-            this.pmType = pmType;
-            this.propertyName = propertyName;
-            this.qualifier = qualifier;
-            this.newValue = newValue;
-            this.tag = tag;
-            this.id = 'InitializeAttribute';
-            this.className = "org.opendolphin.core.comm.InitializeAttributeCommand";
+            var _this = _super.call(this) || this;
+            _this.pmId = pmId;
+            _this.pmType = pmType;
+            _this.propertyName = propertyName;
+            _this.qualifier = qualifier;
+            _this.newValue = newValue;
+            _this.tag = tag;
+            _this.id = 'InitializeAttribute';
+            _this.className = "org.opendolphin.core.comm.InitializeAttributeCommand";
+            return _this;
         }
         return InitializeAttributeCommand;
     }(opendolphin.Command));
@@ -1172,11 +1209,12 @@ var opendolphin;
     var SwitchPresentationModelCommand = (function (_super) {
         __extends(SwitchPresentationModelCommand, _super);
         function SwitchPresentationModelCommand(pmId, sourcePmId) {
-            _super.call(this);
-            this.pmId = pmId;
-            this.sourcePmId = sourcePmId;
-            this.id = 'SwitchPresentationModel';
-            this.className = "org.opendolphin.core.comm.SwitchPresentationModelCommand";
+            var _this = _super.call(this) || this;
+            _this.pmId = pmId;
+            _this.sourcePmId = sourcePmId;
+            _this.id = 'SwitchPresentationModel';
+            _this.className = "org.opendolphin.core.comm.SwitchPresentationModelCommand";
+            return _this;
         }
         return SwitchPresentationModelCommand;
     }(opendolphin.Command));
@@ -1188,10 +1226,11 @@ var opendolphin;
     var DeleteAllPresentationModelsOfTypeCommand = (function (_super) {
         __extends(DeleteAllPresentationModelsOfTypeCommand, _super);
         function DeleteAllPresentationModelsOfTypeCommand(pmType) {
-            _super.call(this);
-            this.pmType = pmType;
-            this.id = 'DeleteAllPresentationModelsOfType';
-            this.className = "org.opendolphin.core.comm.DeleteAllPresentationModelsOfTypeCommand";
+            var _this = _super.call(this) || this;
+            _this.pmType = pmType;
+            _this.id = 'DeleteAllPresentationModelsOfType';
+            _this.className = "org.opendolphin.core.comm.DeleteAllPresentationModelsOfTypeCommand";
+            return _this;
         }
         return DeleteAllPresentationModelsOfTypeCommand;
     }(opendolphin.Command));
@@ -1203,10 +1242,11 @@ var opendolphin;
     var DeletePresentationModelCommand = (function (_super) {
         __extends(DeletePresentationModelCommand, _super);
         function DeletePresentationModelCommand(pmId) {
-            _super.call(this);
-            this.pmId = pmId;
-            this.id = 'DeletePresentationModel';
-            this.className = "org.opendolphin.core.comm.DeletePresentationModelCommand";
+            var _this = _super.call(this) || this;
+            _this.pmId = pmId;
+            _this.id = 'DeletePresentationModel';
+            _this.className = "org.opendolphin.core.comm.DeletePresentationModelCommand";
+            return _this;
         }
         return DeletePresentationModelCommand;
     }(opendolphin.Command));
@@ -1218,10 +1258,11 @@ var opendolphin;
     var DataCommand = (function (_super) {
         __extends(DataCommand, _super);
         function DataCommand(data) {
-            _super.call(this);
-            this.data = data;
-            this.id = "Data";
-            this.className = "org.opendolphin.core.comm.DataCommand";
+            var _this = _super.call(this) || this;
+            _this.data = data;
+            _this.id = "Data";
+            _this.className = "org.opendolphin.core.comm.DataCommand";
+            return _this;
         }
         return DataCommand;
     }(opendolphin.Command));
@@ -1739,10 +1780,11 @@ var opendolphin;
     var GetPresentationModelCommand = (function (_super) {
         __extends(GetPresentationModelCommand, _super);
         function GetPresentationModelCommand(pmId) {
-            _super.call(this);
-            this.pmId = pmId;
-            this.id = 'GetPresentationModel';
-            this.className = "org.opendolphin.core.comm.GetPresentationModelCommand";
+            var _this = _super.call(this) || this;
+            _this.pmId = pmId;
+            _this.id = 'GetPresentationModel';
+            _this.className = "org.opendolphin.core.comm.GetPresentationModelCommand";
+            return _this;
         }
         return GetPresentationModelCommand;
     }(opendolphin.Command));
@@ -1754,10 +1796,11 @@ var opendolphin;
     var ResetPresentationModelCommand = (function (_super) {
         __extends(ResetPresentationModelCommand, _super);
         function ResetPresentationModelCommand(pmId) {
-            _super.call(this);
-            this.pmId = pmId;
-            this.id = 'ResetPresentationModel';
-            this.className = "org.opendolphin.core.comm.ResetPresentationModelCommand";
+            var _this = _super.call(this) || this;
+            _this.pmId = pmId;
+            _this.id = 'ResetPresentationModel';
+            _this.className = "org.opendolphin.core.comm.ResetPresentationModelCommand";
+            return _this;
         }
         return ResetPresentationModelCommand;
     }(opendolphin.Command));

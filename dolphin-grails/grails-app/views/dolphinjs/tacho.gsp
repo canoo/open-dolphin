@@ -75,6 +75,7 @@
     var dolphin = opendolphin.makeDolphin()
         .url("${dolphinUrl}")
         .slackMS(50) // almost no slack for read-only views
+        .strictMode(false)
         .build();
 
     dolphin.reset({

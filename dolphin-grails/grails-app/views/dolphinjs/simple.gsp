@@ -83,6 +83,7 @@
 <script>
   var dolphin = opendolphin.makeDolphin()
       .url("${dolphinUrl}")
+      .strictMode(false)
       .build();
 
     dolphin.reset({
@@ -134,7 +135,7 @@
     addButton.addEventListener("click", function () {
       dolphin.send("${TutorialAction.CMD_ADD}", {onFinished: function (models) {
         models.forEach(function (model) {
-          console.log(model);
+//          console.log(model); // enable for debugging purposes
           var element = document.createElement("div");
           element.innerHTML = model.presentationModelType + ": " + model.attributes[0].value;
           list.appendChild(element);

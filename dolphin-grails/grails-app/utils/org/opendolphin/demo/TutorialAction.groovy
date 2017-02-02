@@ -28,7 +28,8 @@ public class TutorialAction extends DolphinServerAction {
                 final ServerPresentationModel presentationModel = getServerDolphin().getAt(PM_ID_MODEL)
                 final ServerAttribute attribute = presentationModel[ATTR_ID]
 
-                changeValue attribute, "Server: ${attribute.value}"
+//                changeValue attribute, "Server: ${attribute.value}" // old: strict-mode style
+                attribute.value = "Server: ${attribute.value}"
             }
         })
 

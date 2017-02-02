@@ -1292,15 +1292,19 @@ var opendolphin;
 var opendolphin;
 (function (opendolphin) {
     var ClientConnector = (function () {
-        function ClientConnector(transmitter, clientDolphin, slackMS, maxBatchSize) {
+        function ClientConnector(transmitter, clientDolphin, strictMode, slackMS, maxBatchSize) {
+            if (strictMode === void 0) { strictMode = true; }
             if (slackMS === void 0) { slackMS = 0; }
             if (maxBatchSize === void 0) { maxBatchSize = 50; }
             this.commandQueue = [];
             this.currentlySending = false;
+            this.strictMode = true;
+            this.skipCommands = false;
             this.pushEnabled = false;
             this.waiting = false;
             this.transmitter = transmitter;
             this.clientDolphin = clientDolphin;
+            this.strictMode = strictMode;
             this.slackMS = slackMS;
             this.codec = new opendolphin.Codec();
             this.commandBatcher = new opendolphin.BlindCommandBatcher(true, maxBatchSize);
@@ -1321,6 +1325,10 @@ var opendolphin;
             this.transmitter.reset(successHandler);
         };
         ClientConnector.prototype.send = function (command, onFinished) {
+            if (this.skipCommands) {
+                // console.log("--- lenient mode. Skipped command ", command) // uncomment for debugging
+                return;
+            }
             this.commandQueue.push({ command: command, handler: onFinished });
             if (this.currentlySending) {
                 if (command != this.pushListener)
@@ -1343,7 +1351,17 @@ var opendolphin;
                 //console.log("server response: [" + response.map(it => it.id).join(", ") + "] ");
                 var touchedPMs = [];
                 response.forEach(function (command) {
-                    var touched = _this.handle(command);
+                    if (_this.strictMode == false) {
+                        _this.skipCommands = true;
+                    }
+                    var touched = null;
+                    try {
+                        touched = _this.handle(command);
+                    }
+                    catch (exception) {
+                        console.error("error while handling command", command, exception);
+                    }
+                    _this.skipCommands = false;
                     if (touched)
                         touchedPMs.push(touched);
                 });
@@ -1727,6 +1745,7 @@ var opendolphin;
     var DolphinBuilder = (function () {
         function DolphinBuilder() {
             this.reset_ = false;
+            this.strictMode_ = true;
             this.slackMS_ = 300;
             this.maxBatchSize_ = 50;
             this.supportCORS_ = false;
@@ -1737,6 +1756,10 @@ var opendolphin;
         };
         DolphinBuilder.prototype.reset = function (reset) {
             this.reset_ = reset;
+            return this;
+        };
+        DolphinBuilder.prototype.strictMode = function (strictMode) {
+            this.strictMode_ = strictMode;
             return this;
         };
         DolphinBuilder.prototype.slackMS = function (slackMS) {
@@ -1765,7 +1788,7 @@ var opendolphin;
             else {
                 transmitter = new opendolphin.NoTransmitter();
             }
-            clientDolphin.setClientConnector(new opendolphin.ClientConnector(transmitter, clientDolphin, this.slackMS_, this.maxBatchSize_));
+            clientDolphin.setClientConnector(new opendolphin.ClientConnector(transmitter, clientDolphin, this.strictMode_, this.slackMS_, this.maxBatchSize_));
             clientDolphin.setClientModelStore(new opendolphin.ClientModelStore(clientDolphin));
             console.log("ClientDolphin initialized");
             return clientDolphin;

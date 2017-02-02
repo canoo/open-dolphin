@@ -47,6 +47,8 @@ module opendolphin {
         private commandQueue :      CommandAndHandler[] = [];
         private currentlySending :  boolean = false;
         private slackMS:            number; // slack milliseconds for rendering and batching
+        private strictMode:         boolean = true;
+        private skipCommands:       boolean = false;
         private transmitter :       Transmitter;
         private codec :             Codec;
         private clientDolphin :     ClientDolphin;
@@ -59,9 +61,16 @@ module opendolphin {
         private waiting:            boolean = false;
 
 
-        constructor(transmitter:Transmitter, clientDolphin: ClientDolphin, slackMS: number = 0, maxBatchSize : number = 50) {
+        constructor(
+                transmitter:   Transmitter,
+                clientDolphin: ClientDolphin,
+                strictMode:    boolean = true,
+                slackMS:       number = 0,
+                maxBatchSize : number = 50
+            ) {
             this.transmitter    = transmitter;
             this.clientDolphin  = clientDolphin;
+            this.strictMode     = strictMode;
             this.slackMS        = slackMS;
             this.codec          = new  Codec();
             this.commandBatcher = new BlindCommandBatcher(true, maxBatchSize);
@@ -85,6 +94,10 @@ module opendolphin {
         }
 
         send(command: Command, onFinished:OnFinishedHandler) {
+            if (this.skipCommands) {
+                // console.log("--- lenient mode. Skipped command ", command) // uncomment for debugging
+                return;
+            }
             this.commandQueue.push({command: command, handler: onFinished });
             if (this.currentlySending) {
                 if(command != this.pushListener) this.release(); // there is not point in releasing if we do not send atm
@@ -109,7 +122,16 @@ module opendolphin {
 
                 var touchedPMs :  ClientPresentationModel[] = []
                 response.forEach((command: Command) => {
-                    var touched = this.handle(command);
+                    if (this.strictMode == false) {
+                        this.skipCommands = true;
+                    }
+                    var touched = null;
+                    try {
+                        touched = this.handle(command);
+                    } catch (exception) {
+                        console.error("error while handling command", command, exception)
+                    }
+                    this.skipCommands = false;
                     if (touched) touchedPMs.push(touched);
                 });
 

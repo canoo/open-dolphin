@@ -1637,6 +1637,7 @@ var opendolphin;
             if (supportCORS === void 0) { supportCORS = false; }
             this.url = url;
             this.charset = charset;
+            this.backoffMs = 0;
             this.HttpCodes = {
                 finished: 4,
                 success: 200
@@ -1644,11 +1645,10 @@ var opendolphin;
             this.errorHandler = errorHandler;
             this.supportCORS = supportCORS;
             this.http = new XMLHttpRequest();
-            this.sig = new XMLHttpRequest();
+            // this.sig  = new XMLHttpRequest();
             if (this.supportCORS) {
                 if ("withCredentials" in this.http) {
                     this.http.withCredentials = true; // NOTE: doing this for non CORS requests has no impact
-                    this.sig.withCredentials = true;
                 }
             }
             this.codec = new opendolphin.Codec();
@@ -1694,7 +1694,12 @@ var opendolphin;
             if ("overrideMimeType" in this.http) {
                 this.http.overrideMimeType("application/json; charset=" + this.charset); // todo make injectable
             }
-            this.http.send(this.codec.encode(commands));
+            if (this.backoffMs > 0) {
+                setTimeout(this.http.send(this.codec.encode(commands)), this.backoffMs);
+            }
+            else {
+                this.http.send(this.codec.encode(commands));
+            }
         };
         HttpTransmitter.prototype.handleError = function (kind, message) {
             var errorEvent = { kind: kind, url: this.url, httpStatus: this.http.status, message: message };
@@ -1702,12 +1707,16 @@ var opendolphin;
                 this.errorHandler(errorEvent);
             }
             else {
-                console.log("Error occurred: ", errorEvent);
+                this.backoffMs = this.backoffMs + 1000;
+                console.log("Error occurred, backing off ms " + this.backoffMs, errorEvent);
             }
         };
         HttpTransmitter.prototype.signal = function (command) {
-            this.sig.open('POST', this.url, true);
-            this.sig.send(this.codec.encode([command]));
+            var _this = this;
+            setTimeout(function () {
+                _this.http.open('POST', _this.url, true);
+                _this.http.send(_this.codec.encode([command]));
+            }, 1);
         };
         // Deprecated ! Use 'reset(OnSuccessHandler) instead
         HttpTransmitter.prototype.invalidate = function () {
@@ -1726,7 +1735,7 @@ var opendolphin;
                     }
                 }
             };
-            this.http.open('POST', this.url + 'invalidate?', true);
+            this.http.open('POST', this.url + 'invalidate?', true); // todo dk: remove all invalidation-related code.
             this.http.send();
         };
         return HttpTransmitter;

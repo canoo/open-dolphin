@@ -61,7 +61,7 @@ class DolphinSpringBean {
         dolphin.register(new TeamMemberActions(teamBus, teamHistory));
         dolphin.getServerConnector().register(new TeamBusRelease(teamBus));
 
-        dolphin.register(new ChatterActions().subscribedTo(chatterBus))
+        dolphin.register(new ChatterActions(chatterBus));
         dolphin.getServerConnector().register(new ChatterRelease(chatterBus));
 
         dolphin.register(new TesselAction())

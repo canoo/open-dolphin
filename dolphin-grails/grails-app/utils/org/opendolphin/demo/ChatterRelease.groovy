@@ -10,7 +10,7 @@ import org.opendolphin.core.server.comm.CommandHandler
 import static org.opendolphin.demo.ChatterActions.CMD_RELEASE
 
 class ChatterRelease implements ServerAction {
-    private EventBus chatterBus;
+    private final EventBus chatterBus;
 
     public ChatterRelease(EventBus chatterBus) {
         this.chatterBus = chatterBus;

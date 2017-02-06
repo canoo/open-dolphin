@@ -8,7 +8,7 @@ module opendolphin {
     export class HttpTransmitter implements Transmitter {
 
         http:XMLHttpRequest;
-        sig:XMLHttpRequest; // for the signal command, which needs an extra connection
+        // sig:XMLHttpRequest; // for the signal command, which needs an extra connection
         codec:Codec;
         private errorHandler: (any) => void;
         supportCORS: boolean;
@@ -22,11 +22,11 @@ module opendolphin {
             this.errorHandler = errorHandler;
             this.supportCORS = supportCORS;
             this.http = new XMLHttpRequest();
-            this.sig  = new XMLHttpRequest();
+            // this.sig  = new XMLHttpRequest();
             if (this.supportCORS) {
                 if ("withCredentials" in this.http) { // browser supports CORS
                     this.http.withCredentials = true; // NOTE: doing this for non CORS requests has no impact
-                    this.sig.withCredentials = true;
+                    // this.sig.withCredentials = true;
                 }
                 // NOTE: Browser might support CORS partially so we simply try to use 'this.http' for CORS requests instead of forbidding it
                 // NOTE: XDomainRequest for IE 8, IE 9 not supported by dolphin because XDomainRequest does not support cookies in CORS requests (which are needed for the JSESSIONID cookie)
@@ -94,8 +94,10 @@ module opendolphin {
         }
 
         signal(command : SignalCommand) {
-            this.sig.open('POST', this.url, true);
-            this.sig.send(this.codec.encode([command]));
+            setTimeout( () => { // order this at the end of the current UI events - after any imminent value changes
+                this.http.open('POST', this.url, true);
+                this.http.send(this.codec.encode([command]));
+            }, 1);
         }
 
         // Deprecated ! Use 'reset(OnSuccessHandler) instead
@@ -115,7 +117,7 @@ module opendolphin {
                 }
             };
 
-            this.http.open('POST', this.url + 'invalidate?', true);
+            this.http.open('POST', this.url + 'invalidate?', true); // todo dk: remove all invalidation-related code.
             this.http.send();
         }
 

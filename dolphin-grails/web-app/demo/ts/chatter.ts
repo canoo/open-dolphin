@@ -13,6 +13,7 @@ var SERVER_URL      = window.location.protocol + "//" + window.location.host + "
 var dolphin         = <opendolphin.ClientDolphin> opendolphin.makeDolphin()
     .url(SERVER_URL)
     .slackMS(0)
+    .strictMode(false)
     .build();
 
 dolphin.reset({
@@ -25,11 +26,11 @@ var dateAtt         = dolphin.attribute("date",     null, '',  'VALUE');
 var myChat          = dolphin.presentationModel("chatter.input", null, nameAtt, messageAtt, dateAtt);
 
 // bind input form bidirectionally
-nameElement.oninput     = (event) => {    nameAtt.setValue(   nameElement.value);  };
-message.oninput  = (event) => { messageAtt.setValue(message.value);  };
+nameElement.oninput = (event) => { nameAtt.setValue(nameElement.value);  };
+message.oninput     = (event) => { messageAtt.setValue(message.value);  };
 
-nameAtt.onValueChange(   (event) => nameElement.value    = event.newValue);
-messageAtt.onValueChange((event) => message.value = event.newValue);
+nameAtt.onValueChange(   (event) => nameElement.value = event.newValue);
+messageAtt.onValueChange((event) => message.value     = event.newValue);
 
 // bind collection of posts
 function onPostAdded(pm) {
@@ -76,9 +77,11 @@ postMessageText.onclick = (event) => {
 };
 
 dolphin.send("chatter.init", {
-    onFinished     : () => { dolphin.startPushListening("chatter.on.push", "chatter.release") },
+    onFinished     : () => {
+        console.log("starting the push listening");
+        dolphin.startPushListening("chatter.on.push", "chatter.release");
+    },
     onFinishedData : null
 });
-
     } // onSuccess
 });

@@ -100,7 +100,7 @@ module opendolphin {
             }
             this.commandQueue.push({command: command, handler: onFinished });
             if (this.currentlySending) {
-                if(command != this.pushListener) this.release(); // there is not point in releasing if we do not send atm
+                this.release(); // there is not point in releasing if we do not send atm
                 return;
             }
             this.doSendNext();
@@ -108,8 +108,12 @@ module opendolphin {
 
         private doSendNext() {
             if (this.commandQueue.length < 1) {
-                this.currentlySending = false;
-                return;
+                if (this.pushEnabled) {
+                    this.enqueuePushCommand();
+                } else {
+                    this.currentlySending = false;
+                    return;
+                }
             }
             this.currentlySending = true;
 
@@ -315,12 +319,21 @@ module opendolphin {
             if (! this.pushEnabled) return;
             if (this.waiting) return;
             // todo: how to issue a warning if no pushListener is set?
+            if (! this.currentlySending) {
+                this.doSendNext();
+            }
+        }
+
+        private enqueuePushCommand() : void {
+            var me = this;
             this.waiting = true;
-            var me = this; // oh, boy, this took some time to find...
-            this.send(this.pushListener, { onFinished: function(models) {
-                me.waiting = false;
-                me.listen();
-            }, onFinishedData: null})
+            this.commandQueue.push({
+                command: this.pushListener,
+                handler: {
+                    onFinished: function(models) { me.waiting = false; },
+                    onFinishedData: null
+                }
+            });
         }
 
         release() : void {

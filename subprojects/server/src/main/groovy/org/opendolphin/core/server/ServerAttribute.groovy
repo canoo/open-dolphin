@@ -16,12 +16,15 @@
 
 package org.opendolphin.core.server
 
+import groovy.transform.CompileStatic
+import groovy.transform.stc.ClosureParams
+import groovy.transform.stc.SimpleType
 import org.opendolphin.core.Attribute
 import org.opendolphin.core.BaseAttribute
 import org.opendolphin.core.Tag
 import org.opendolphin.core.comm.AttributeMetadataChangedCommand
 
-//CompileStatic
+@CompileStatic
 class ServerAttribute extends BaseAttribute {
 
     private boolean notifyClient = true;
@@ -61,7 +64,7 @@ class ServerAttribute extends BaseAttribute {
         forAllQualified { if (value != it.baseValue) it.setBaseValue(value) }
     }
 
-    protected void forAllQualified(Closure yield) {
+    protected void forAllQualified(@ClosureParams(value=SimpleType, options=["org.opendolphin.core.server.ServerAttribute"]) Closure yield) {
         if (! qualifier) return
         if (! presentationModel) return // we may not know the pm, yet
         for (ServerAttribute sameQualified in (List<ServerAttribute>) presentationModel.modelStore.findAllAttributesByQualifier(qualifier)) {

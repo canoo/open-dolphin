@@ -24,7 +24,7 @@ import org.opendolphin.core.server.comm.ActionRegistry
 import groovy.transform.CompileStatic
 import groovy.util.logging.Log
 
-//CompileStatic
+@CompileStatic
 @Log
 class StoreAttributeAction extends DolphinServerAction {
     void registerIn(ActionRegistry registry) {

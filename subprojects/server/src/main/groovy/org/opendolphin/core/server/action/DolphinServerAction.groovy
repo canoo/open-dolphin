@@ -16,6 +16,7 @@
 
 package org.opendolphin.core.server.action
 
+import groovy.transform.CompileStatic
 import org.opendolphin.core.Tag
 import org.opendolphin.core.comm.Command
 import org.opendolphin.core.comm.InitializeAttributeCommand
@@ -28,7 +29,7 @@ import org.opendolphin.core.server.DefaultServerDolphin
  * the ServerDolphin, e.g. to work with the server model store.
  */
 
-//CompileStatic
+@CompileStatic
 abstract class DolphinServerAction implements ServerAction {
     DefaultServerDolphin serverDolphin
     List<Command> dolphinResponse

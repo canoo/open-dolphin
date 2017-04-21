@@ -29,7 +29,7 @@ module opendolphin {
             this.areIdentical(pm2.getAttributes().length, 2);
         }
 
-        tagTheAttribute(){
+        tagTheAttribute() {
             var clientDolphin:ClientDolphin = new ClientDolphin();
             var clientModelStore:ClientModelStore = new ClientModelStore(clientDolphin);
             clientDolphin.setClientModelStore(clientModelStore);
@@ -41,6 +41,16 @@ module opendolphin {
             clientDolphin.tag(pm,"property","value",Tag.tooltip());
             this.areIdentical(pm.getAttributes().length, 1);
             this.areIdentical(pm.getAttributes()[0].tag, "TOOLTIP");
+        }
+
+        createAttributeWithValueTagAsDefault() {
+            var clientDolphin:ClientDolphin = new ClientDolphin();
+            var clientModelStore:ClientModelStore = new ClientModelStore(clientDolphin);
+            clientDolphin.setClientModelStore(clientModelStore);
+            clientDolphin.setClientConnector(new ClientConnector(new NoTransmitter(), clientDolphin));
+
+            var attr = clientDolphin.attribute("prop1", "qual1", "val");
+            this.areIdentical(Tag.value(), attr.tag);
         }
     }
 }

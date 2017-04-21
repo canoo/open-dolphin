@@ -36,7 +36,7 @@ module opendolphin {
         }
 
         // factory method for attributes
-        attribute(propertyName, qualifier, value, tag) {
+        attribute(propertyName, qualifier, value, tag?) {
             return new ClientAttribute(propertyName, qualifier, value, tag);
         }
 

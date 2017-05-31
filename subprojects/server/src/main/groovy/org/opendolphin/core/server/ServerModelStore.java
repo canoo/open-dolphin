@@ -13,7 +13,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * server side of a Dolphin connection.  There is one ServerModelSore for each user session.
  * The ServerModelStore self-assigns a unique ID which identifies each user session.
  */
-public class ServerModelStore extends ModelStore {
+public class ServerModelStore extends ModelStore<ServerAttribute, ServerPresentationModel> {
 
     protected List<Command> currentResponse = null;
 
@@ -44,10 +44,10 @@ public class ServerModelStore extends ModelStore {
     }
 
     @Override
-    public boolean add(PresentationModel model) {
+    public boolean add(ServerPresentationModel model) {
         boolean added = super.add(model);
         if (! added) return false;
-        ((ServerPresentationModel)model).modelStore = this;
+        model.modelStore = this;
         return true;
     }
 }

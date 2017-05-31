@@ -92,7 +92,41 @@ class BlindCommandBatcherTest extends GroovyTestCase {
         assert nextBatch.first().command.oldValue == 0
         assert nextBatch.first().command.newValue == 3
         assert batcher.empty
+    }
 
+    void testNoMergeInReverseOrder() {
+        LogConfig.logOnLevel(Level.ALL)
+
+        batcher.mergeValueChanges = true
+        def list = [
+            new CommandAndHandler(command: new ValueChangedCommand(attributeId: 0, oldValue: 1, newValue: 2)),
+            new CommandAndHandler(command: new ValueChangedCommand(attributeId: 0, oldValue: 0, newValue: 1)),
+        ]
+
+        list.each { commandAndHandler -> batcher.batch(commandAndHandler) }
+
+        def nextBatch = batcher.waitingBatches.val
+        assert nextBatch.size() == 2
+        assert batcher.empty
+    }
+
+    void testMergeInOneCommandWithInterleavingVCCs() {
+        LogConfig.logOnLevel(Level.ALL)
+
+        batcher.mergeValueChanges = true
+        def list = [
+          new CommandAndHandler(command: new ValueChangedCommand(attributeId: 0, oldValue: 0, newValue: 1)),
+          new CommandAndHandler(command: new ValueChangedCommand(attributeId: 1, oldValue: 8, newValue: 9)),
+          new CommandAndHandler(command: new ValueChangedCommand(attributeId: 0, oldValue: 1, newValue: 2)),
+        ]
+
+        list.each { commandAndHandler -> batcher.batch(commandAndHandler) }
+
+        def nextBatch = batcher.waitingBatches.val
+        assert nextBatch.size() == 2
+        assert nextBatch.first().command.oldValue == 0 // position of the first of any merged VCCs is retained
+        assert nextBatch.first().command.newValue == 2
+        assert batcher.empty
     }
 
     void testMergeCreatePmAfterValueChange() {

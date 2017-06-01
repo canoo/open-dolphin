@@ -43,15 +43,16 @@ class StallingPushIssueTests extends GroovyTestCase {
         context = new TestInMemoryConfig()
         serverDolphin = context.serverDolphin
         clientDolphin = context.clientDolphin
-        LogConfig.noLogs()
+        //LogConfig.noLogs()
     }
 
     @Override
     protected void tearDown() {
+        clientDolphin.stopPushListening()
         assert context.done.await(20, TimeUnit.SECONDS)
     }
 
-
+    // did we send enough releases at the right time such that the communication is not stalled?
     void testStallingIssue() {
         clientDolphin.clientConnector.sleepMillis = 100 // this is needed or the stalling does not happen
 
@@ -60,7 +61,7 @@ class StallingPushIssueTests extends GroovyTestCase {
         bus.subscribe queue
 
         serverDolphin.action "onPush", { cmd, response ->
-            queue.val // is reality, one should never read without a max waiting time!
+            queue.val // in reality, one should never read without a max waiting time!
         }
         serverDolphin.action "onRelease", { cmd, response ->
             bus.publish null, "xxx" // any value will release the waiting onPush
@@ -69,6 +70,9 @@ class StallingPushIssueTests extends GroovyTestCase {
         def pm = clientDolphin.presentationModel("pm", null, attr: -1)
         clientDolphin.startPushListening("onPush", "onRelease")
 
+        // we send a hundred value changes (no batching)
+        // each "request" for sending a value change must trigger a release,
+        // publishing on the bus, releasing the onPush (which would otherwise stall forever)
         100.times { pm.attr.value = it }
 
         clientDolphin.sync {

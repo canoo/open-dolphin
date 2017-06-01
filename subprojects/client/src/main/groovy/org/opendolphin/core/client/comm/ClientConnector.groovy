@@ -18,6 +18,7 @@ package org.opendolphin.core.client.comm
 
 import groovy.transform.CompileStatic
 import groovy.util.logging.Log
+import groovyx.gpars.dataflow.DataflowQueue
 import groovyx.gpars.dataflow.KanbanFlow
 import groovyx.gpars.dataflow.KanbanTray
 import groovyx.gpars.dataflow.ProcessingNode
@@ -78,6 +79,7 @@ abstract class ClientConnector {
             def answer = null
 
             Runnable transmitter = {
+                release()
                 answer = transmit(commands)
             }
             Runnable postWorker  = { trayOut << [response: answer, request: commandsAndHandlers] }
@@ -136,9 +138,9 @@ abstract class ClientConnector {
             return
         }
         // we have some change so regardless of the batching we may have to release a push
-        if (command != pushListener) {
-            release()
-        }
+        // if (command != pushListener) {  // todo dk: can this even happen?
+        //     release()
+        // }
         // we are inside the UI thread and events calls come in strict order as received by the UI toolkit
         commandBatcher.batch(new CommandAndHandler(command: command, handler: callback))
     }
@@ -394,13 +396,17 @@ abstract class ClientConnector {
     /** Release the current push listener, which blocks the sending queue.
      *  Does nothing in case that the push listener is not active.
      * */
+    //def transmitAsynchronously
     protected void release() {
+        if (!pushEnabled) return // there is no point in even checking
         if (! pushIsInQueue.get()) {
             return      // there is no point in releasing if we do not wait. Avoid excessive releasing.
         }
-        withPool {
-            def transmitAsynchronously = this.&transmit.asyncFun()
-            transmitAsynchronously([releaseCommand]) // sneaks by the strict command sequence
-        }
+        //withPool {
+        //    transmitAsynchronously = transmitAsynchronously ?: this.&transmit.asyncFun()
+        //    transmitAsynchronously([releaseCommand]) // sneaks by the strict command sequence
+        //}
+        println "releasing"
+        transmit([releaseCommand])
     }
 }

@@ -25,9 +25,9 @@ class ClientConnectorPushTests extends Specification {
 
     // make sure the tests only count as ok if context.assertionsDone() has been reached
     protected void cleanup() {
+        clientDolphin.stopPushListening()
         clientDolphin.sync { app.assertionsDone() }
         assert app.done.await(4, TimeUnit.SECONDS) // max waiting time for async operations to have finished
-        clientDolphin.stopPushListening()
     }
 
 

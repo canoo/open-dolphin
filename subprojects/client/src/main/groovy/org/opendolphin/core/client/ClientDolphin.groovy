@@ -16,6 +16,7 @@
 
 package org.opendolphin.core.client
 
+import groovy.util.logging.Log
 import org.opendolphin.core.AbstractDolphin
 import org.opendolphin.core.ModelStore
 import org.opendolphin.core.PresentationModel
@@ -36,6 +37,7 @@ import org.opendolphin.core.comm.SignalCommand
  * Threading model: confined to the UI handling thread.
  */
 // makes use of dynamic dispatch, do not use @CompileStatic
+@Log
 public class ClientDolphin extends AbstractDolphin<ClientAttribute, ClientPresentationModel> {
 
     // todo dk: the client model store should become a secret of the ClientDolphin
@@ -182,11 +184,11 @@ public class ClientDolphin extends AbstractDolphin<ClientAttribute, ClientPresen
     public startPushListening(String pushActionName, String releaseActionName) {
         if (null == pushActionName) {
             // todo dk: think about logging here
-//            log.warning("You must set a pushListener on the client connector if you want to listen for push events")
+            log.warning("You must set a pushListener on the client connector if you want to listen for push events")
             return
         }
         if (null == releaseActionName) {
-//            log.warning("Please set releaseCommand in client connector or we cannot release the send lock.")
+            log.warning("Please set releaseCommand in client connector or we cannot release the send lock.")
             return
         }
         clientConnector.pushListener   = new NamedCommand(pushActionName);

@@ -75,9 +75,7 @@ class BlindCommandBatcher extends CommandBatcher {
     protected void processDeferred() {
         inProcess.set(true)
         Dataflow.task {
-            def count = maxBatchSize        // never wait for more than those
-            while (deferralNeeded.get() && count > 0) {
-                count--
+            if (deferralNeeded.get()) {
                 deferralNeeded.set(false)
                 sleep(deferMillis)          // while we sleep, new requests may have arrived that request deferral
             }

@@ -130,6 +130,7 @@ module opendolphin {
             if (result instanceof String || result instanceof Boolean || result instanceof Number) {
                 result = value.valueOf();
             }
+            // todo dk: handle the encoded long value object {"class java.lang.Long": value}
             if (result instanceof ClientAttribute) {
                 console.log("An Attribute may not itself contain an attribute as a value. Assuming you forgot to call value.")
                 result = this.checkValue((<ClientAttribute>value).value);

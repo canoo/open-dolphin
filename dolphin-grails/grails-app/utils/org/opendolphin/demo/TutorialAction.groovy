@@ -38,7 +38,8 @@ public class TutorialAction extends DolphinServerAction {
                 count++
                 presentationModel("weather.$count", "weather", new DTO(
                         new Slot("temperature", String.valueOf((int) (Math.random() * 100)), "weather.${count}.temperature"),
-                        new Slot("humidity",    String.valueOf((int) (Math.random() * 100)), "weather.${count}.humidity")
+                        new Slot("humidity",    String.valueOf((int) (Math.random() * 100)), "weather.${count}.humidity"),
+                        new Slot("someLong",    (Math.random() * 100).toLong(),              "weather.${count}.someLong")
                 ))
             }
         })

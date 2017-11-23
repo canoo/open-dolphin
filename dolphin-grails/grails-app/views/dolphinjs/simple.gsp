@@ -137,7 +137,10 @@
         models.forEach(function (model) {
 //          console.log(model); // enable for debugging purposes
           var element = document.createElement("div");
-          element.innerHTML = model.presentationModelType + ": " + model.attributes[0].value;
+          element.innerHTML = model.presentationModelType + ": " +
+                              model.attributes[0].value +   // String value
+                              model.attributes[1].value +   // String value
+                              model.attributes[2].value;    // Long   value
           list.appendChild(element);
         })
       }});

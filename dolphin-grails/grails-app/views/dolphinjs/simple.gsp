@@ -135,12 +135,15 @@
     addButton.addEventListener("click", function () {
       dolphin.send("${TutorialAction.CMD_ADD}", {onFinished: function (models) {
         models.forEach(function (model) {
-//          console.log(model); // enable for debugging purposes
+          // console.log(model); // enable for debugging purposes
           var element = document.createElement("div");
           element.innerHTML = model.presentationModelType + ": " +
-                              model.attributes[0].value +   // String value
-                              model.attributes[1].value +   // String value
-                              model.attributes[2].value;    // Long   value
+                              model.attributes[0].value + " " +  // String value
+                              model.attributes[1].value + " " +  // String value
+                              model.attributes[2].value + " " +  // Integer value
+                              model.attributes[3].value + " " +  // Long value
+                              model.attributes[4].value + " " +  // Float value
+                              model.attributes[5].value + " "    // Double value
           list.appendChild(element);
         })
       }});

@@ -14,13 +14,22 @@
  * limitations under the License.
  */
 
+import java.text.SimpleDateFormat
+
 buildscript {
     repositories {
         jcenter()
     }
     dependencies {
         classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.0.1'
+        classpath 'net.nemerosa:versioning:1.6.2'
     }
+}
+
+ext {
+    buildTimeAndDate = new Date()
+    buildDate = new SimpleDateFormat('yyyy-MM-dd').format(buildTimeAndDate)
+    buildTime = new SimpleDateFormat('HH:mm:ss.SSSZ').format(buildTimeAndDate)
 }
 
 allprojects {
@@ -33,6 +42,9 @@ apply plugin: 'com.github.kt3k.coveralls'
 
 subprojects {
     apply plugin: 'groovy'
+    apply plugin: 'net.nemerosa.versioning'
+
+    archivesBaseName = "dolphin-${project.name}"
 
     plugins.withType(JavaPlugin) {
         configurations {
@@ -59,6 +71,24 @@ subprojects {
                 scopes.PROVIDED.plus += [configurations.testCompileOnly]
             }
         }
+
+        jar {
+            manifest {
+                attributes(
+                    'Built-By': System.properties['user.name'],
+                    'Created-By': "${System.properties['java.version']} (${System.properties['java.vendor']} ${System.properties['java.vm.version']})".toString(),
+                    'Build-Date': buildDate,
+                    'Build-Time': buildTime,
+                    'Build-Revision': versioning.info.commit,
+                    'Specification-Title': archivesBaseName,
+                    'Specification-Version': project.version,
+                    'Specification-Vendor': 'open-dolphin.org',
+                    'Implementation-Title': archivesBaseName,
+                    'Implementation-Version': project.version,
+                    'Implementation-Vendor': 'open-dolphin.org'
+                )
+            }
+        }
     }
 
     configurations { // only needed such that groovydoc can work with groovy core plus groovy-ant module only
@@ -68,8 +98,6 @@ subprojects {
     groovydoc {
         groovyClasspath = project.configurations.groovyAnt
     }
-
-    archivesBaseName = "dolphin-${project.name}"
 
     repositories {
         mavenLocal()
